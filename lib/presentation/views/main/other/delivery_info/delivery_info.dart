@@ -8,7 +8,7 @@ import '../../../../../domain/entities/user/delivery_info.dart';
 import '../../../../blocs/delivery_info/delivery_info_action/delivery_info_action_cubit.dart';
 import '../../../../blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.dart';
 import '../../../../widgets/delivery_info_card.dart';
-import '../../../../widgets/input_form_button.dart';
+import '../../../../widgets/input_button.dart';
 import '../../../../widgets/input_text_form_field.dart';
 
 class DeliveryInfoView extends StatefulWidget {
@@ -271,7 +271,7 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   const SizedBox(
                     height: 18,
                   ),
-                  InputFormButton(
+                  InputButton(
                     color: Colors.black87,
                     onClick: () {
                       if (_formKey.currentState!.validate()) {
@@ -309,7 +309,7 @@ class _DeliveryInfoFormState extends State<DeliveryInfoForm> {
                   const SizedBox(
                     height: 8,
                   ),
-                  InputFormButton(
+                  InputButton(
                     color: Colors.black87,
                     onClick: () {
                       Navigator.of(context).pop();

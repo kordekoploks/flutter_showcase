@@ -1,7 +1,9 @@
+import 'dart:ui';
+
 import 'package:eshop/core/constant/images.dart';
 import 'package:flutter/material.dart';
 
-class InputFormButton extends StatelessWidget {
+class InputButton extends StatelessWidget {
   final Function() onClick;
   final String? titleText;
   final Icon? icon;
@@ -9,7 +11,7 @@ class InputFormButton extends StatelessWidget {
   final double? cornerRadius;
   final EdgeInsets padding;
 
-  const InputFormButton(
+  const InputButton(
       {Key? key,
       required this.onClick,
       this.titleText,
@@ -39,7 +41,7 @@ class InputFormButton extends StatelessWidget {
       child: titleText != null
           ? Text(
               titleText!,
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.black),
             )
           : Image.asset(
               kFilterIcon,

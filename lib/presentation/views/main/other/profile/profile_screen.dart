@@ -2,7 +2,7 @@ import 'package:eshop/core/constant/images.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../domain/entities/user/user.dart';
-import '../../../../widgets/input_form_button.dart';
+import '../../../../widgets/input_button.dart';
 import '../../../../widgets/input_text_form_field.dart';
 
 class UserProfileScreen extends StatefulWidget {
@@ -80,7 +80,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       bottomNavigationBar: SafeArea(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: InputFormButton(
+        child: InputButton(
           onClick: () {},
           titleText: "Update",
           color: Colors.black87,

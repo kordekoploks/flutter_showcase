@@ -13,7 +13,7 @@ import '../../../domain/entities/order/order_details.dart';
 import '../../../domain/entities/order/order_item.dart';
 import '../../blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.dart';
 import '../../blocs/order/order_add/order_add_cubit.dart';
-import '../../widgets/input_form_button.dart';
+import '../../widgets/input_button.dart';
 import '../../widgets/outline_label_card.dart';
 
 class OrderCheckoutView extends StatelessWidget {
@@ -224,7 +224,7 @@ class OrderCheckoutView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               child: Builder(builder: (context) {
-                return InputFormButton(
+                return InputButton(
                   color: Colors.black87,
                   onClick: () {
                     if (context

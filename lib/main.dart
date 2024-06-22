@@ -18,6 +18,7 @@ import 'presentation/blocs/home/navbar_cubit.dart';
 import 'presentation/blocs/order/order_fetch/order_fetch_cubit.dart';
 import 'presentation/blocs/product/product_bloc.dart';
 import 'presentation/blocs/user/user_bloc.dart';
+import 'presentation/blocs/setting/setting_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,16 +64,28 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.sl<OrderFetchCubit>()..getOrders(),
         ),
-      ],
-      child: OKToast(
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          initialRoute: AppRouter.home,
-          onGenerateRoute: AppRouter.onGenerateRoute,
-          title: appTitle,
-          theme: AppTheme.lightTheme,
-          builder: EasyLoading.init(),
+        BlocProvider(
+          create: (context) => di.sl<SettingBloc>()..add(CheckSetting()),
         ),
+      ],
+      child: BlocBuilder<SettingBloc, SettingState>(
+        builder: (context, state) {
+          bool isDarkMode = false;
+          if (state is SettingApplied) {
+            isDarkMode = state.setting.darkMode;
+          }
+
+          return OKToast(
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              initialRoute: AppRouter.home,
+              onGenerateRoute: AppRouter.onGenerateRoute,
+              title: appTitle,
+              theme: isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
+              builder: EasyLoading.init(),
+            ),
+          );
+        },
       ),
     );
   }

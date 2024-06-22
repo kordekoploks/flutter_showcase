@@ -6,26 +6,43 @@ class AppTheme {
 
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
-    primaryColor: kLightPrimaryColor,
+    primaryColor: Colors.cyan,
     visualDensity: VisualDensity.adaptivePlatformDensity,
-    scaffoldBackgroundColor: kBackgroundColor,
+    scaffoldBackgroundColor: vwBackgroundColor,
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.white,
-      foregroundColor: kLightSecondaryColor,
+      foregroundColor: vWSecondaryColor,
       elevation: 0,
     ),
-    textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(foregroundColor: kLightSecondaryColor)),
-    colorScheme: ColorScheme.light(secondary: kLightSecondaryColor)
-        .copyWith(background: kLightBackgroundColor),
+
+    fontFamily: 'Nunito',
+    textTheme: TextTheme(
+        bodyLarge:  TextStyle(color: vWTextColor),
+        bodyMedium:  TextStyle(color: vWTextColor),
+        bodySmall: TextStyle(color: vWTextColor)),
+    // textButtonTheme: TextButtonThemeData(
+    //     style: TextButton.styleFrom(foregroundColor: kLightSecondaryColor)),
+    // colorScheme: ColorScheme.light(secondary: kL»
   );
 
-  // static final darkTheme = ThemeData(
-  //     brightness: Brightness.dark,
-  //     primaryColor: darkPrimaryColor,
-  //     visualDensity: VisualDensity.adaptivePlatformDensity,
-  //     textButtonTheme: TextButtonThemeData(
-  //         style: TextButton.styleFrom(foregroundColor: darkTextColor)),
-  //     colorScheme: ColorScheme.light(secondary: lightSecondaryColor)
-  //         .copyWith(background: darkBackgroundColor));
+  static final darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: Colors.cyan,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    scaffoldBackgroundColor: Colors.black,
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.black,
+      foregroundColor: vWSecondaryColor,
+      elevation: 0,
+    ),
+
+    fontFamily: 'Nunito',
+    textTheme: TextTheme(
+        bodyLarge:  TextStyle(color: vWTextColor),
+        bodyMedium:  TextStyle(color: vWTextColor),
+        bodySmall: TextStyle(color: vWTextColor)),
+    // textButtonTheme: TextButtonThemeData(
+    //     style: TextButton.styleFrom(foregroundColor: kLightSecondaryColor)),
+    // colorScheme: ColorScheme.light(secondary: kL»
+  );
 }

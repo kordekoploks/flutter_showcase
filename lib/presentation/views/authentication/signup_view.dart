@@ -8,7 +8,7 @@ import '../../../core/router/app_router.dart';
 import '../../../domain/usecases/user/sign_up_usecase.dart';
 import '../../blocs/cart/cart_bloc.dart';
 import '../../blocs/user/user_bloc.dart';
-import '../../widgets/input_form_button.dart';
+import '../../widgets/input_button.dart';
 import '../../widgets/input_text_form_field.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -165,7 +165,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(
                     height: 40,
                   ),
-                  InputFormButton(
+                  InputButton(
                     color: Colors.black87,
                     onClick: () {
                       if (_formKey.currentState!.validate()) {
@@ -186,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const SizedBox(
                     height: 10,
                   ),
-                  InputFormButton(
+                  InputButton(
                     color: Colors.black87,
                     onClick: () {
                       Navigator.of(context).pop();

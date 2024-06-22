@@ -11,3 +11,5 @@ const String kOrderDelivery = "assets/status_image/order-delivery.png";
 
 //Icon
 const String kFilterIcon = "assets/icons/filter.png";
+const String kClose = "assets/icons/close.png";
+const String kThumb = "assets/icons/thumb.png";
