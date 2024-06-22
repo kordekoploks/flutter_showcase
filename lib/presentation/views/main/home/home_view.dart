@@ -11,7 +11,7 @@ import '../../../blocs/filter/filter_cubit.dart';
 import '../../../blocs/product/product_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
 import '../../../widgets/alert_card.dart';
-import '../../../widgets/input_form_button.dart';
+import '../../../widgets/input_button.dart';
 import '../../../widgets/product_card.dart';
 
 class HomeView extends StatefulWidget {
@@ -215,7 +215,7 @@ class _HomeViewState extends State<HomeView> {
                         isLabelVisible:
                             context.read<FilterCubit>().getFiltersCount() != 0,
                         backgroundColor: Theme.of(context).primaryColor,
-                        child: InputFormButton(
+                        child: InputButton(
                           color: Colors.black87,
                           onClick: () {
                             Navigator.of(context).pushNamed(AppRouter.filter);

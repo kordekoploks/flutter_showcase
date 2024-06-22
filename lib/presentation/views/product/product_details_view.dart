@@ -9,7 +9,7 @@ import '../../../../../domain/entities/product/price_tag.dart';
 import '../../../../../domain/entities/product/product.dart';
 import '../../../core/router/app_router.dart';
 import '../../blocs/cart/cart_bloc.dart';
-import '../../widgets/input_form_button.dart';
+import '../../widgets/input_button.dart';
 
 class ProductDetailsView extends StatefulWidget {
   final Product product;
@@ -202,7 +202,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             const Spacer(),
             SizedBox(
               width: 120,
-              child: InputFormButton(
+              child: InputButton(
                 onClick: () {
                   context.read<CartBloc>().add(AddProduct(
                       cartItem: CartItem(
@@ -219,7 +219,7 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
             ),
             SizedBox(
               width: 90,
-              child: InputFormButton(
+              child: InputButton(
                 onClick: () {
                   Navigator.of(context)
                       .pushNamed(AppRouter.orderCheckout, arguments: [

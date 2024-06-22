@@ -1,5 +1,7 @@
+import 'package:eshop/core/constant/colors.dart';
 import 'package:eshop/presentation/blocs/home/navbar_cubit.dart';
 import 'package:eshop/presentation/blocs/order/order_fetch/order_fetch_cubit.dart';
+import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -11,7 +13,7 @@ import '../../../domain/usecases/user/sign_in_usecase.dart';
 import '../../blocs/cart/cart_bloc.dart';
 import '../../blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.dart';
 import '../../blocs/user/user_bloc.dart';
-import '../../widgets/input_form_button.dart';
+import '../../widgets/input_button.dart';
 import '../../widgets/input_text_form_field.dart';
 
 class SignInView extends StatefulWidget {
@@ -28,6 +30,7 @@ class _SignInViewState extends State<SignInView> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
         EasyLoading.dismiss();
@@ -51,141 +54,163 @@ class _SignInViewState extends State<SignInView> {
         }
       },
       child: Scaffold(
+        backgroundColor: vLightSecondaryColor,
         resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.fromLTRB(0, size.height * 0.05, 0, size.height * 0.03),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  SizedBox(
-                      height: 80,
-                      child: Image.asset(
-                        kAppLogo,
-                        color: Colors.black,
-                      )),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Text(
-                    "Please enter your e-mail address and password to sign-in",
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
-                    textAlign: TextAlign.center,
-                  ),
-                  const Spacer(
-                    flex: 2,
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  InputTextFormField(
-                    controller: emailController,
-                    textInputAction: TextInputAction.next,
-                    hint: 'Email',
-                    validation: (String? val) {
-                      if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  InputTextFormField(
-                    controller: passwordController,
-                    textInputAction: TextInputAction.go,
-                    hint: 'Password',
-                    isSecureField: true,
-                    validation: (String? val) {
-                      if (val == null || val.isEmpty) {
-                        return 'This field can\'t be empty';
-                      }
-                      return null;
-                    },
-                    onFieldSubmitted: (_) {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<UserBloc>().add(SignInUser(SignInParams(
-                              username: emailController.text,
-                              password: passwordController.text,
-                            )));
-                      }
-                    },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: InkWell(
-                      onTap: () {
-                        // Navigator.pushNamed(context, AppRouter.forgotPassword);
-                      },
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  InputFormButton(
-                    color: Colors.black87,
-                    onClick: () {
-                      if (_formKey.currentState!.validate()) {
-                        context.read<UserBloc>().add(SignInUser(SignInParams(
-                              username: emailController.text,
-                              password: passwordController.text,
-                            )));
-                      }
-                    },
-                    titleText: 'Sign In',
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  InputFormButton(
-                    color: Colors.black87,
-                    onClick: () {
-                      Navigator.of(context).pop();
-                    },
-                    titleText: 'Back',
-                  ),
-                  const Spacer(),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
+                    padding: EdgeInsets.symmetric(horizontal: size.width * 0.06),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text(
-                          'Don\'t have an account! ',
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
                         InkWell(
                           onTap: () {
-                            Navigator.pushNamed(context, AppRouter.signUp);
+                            Navigator.of(context).pop();
                           },
-                          child: const Text(
-                            'Register',
-                            style: TextStyle(
-                              fontSize: 14,
+                          child: SizedBox(
+                            height: size.height * 0.03,
+                            child: Image.asset(
+                              kClose,
                               color: Colors.black,
-                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "Forgot your credentials?",
+                              style: TextStyle(
+                                  fontSize: size.width * 0.04,
+                                  color: Colors.black54),
+                              textAlign: TextAlign.end,
                             ),
                           ),
                         ),
                       ],
                     ),
+                  ),
+                  SizedBox(
+                    width: size.width,
+                    height: size.height * 0.87,
+                    child: Stack(children: [
+                      Column(
+                        children: [
+                          const Spacer(flex: 8),
+                          SizedBox(
+                            width: size.width,
+                            height: size.height * 0.7,
+                            child: Card(
+                              surfaceTintColor: Colors.white,
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.all(size.width * 0.04),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    SizedBox(height: size.height * 0.07),
+                                    SizedBox(height: size.height * 0.03),
+                                    Text(
+                                      "Let's Sign You In",
+                                      style: Theme.of(context).textTheme.headline6,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Text(
+                                      "Welcome back, you've been missed!",
+                                      style: Theme.of(context).textTheme.subtitle1,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Spacer(),
+                                    InputTextFormField(
+                                      label: "Email",
+                                      controller: emailController,
+                                      prefixIcon: Icons.email_outlined,
+                                      textInputAction: TextInputAction.next,
+                                      validation: (String? val) {
+                                        if (val == null || val.isEmpty) {
+                                          return 'This field can\'t be empty';
+                                        }
+                                        if (!val.contains("@") || !val.contains('.')) {
+                                          return 'Enter a valid Email';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    SizedBox(height: size.height * 0.02),
+                                    InputTextFormField(
+                                      label: "Password",
+                                      prefixIcon: Icons.lock_outline,
+                                      controller: passwordController,
+                                      textInputAction: TextInputAction.go,
+                                      isSecureField: true,
+                                      validation: (String? val) {
+                                        if (val == null || val.isEmpty) {
+                                          return 'This field can\'t be empty';
+                                        }
+                                        return null;
+                                      },
+                                      onFieldSubmitted: (_) {
+                                        if (_formKey.currentState!.validate()) {
+                                          context
+                                              .read<UserBloc>()
+                                              .add(SignInUser(SignInParams(
+                                            username: emailController.text,
+                                            password: passwordController.text,
+                                          )));
+                                        }
+                                      },
+                                    ),
+                                    SizedBox(height: size.height * 0.015),
+                                    SizedBox(height: size.height * 0.03),
+                                    VwButton(
+                                      onClick: () {
+                                        if (_formKey.currentState!.validate()) {
+                                          context
+                                              .read<UserBloc>()
+                                              .add(SignInUser(SignInParams(
+                                            username: emailController.text,
+                                            password: passwordController.text,
+                                          )));
+                                        }
+                                      },
+                                      titleText: 'Sign In',
+                                    ),
+                                    SizedBox(height: size.height * 0.015),
+                                    VwButton(
+                                      onClick: () {
+                                        Navigator.pushNamed(context, AppRouter.signUp);
+                                      },
+                                      titleText: 'Create an Account',
+                                      buttonType: ButtonType.secondary,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment(0, -0.99),
+                        child: Container(
+                          width: size.width * 0.9,
+                          height: size.height * 0.4,
+                          child: SizedBox(
+                            height: 80,
+                            child: Image.asset(kThumb),
+                          ),
+                        ),
+                      ),
+                    ]),
                   ),
                 ],
               ),

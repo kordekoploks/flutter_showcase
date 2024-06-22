@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-class OtherItemCard extends StatelessWidget {
+class MenuItemCard extends StatelessWidget {
   final String title;
   final Function()? onClick;
-  const OtherItemCard({
+  final Icon? icon;
+  const MenuItemCard({
     Key? key,
     required this.title,
     this.onClick,
-  }) : super(key: key);
+    this.icon}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +24,21 @@ class OtherItemCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 25),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title,
-                  style: Theme.of(context).textTheme.titleSmall,)
+                if (icon != null)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: icon,
+                  ),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+                const  Icon(Icons.arrow_forward),
+
               ],
             ),
           ),

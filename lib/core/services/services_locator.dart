@@ -1,8 +1,12 @@
+import 'package:eshop/data/repositories/setting_repository_impl.dart';
+import 'package:eshop/domain/repositories/setting_repository.dart';
 import 'package:eshop/domain/usecases/delivery_info/clear_local_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/edit_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/get_selected_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/select_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/order/clear_local_order_usecase.dart';
+import 'package:eshop/domain/usecases/setting/get_cached_setting_usecase.dart';
+import 'package:eshop/domain/usecases/setting/save_setting_usecase.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -58,6 +62,7 @@ import '../../presentation/blocs/delivery_info/delivery_info_fetch/delivery_info
 import '../../presentation/blocs/order/order_add/order_add_cubit.dart';
 import '../../presentation/blocs/order/order_fetch/order_fetch_cubit.dart';
 import '../../presentation/blocs/product/product_bloc.dart';
+import '../../presentation/blocs/setting/setting_bloc.dart';
 import '../../presentation/blocs/user/user_bloc.dart';
 import '../network/network_info.dart';
 
@@ -226,6 +231,21 @@ Future<void> init() async {
   );
   sl.registerLazySingleton<UserRemoteDataSource>(
     () => UserRemoteDataSourceImpl(client: sl()),
+  );
+
+  //Setting Feature
+  // Bloc
+  sl.registerFactory(
+        () => SettingBloc(sl(),sl()),
+  );
+  // Use cases
+  sl.registerLazySingleton(() => GetCachedSettingUseCase(sl()));
+  sl.registerLazySingleton(() => SaveSettingUseCase(sl()));
+
+  sl.registerLazySingleton<SettingRepository>(
+    () => SettingRepositoryImpl(
+      sl(),
+    ),
   );
 
   ///***********************************************

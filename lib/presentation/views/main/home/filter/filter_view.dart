@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../domain/usecases/product/get_product_usecase.dart';
 import '../../../../blocs/category/category_bloc.dart';
 import '../../../../blocs/filter/filter_cubit.dart';
-import '../../../../widgets/input_form_button.dart';
+import '../../../../widgets/input_button.dart';
 import '../../../../widgets/input_range_slider.dart';
 
 class FilterView extends StatelessWidget {
@@ -101,7 +101,7 @@ class FilterView extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Builder(builder: (context) {
-            return InputFormButton(
+            return InputButton(
               color: Colors.black87,
               onClick: () {
                 context
