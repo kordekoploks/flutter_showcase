@@ -155,6 +155,13 @@ class OtherView extends StatelessWidget {
           const SizedBox(height: 6),
           MenuItemCard(
             onClick: () {
+              Navigator.of(context).pushNamed(AppRouter.category);
+            },
+            title: "Category",
+          ),
+          const SizedBox(height: 6),
+          MenuItemCard(
+            onClick: () {
               Navigator.of(context).pushNamed(AppRouter.notifications);
             },
             title: "Notifications",

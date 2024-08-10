@@ -1,5 +1,8 @@
+import 'package:eshop/core/network/LoggingHttpClient.dart';
+import 'package:eshop/data/data_sources/local/entity/category_entity.dart';
 import 'package:eshop/data/repositories/setting_repository_impl.dart';
 import 'package:eshop/domain/repositories/setting_repository.dart';
+import 'package:eshop/domain/usecases/category/add_category_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/clear_local_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/edit_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/get_selected_delivery_info_usecase.dart';
@@ -7,6 +10,7 @@ import 'package:eshop/domain/usecases/delivery_info/select_delivery_info_usecase
 import 'package:eshop/domain/usecases/order/clear_local_order_usecase.dart';
 import 'package:eshop/domain/usecases/setting/get_cached_setting_usecase.dart';
 import 'package:eshop/domain/usecases/setting/save_setting_usecase.dart';
+import 'package:eshop/objectbox.g.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -41,9 +45,11 @@ import '../../domain/usecases/cart/add_cart_item_usecase.dart';
 import '../../domain/usecases/cart/clear_cart_usecase.dart';
 import '../../domain/usecases/cart/get_cached_cart_usecase.dart';
 import '../../domain/usecases/cart/sync_cart_usecase.dart';
+import '../../domain/usecases/category/delete_category_usecase.dart';
 import '../../domain/usecases/category/filter_category_usecase.dart';
 import '../../domain/usecases/category/get_cached_category_usecase.dart';
 import '../../domain/usecases/category/get_remote_category_usecase.dart';
+import '../../domain/usecases/category/update_category_usecase.dart';
 import '../../domain/usecases/delivery_info/add_dilivey_info_usecase.dart';
 import '../../domain/usecases/delivery_info/get_cached_delivery_info_usecase.dart';
 import '../../domain/usecases/delivery_info/get_remote_delivery_info_usecase.dart';
@@ -64,6 +70,7 @@ import '../../presentation/blocs/order/order_fetch/order_fetch_cubit.dart';
 import '../../presentation/blocs/product/product_bloc.dart';
 import '../../presentation/blocs/setting/setting_bloc.dart';
 import '../../presentation/blocs/user/user_bloc.dart';
+import '../database/ObjectBox.dart';
 import '../network/network_info.dart';
 
 final sl = GetIt.instance;
@@ -76,6 +83,7 @@ Future<void> init() async {
   );
   // Use cases
   sl.registerLazySingleton(() => GetProductUseCase(sl()));
+
   // Repository
   sl.registerLazySingleton<ProductRepository>(
     () => ProductRepositoryImpl(
@@ -95,11 +103,14 @@ Future<void> init() async {
   //Features - Category
   // Bloc
   sl.registerFactory(
-    () => CategoryBloc(sl(), sl(), sl()),
+    () => CategoryBloc(sl(), sl(), sl(), sl(), sl(), sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetRemoteCategoryUseCase(sl()));
   sl.registerLazySingleton(() => GetCachedCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => AddCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteCategoryUseCase(sl()));
   sl.registerLazySingleton(() => FilterCategoryUseCase(sl()));
   // Repository
   sl.registerLazySingleton<CategoryRepository>(
@@ -114,7 +125,7 @@ Future<void> init() async {
     () => CategoryRemoteDataSourceImpl(client: sl()),
   );
   sl.registerLazySingleton<CategoryLocalDataSource>(
-    () => CategoryLocalDataSourceImpl(sharedPreferences: sl()),
+    () => CategoryLocalDataSourceImpl(categoryBox: sl(), store: sl()),
   );
 
   //Features - Cart
@@ -256,8 +267,16 @@ Future<void> init() async {
   ///! External
   final sharedPreferences = await SharedPreferences.getInstance();
   const secureStorage = FlutterSecureStorage();
+  // final objectBox = await openStore();
+  //
+  // if (Admin.isAvailable()) {
+  //   Admin _admin = Admin(objectBox);
+  // }
+
+
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => secureStorage);
   sl.registerLazySingleton(() => http.Client());
+  // sl.registerLazySingleton<http.Client>(() => LoggingHttpClient(http.Client()));
   sl.registerLazySingleton(() => InternetConnectionChecker());
 }

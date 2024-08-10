@@ -4,6 +4,7 @@ class User extends Equatable {
   final String id;
   final String firstName;
   final String lastName;
+  final String phoneNumber;
   final String? image;
   final String email;
 
@@ -11,6 +12,7 @@ class User extends Equatable {
     required this.id,
     required this.firstName,
     required this.lastName,
+    required this.phoneNumber,
     this.image,
     required this.email,
   });
@@ -20,6 +22,7 @@ class User extends Equatable {
     id,
     firstName,
     lastName,
+    phoneNumber,
     email,
   ];
 }

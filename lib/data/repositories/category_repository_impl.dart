@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:eshop/data/models/category/category_model.dart';
 import 'package:eshop/domain/entities/category/category.dart';
 
 import '../../../../core/error/failures.dart';
@@ -7,7 +8,6 @@ import '../../core/network/network_info.dart';
 import '../../domain/repositories/category_repository.dart';
 import '../data_sources/local/category_local_data_source.dart';
 import '../data_sources/remote/category_remote_data_source.dart';
-
 
 class CategoryRepositoryImpl implements CategoryRepository {
   final CategoryRemoteDataSource remoteDataSource;
@@ -38,6 +38,20 @@ class CategoryRepositoryImpl implements CategoryRepository {
   @override
   Future<Either<Failure, List<Category>>> getCachedCategories() async {
     try {
+      final cachedCategories = await localDataSource.getCategories();
+      if (cachedCategories.isEmpty) await localDataSource.generateCategories();
+      final finalData = await localDataSource.getCategories();
+
+      return Right(finalData);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Category>>> addCategories(params) async {
+    try {
+      final saved = await localDataSource.saveCategory(params);
       final localProducts = await localDataSource.getCategories();
       return Right(localProducts);
     } on Failure catch (failure) {
@@ -49,7 +63,10 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<Either<Failure, List<Category>>> filterCachedCategories(params) async {
     try {
       final cachedCategories = await localDataSource.getCategories();
-      final categories = cachedCategories;
+      if (cachedCategories.isEmpty) await localDataSource.generateCategories();
+      final finalData = await localDataSource.getCategories();
+
+      final categories = finalData;
       final filteredCategories = categories
           .where((element) =>
               element.name.toLowerCase().contains(params.toLowerCase()))
@@ -57,6 +74,30 @@ class CategoryRepositoryImpl implements CategoryRepository {
       return Right(filteredCategories);
     } on CacheException {
       return Left(CacheFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Category>>> updateCategory(
+      CategoryModel keyword) async {
+    try {
+      await localDataSource.saveCategory(keyword);
+      final localProducts = await localDataSource.getCategories();
+      return Right(localProducts);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Category>>> deleteCategory(
+      CategoryModel data) async {
+    try {
+      await localDataSource.deleteCategory(data);
+      final localProducts = await localDataSource.getCategories();
+      return Right(localProducts);
+    } on Failure catch (failure) {
+      return Left(failure);
     }
   }
 }

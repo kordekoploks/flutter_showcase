@@ -1,95 +1,228 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eshop/presentation/blocs/filter/filter_cubit.dart';
-import 'package:eshop/presentation/blocs/product/product_bloc.dart';
+import 'package:eshop/data/models/category/category_model.dart';
+import 'package:eshop/presentation/views/main/category/sub_category_add_bottom_sheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../core/router/app_router.dart';
 import '../../domain/entities/category/category.dart';
-import '../blocs/home/navbar_cubit.dart';
 
-class CategoryCard extends StatelessWidget {
+class CategoryCard extends StatefulWidget {
   final Category? category;
-  const CategoryCard({Key? key, this.category}) : super(key: key);
+  final Function? onFavoriteToggle;
+  final Function? onClick;
+  final  Function(Category)? onClickMoreAction;
+
+  const CategoryCard(
+      {Key? key,
+      this.category,
+      this.onFavoriteToggle,
+      this.onClick, this.onClickMoreAction})
+      : super(key: key);
+
+  @override
+  _CategoryCardState createState() => _CategoryCardState();
+}
+
+class _CategoryCardState extends State<CategoryCard> {
+  bool isExpanded = false;
+  final GlobalKey _listKey = GlobalKey();
+  double expandedHeight = 80;
 
   @override
   Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: widget.category == null
+          ? Shimmer.fromColors(
+              baseColor: Colors.grey.shade100,
+              highlightColor: Colors.white,
+              child: buildBody(context),
+            )
+          : buildBody(context),
+    );
+  }
+
+  Widget buildBody(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if(category!=null){
-          context.read<NavbarCubit>().controller.animateToPage(
-              0,
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.linear);
-          context.read<NavbarCubit>().update(0);
-          context.read<FilterCubit>().update(
-            category: category
-          );
-          context.read<ProductBloc>().add(GetProducts(context.read<FilterCubit>().state));
-        }
+        // Navigate to category details if necessary
       },
-      child: category != null
-          ? Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: isExpanded ? expandedHeight : 90,
+            child: Column(
               children: [
-                Card(
-                  color: Colors.grey.shade100,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  elevation: 4,
-                  clipBehavior: Clip.antiAlias,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.18,
-                    width: double.maxFinite,
-                    child: Hero(
-                      tag: category!.id,
-                      child: CachedNetworkImage(
-                        imageUrl: category!.image,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          color: Colors.grey.shade100,
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Center(child: Icon(Icons.error)),
+                Row(
+                  children: [
+                    widget.category == null
+                        ? Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(35),
+                            ),
+                          )
+                        : Expanded(
+                            flex: 2,
+                            child: SizedBox(
+                              height: 80,
+                              width: 80,
+                              child: Card(
+                                color: Colors.white,
+                                elevation: 2,
+                                margin: const EdgeInsets.all(4),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Hero(
+                                  tag: widget.category!.id,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl: widget.category!.image,
+                                      placeholder: (context, url) =>
+                                          Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade100,
+                                        highlightColor: Colors.white,
+                                        child: Container(),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const Center(
+                                              child: Icon(Icons.error)),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Padding(
+                              padding: const EdgeInsets.fromLTRB(4, 16, 4, 0),
+                              child: widget.category == null
+                                  ? Container(
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    )
+                                  : Text(
+                                      widget.category!.name,
+                                      style:
+                                          Theme.of(context).textTheme.bodyLarge,
+                                    )),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  height: 18,
+                                  child: widget.category == null
+                                      ? Container(
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                        )
+                                      : Text(
+                                          widget.category!.desc,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium,
+                                        ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ),
-                Positioned(
-                    right: 10,
-                    bottom: 25,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        category!.name,
-                        style: const TextStyle(
-                          fontSize: 18,
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isExpanded = !isExpanded;
+                            if (isExpanded) {
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                setState(() {
+                                  expandedHeight = _listKey
+                                          .currentContext!.size!.height +
+                                      80; // Adjust based on the height of your header
+                                });
+                              });
+                            }
+                          });
+                        },
+                        child: Icon(
+                          isExpanded
+                              ? Icons.keyboard_arrow_up
+                              : Icons.keyboard_arrow_down,
                         ),
                       ),
-                    ))
+                    ),
+                    Expanded(
+                        flex: 2,
+                        child: GestureDetector(
+                          onTap: () {
+                            widget.onClickMoreAction!(widget.category!);
+                          },
+                          child: const Icon(
+                            Icons.more_vert,
+                          ),
+                        ))
+                  ],
+                ),
+                if (isExpanded)
+                  Column(key: _listKey, children: [
+                    GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return SubCategoryAddBottomSheet(
+                                onSave: () {
+                                  // Handle save action
+                                },
+                                categoryModel: widget.category!,
+                              );
+                            },
+                          );
+                        },
+                        child: ListTile(
+                            leading: Icon(Icons.add),
+                            title: Text('Add Sub Category'),
+                            trailing: Icon(Icons.add))),
+                    ...List.generate(3, (index) {
+                      return ListTile(
+                        leading: Icon(Icons.circle),
+                        title: Text('Sub-item ${index + 1}'),
+                        trailing: IconButton(
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            // Handle add button press
+                          },
+                        ),
+                      );
+                    }),
+                  ]),
               ],
-            )
-          : Shimmer.fromColors(
-              baseColor: Colors.grey.shade100,
-              highlightColor: Colors.white70,
-              child: Card(
-                color: Colors.grey.shade100,
-                elevation: 4,
-                margin: const EdgeInsets.only(bottom: 16),
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.18,
-                ),
-              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 }

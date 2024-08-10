@@ -9,6 +9,7 @@ Color vWButtonSecondaryColor = Colors.white70;
 Color vWInputBackgroundColor = const Color(0xFFEAEAEA);
 Color vWInputLabelColor = const Color(0xFF848484);
 Color vWTextColor = const Color(0xff040415);
+Color vWTextDescColor = const Color(0xFF848484);
 Color vLightSecondaryColor = const Color.fromRGBO(235,239,254,1);
 
 Color kDarkBackgroundColor = const Color(0xFF1A2127);
