@@ -18,3 +18,28 @@ class FilterCategories extends CategoryEvent {
   @override
   List<Object> get props => [];
 }
+
+
+class AddCategory extends CategoryEvent {
+  final CategoryModel _categoryModel;
+  const AddCategory(this._categoryModel);
+
+  @override
+  List<Object> get props => [];
+}
+
+class UpdateCategory extends CategoryEvent {
+  final CategoryModel _categoryModel;
+  const UpdateCategory(this._categoryModel);
+
+  @override
+  List<Object> get props => [];
+}
+
+class DeleteCategory extends CategoryEvent {
+  final CategoryModel _categoryModel;
+  const DeleteCategory(this._categoryModel);
+
+  @override
+  List<Object> get props => [];
+}

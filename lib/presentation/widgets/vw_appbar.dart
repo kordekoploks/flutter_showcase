@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class VwAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final Function()? onBackPressed;
 
-  const CustomAppBar({
+  const VwAppBar({
     Key? key,
     required this.title,
     this.onBackPressed,
@@ -31,27 +31,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => AppBar().preferredSize;
 }
 
-// Example usage:
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: CustomAppBar(
-          title: 'My Custom AppBar',
-          onBackPressed: () {
-            // Handle custom back press action
-            print('Custom back press action');
-          },
-        ),
-        body: Center(
-          child: Text('Hello, world!'),
-        ),
-      ),
-    );
-  }
-}
 
-void main() {
-  runApp(MyApp());
-}
+

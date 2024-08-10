@@ -1,11 +1,15 @@
+import 'package:eshop/objectbox.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get_it/get_it.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/constant/strings.dart';
+import 'core/database/ObjectBox.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'data/data_sources/local/entity/category_entity.dart';
 import 'domain/usecases/product/get_product_usecase.dart';
 import 'presentation/blocs/cart/cart_bloc.dart';
 import 'presentation/blocs/category/category_bloc.dart';
@@ -20,9 +24,20 @@ import 'presentation/blocs/product/product_bloc.dart';
 import 'presentation/blocs/user/user_bloc.dart';
 import 'presentation/blocs/setting/setting_bloc.dart';
 
+late Store objectBoxStore;
+late final Admin _admin;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
+  final sl = GetIt.instance;
+
+  objectBoxStore = await openStore();
+
+  if (Admin.isAvailable()) {
+    _admin = Admin(objectBoxStore);
+  }
+  sl.registerLazySingleton(() => objectBoxStore);
+  sl.registerLazySingleton(() => objectBoxStore.box<CategoryEntity>());
 
   runApp(const MyApp());
   configLoading();

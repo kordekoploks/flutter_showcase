@@ -17,7 +17,7 @@ void main() {
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
     dataSource =
-        CategoryLocalDataSourceImpl(sharedPreferences: mockSharedPreferences);
+        CategoryLocalDataSourceImpl();
   });
 
   group('getCategories', () {

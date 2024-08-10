@@ -37,7 +37,7 @@ class MenuItemCard extends StatelessWidget {
                   title,
                   style: Theme.of(context).textTheme.titleSmall,
                 ),
-                const  Icon(Icons.arrow_forward),
+                const  Icon(Icons.keyboard_arrow_right),
 
               ],
             ),

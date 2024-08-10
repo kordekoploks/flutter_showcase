@@ -14,15 +14,12 @@ class AppTheme {
       foregroundColor: vWSecondaryColor,
       elevation: 0,
     ),
-
     fontFamily: 'Nunito',
     textTheme: TextTheme(
-        bodyLarge:  TextStyle(color: vWTextColor),
-        bodyMedium:  TextStyle(color: vWTextColor),
+        labelMedium: TextStyle(color: vWTextDescColor),
+        bodyLarge: TextStyle(color: vWTextColor),
+        bodyMedium: TextStyle(color: vWTextColor),
         bodySmall: TextStyle(color: vWTextColor)),
-    // textButtonTheme: TextButtonThemeData(
-    //     style: TextButton.styleFrom(foregroundColor: kLightSecondaryColor)),
-    // colorScheme: ColorScheme.light(secondary: kL»
   );
 
   static final darkTheme = ThemeData(
@@ -38,9 +35,9 @@ class AppTheme {
 
     fontFamily: 'Nunito',
     textTheme: TextTheme(
-        bodyLarge:  TextStyle(color: vWTextColor),
-        bodyMedium:  TextStyle(color: vWTextColor),
-        bodySmall: TextStyle(color: vWTextColor)),
+        bodyLarge: TextStyle(color: vWTextColor, fontSize: 16),
+        bodyMedium: TextStyle(color: vWTextColor, fontSize: 12),
+        bodySmall: TextStyle(color: vWTextColor, fontSize: 8)),
     // textButtonTheme: TextButtonThemeData(
     //     style: TextButton.styleFrom(foregroundColor: kLightSecondaryColor)),
     // colorScheme: ColorScheme.light(secondary: kL»

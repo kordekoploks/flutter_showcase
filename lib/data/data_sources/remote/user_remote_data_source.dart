@@ -48,10 +48,11 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
             body: json.encode({
               'firstName': params.firstName,
               'lastName': params.lastName,
+              'phoneNumber': params.phoneNumber,
               'email': params.email,
               'password': params.password,
             }));
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return authenticationResponseModelFromJson(response.body);
     } else if (response.statusCode == 400 || response.statusCode == 401) {
       throw CredentialFailure();

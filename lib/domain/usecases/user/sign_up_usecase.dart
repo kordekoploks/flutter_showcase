@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:ffi';
+
 import 'package:dartz/dartz.dart';
 
 import '../../../../../core/error/failures.dart';
@@ -18,11 +21,13 @@ class SignUpUseCase implements UseCase<User, SignUpParams> {
 class SignUpParams {
   final String firstName;
   final String lastName;
+  final int phoneNumber;
   final String email;
   final String password;
   const SignUpParams({
     required this.firstName,
     required this.lastName,
+    required this.phoneNumber,
     required this.email,
     required this.password,
   });

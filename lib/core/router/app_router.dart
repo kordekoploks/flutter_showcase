@@ -1,3 +1,4 @@
+import 'package:eshop/presentation/views/main/category/category_view.dart';
 import 'package:eshop/presentation/views/main/home/filter/filter_view.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +32,7 @@ class AppRouter {
   static const String deliveryDetails = '/delivery-details';
   static const String orders = '/orders';
   static const String settings = '/settings';
+  static const String category = '/category';
   static const String notifications = '/notifications';
   static const String about = '/about';
   static const String filter = '/filter';
@@ -65,6 +67,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const OrderView());
       case settings:
         return MaterialPageRoute(builder: (_) => const SettingsView());
+      case category:
+        return MaterialPageRoute(builder: (_) => const CategoryView());
       case notifications:
         return MaterialPageRoute(builder: (_) => const NotificationView());
       case about:
