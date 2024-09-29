@@ -40,12 +40,12 @@ class FilterView extends StatelessWidget {
               ),
             ),
           ),
-          BlocBuilder<CategoryBloc, CategoryState>(
+          BlocBuilder<OutcomeCategoryBloc, OutcomeCategoryState>(
             builder: (context, categoryState) {
               return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: categoryState.categories.length,
+                itemCount: categoryState.data.length,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 20,
                   vertical: 10,
@@ -54,7 +54,7 @@ class FilterView extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          categoryState.categories[index].name,
+                          categoryState.data[index].name,
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w500),
                         ),
@@ -63,11 +63,11 @@ class FilterView extends StatelessWidget {
                           builder: (context, filterState) {
                             return Checkbox(
                               value: filterState.categories
-                                  .contains(categoryState.categories[index]) ||
+                                  .contains(categoryState.data[index]) ||
                                   filterState.categories.isEmpty,
                               onChanged: (bool? value) {
                                 context.read<FilterCubit>().updateCategory(
-                                    category: categoryState.categories[index]);
+                                    category: categoryState.data[index]);
                               },
                             );
                           },

@@ -1,5 +1,5 @@
 import 'package:eshop/data/models/cart/cart_item_model.dart';
-import 'package:eshop/data/models/category/category_model.dart';
+import 'package:eshop/data/models/category/outcome_category_model.dart';
 import 'package:eshop/data/models/order/order_details_model.dart';
 import 'package:eshop/data/models/order/order_item_model.dart';
 import 'package:eshop/data/models/product/pagination_data_model.dart';
@@ -19,7 +19,7 @@ final tProductModel = ProductModel(
   name: "name",
   description: "description",
   priceTags: [PriceTagModel(id: "1", name: "name", price: 100)],
-  categories: const [CategoryModel(id: "1", name: "name", image: "image")],
+  categories: const [OutcomeCategoryModel(id: "1", name: "name", image: "image")],
   images: const ["image"],
   createdAt: DateTime(2000),
   updatedAt: DateTime(2000),
@@ -55,7 +55,7 @@ final tCartItemModel = CartItemModel(
 );
 
 //category
-const tCategoryModel = CategoryModel(
+const tCategoryModel = OutcomeCategoryModel(
   id: "1",
   name: "name",
   image: "image",

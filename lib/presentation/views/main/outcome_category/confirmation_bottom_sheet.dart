@@ -1,10 +1,8 @@
-import 'package:eshop/data/models/category/category_model.dart';
-import 'package:eshop/domain/entities/category/category.dart';
 import 'package:eshop/presentation/widgets/vw_bottom_sheet.dart';
+import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../widgets/input_text_form_field.dart';
 
 class ConfirmationBottomSheet extends StatefulWidget {
   final String title;
@@ -17,7 +15,7 @@ class ConfirmationBottomSheet extends StatefulWidget {
 
   ConfirmationBottomSheet({
     Key? key,
-    required this.title, required this.desc, this.onPositiveClick, this.onNegativeClick, required this.positiveLabel, required this.negativeLabel, this.isReverted = false
+    required this.title, required this.desc, this.onPositiveClick, this.onNegativeClick, this.positiveLabel = "Ya",  this.negativeLabel = "Tidak", this.isReverted = false
   }) : super(key: key);
 
   @override
@@ -48,24 +46,10 @@ class _ConfirmationBottomSheetState extends State<ConfirmationBottomSheet> {
           children: [
             widget.desc,
             SizedBox(height: 16),
-
             Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                   widget.onPositiveClick;
-                    Navigator.pop(context);
-                  },
-                  child: Text(widget.positiveLabel),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    widget.onNegativeClick;
-                    Navigator.pop(context);
-                  },
-                  child: Text(widget.negativeLabel),
-                ),
-              ],
+              children: widget.isReverted
+                  ? _buildButtons(context, reversed: true)
+                  : _buildButtons(context),
             ),
           ],
         ),
@@ -74,24 +58,32 @@ class _ConfirmationBottomSheetState extends State<ConfirmationBottomSheet> {
   }
 
   List<Widget> _buildButtons(BuildContext context, {bool reversed = false}) {
-    final positiveButton = ElevatedButton(
-      onPressed: () {
-        widget.onPositiveClick?.call();
-        Navigator.pop(context);
-      },
-      child: Text(widget.positiveLabel),
+    final positiveButton = Expanded(
+      child: VwButton(
+        onClick: () {
+          widget.onPositiveClick?.call();
+          Navigator.pop(context);
+        },
+        titleText: widget.positiveLabel,
+        buttonType: ButtonType.primary,
+      ),
     );
 
-    final negativeButton = ElevatedButton(
-      onPressed: () {
-        widget.onNegativeClick?.call();
-        Navigator.pop(context);
-      },
-      child: Text(widget.negativeLabel),
+    final negativeButton = Expanded(
+      child: VwButton(
+        onClick: () {
+          widget.onNegativeClick?.call();
+          Navigator.pop(context);
+        },
+        titleText: widget.negativeLabel,
+        buttonType: ButtonType.secondary,
+      ),
     );
 
     return reversed
         ? [negativeButton, SizedBox(width: 8), positiveButton]
         : [positiveButton, SizedBox(width: 8), negativeButton];
   }
+
+
 }

@@ -1,7 +1,7 @@
-import 'category.dart';
+import 'outcome_category.dart';
 
 class CategoryResponse {
-  final List<Category> categories;
+  final List<OutcomeCategory> categories;
 
   CategoryResponse({required this.categories});
 }

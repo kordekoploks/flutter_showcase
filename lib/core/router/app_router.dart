@@ -1,4 +1,3 @@
-import 'package:eshop/presentation/views/main/category/category_view.dart';
 import 'package:eshop/presentation/views/main/home/filter/filter_view.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +13,7 @@ import '../../presentation/views/main/other/notification/notification_view.dart'
 import '../../presentation/views/main/other/orders/order_view.dart';
 import '../../presentation/views/main/other/profile/profile_screen.dart';
 import '../../presentation/views/main/other/settings/settings_view.dart';
+import '../../presentation/views/main/outcome_category/category_view.dart';
 import '../../presentation/views/order_chekout/order_checkout_view.dart';
 import '../../presentation/views/product/product_details_view.dart';
 import '../error/exceptions.dart';

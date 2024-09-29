@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:eshop/data/models/category/category_model.dart';
-import 'package:eshop/domain/entities/category/category.dart';
+import 'package:eshop/data/models/category/outcome_category_model.dart';
+import 'package:eshop/domain/entities/category/outcome_category.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../fixtures/constant_objects.dart';
@@ -12,7 +12,7 @@ void main() {
     'CategoryModel should be a subclass of Category entity',
     () async {
       /// Assert
-      expect(tCategoryModel, isA<Category>());
+      expect(tCategoryModel, isA<OutcomeCategory>());
     },
   );
 
@@ -27,7 +27,7 @@ void main() {
             json.decode(fixture('category/category.json'));
 
         /// Act
-        final result = CategoryModel.fromJson(jsonMap);
+        final result = OutcomeCategoryModel.fromJson(jsonMap);
 
         /// Assert
         expect(result, tCategoryModel);

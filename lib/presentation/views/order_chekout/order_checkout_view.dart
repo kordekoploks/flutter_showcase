@@ -149,6 +149,7 @@ class OrderCheckoutView extends StatelessWidget {
                                     const SizedBox(width: 20),
                                     Flexible(
                                       child: Column(
+
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         mainAxisAlignment:
