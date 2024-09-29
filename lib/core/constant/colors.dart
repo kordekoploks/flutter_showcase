@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 Color vWLightBackgroundColor = const Color(0xffffffff);
 Color vwBackgroundColor = const Color(0xFFFFFFFF);
-Color vWPrimaryColor = const Color(0xffff8900);
+Color vWPrimaryColor = const Color(0xffffba24);
 Color vWSecondaryColor = const Color(0xff040415);
-Color vWButtonPrimaryColor = Colors.amberAccent;
-Color vWButtonSecondaryColor = Colors.white70;
+Color vWButtonPrimaryColor = const Color(0xffffba24);
+Color vWButtonSecondaryColor = Colors.white10;
 Color vWInputBackgroundColor = const Color(0xFFEAEAEA);
 Color vWInputLabelColor = const Color(0xFF848484);
 Color vWTextColor = const Color(0xff040415);

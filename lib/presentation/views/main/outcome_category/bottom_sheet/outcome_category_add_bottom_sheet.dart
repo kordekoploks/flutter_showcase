@@ -2,7 +2,8 @@ import 'package:eshop/presentation/widgets/vw_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../widgets/input_text_form_field.dart';
+import '../../../../widgets/input_text_form_field.dart';
+import '../../../../widgets/vw_button.dart';
 
 class CategoryAddBottomSheet extends StatefulWidget {
   final Function(String) onSave;
@@ -40,12 +41,12 @@ class _CategoryAddBottomSheetState extends State<CategoryAddBottomSheet> {
               isMandatory: true,
             ),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
+            VwButton(
+              onClick: () {
                 widget.onSave(nameController.text);
                 Navigator.pop(context);
               },
-              child: Text('Save'),
+              titleText: 'Simpan',
             ),
           ],
         ),

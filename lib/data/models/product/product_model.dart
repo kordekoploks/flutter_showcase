@@ -1,5 +1,5 @@
 import '../../../domain/entities/product/product.dart';
-import '../category/category_model.dart';
+import '../category/outcome_category_model.dart';
 import 'price_tag_model.dart';
 
 class ProductModel extends Product {
@@ -8,7 +8,7 @@ class ProductModel extends Product {
     required String name,
     required String description,
     required List<PriceTagModel> priceTags,
-    required List<CategoryModel> categories,
+    required List<OutcomeCategoryModel> categories,
     required List<String> images,
     required DateTime createdAt,
     required DateTime updatedAt,
@@ -29,8 +29,8 @@ class ProductModel extends Product {
         description: json["description"],
         priceTags: List<PriceTagModel>.from(
             json["priceTags"].map((x) => PriceTagModel.fromJson(x))),
-        categories: List<CategoryModel>.from(
-            json["categories"].map((x) => CategoryModel.fromJson(x))),
+        categories: List<OutcomeCategoryModel>.from(
+            json["categories"].map((x) => OutcomeCategoryModel.fromJson(x))),
         images: List<String>.from(json["images"].map((x) => x)),
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.parse(json["updatedAt"]),
@@ -43,7 +43,7 @@ class ProductModel extends Product {
         "priceTags": List<dynamic>.from(
             (priceTags as List<PriceTagModel>).map((x) => x.toJson())),
         "categories": List<dynamic>.from(
-            (categories as List<CategoryModel>).map((x) => x.toJson())),
+            (categories as List<OutcomeCategoryModel>).map((x) => x.toJson())),
         "images": List<dynamic>.from(images.map((x) => x)),
         "createdAt": createdAt.toIso8601String(),
         "updatedAt": updatedAt.toIso8601String(),
@@ -57,7 +57,7 @@ class ProductModel extends Product {
             .map((priceTag) => PriceTagModel.fromEntity(priceTag))
             .toList(),
         categories: entity.categories
-            .map((category) => CategoryModel.fromEntity(category))
+            .map((category) => OutcomeCategoryModel.fromInterface(category))
             .toList(),
         images: entity.images,
         createdAt: entity.createdAt,

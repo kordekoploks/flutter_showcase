@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MenuBottomSheetItemCard extends StatelessWidget {
@@ -13,11 +14,11 @@ class MenuBottomSheetItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GestureDetector(
         onTap: onClick,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 16),
           child: Column(
             children: [
               Row(
@@ -28,15 +29,17 @@ class MenuBottomSheetItemCard extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 10),
                       child: icon,
                     ),
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleSmall,
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      title,
+                      style: Theme.of(context).textTheme.bodyLarge,textAlign: TextAlign.left,
+                    ),
                   ),
-                  const  Icon(Icons.keyboard_arrow_right),
+                    Icon(Icons.keyboard_arrow_right, color: Colors.grey.withOpacity(0.5) ),
 
                 ],
               ),
-              const Divider(color: Colors.grey),
             ],
           ),
         ),

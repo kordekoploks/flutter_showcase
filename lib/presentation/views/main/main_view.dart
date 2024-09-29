@@ -4,9 +4,9 @@ import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
 import 'cart/cart_view.dart';
-import 'category/category_view.dart';
 import 'home/home_view.dart';
 import 'other/other_view.dart';
+import 'outcome_category/category_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);

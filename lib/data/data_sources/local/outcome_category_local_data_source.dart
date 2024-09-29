@@ -1,37 +1,89 @@
 import 'dart:convert';
 
 import 'package:eshop/core/error/failures.dart';
+import 'package:eshop/data/data_sources/local/entity/outcome_category_entity.dart';
+import 'package:eshop/domain/entities/category/outcome_category.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../objectbox.g.dart';
-import '../../models/category/category_model.dart';
-import 'entity/category_entity.dart';
+import '../../models/category/outcome_category_model.dart';
+import 'entity/outcome_category_entity.dart';
+import 'entity/outcome_sub_category_entity.dart';
 
-abstract class CategoryLocalDataSource {
-  Future<List<CategoryModel>> getCategories();
+abstract class OutcomeCategoryLocalDataSource {
+  Future<List<OutcomeCategoryModel>> getCategories();
 
-  Future<void> saveCategory(CategoryModel categoryModel);
+  Future<void> saveCategory(OutcomeCategoryModel categoryModel);
 
-  Future<void> deleteCategory(CategoryModel categoryModel);
+  Future<void> deleteCategory(OutcomeCategory categoryModel);
 
-  Future<void> saveCategories(List<CategoryModel> categoriesToCache);
+  Future<void> saveCategories(List<OutcomeCategoryModel> categoriesToCache);
 
   Future<void> generateCategories();
+
+  Future<List<OutcomeCategoryModel>> filterCategories(String params);
 }
 
 const cachedCategories = 'CACHED_CATEGORIES';
 
-class CategoryLocalDataSourceImpl implements CategoryLocalDataSource {
-  final Box<CategoryEntity> categoryBox;
+class CategoryLocalDataSourceImpl implements OutcomeCategoryLocalDataSource {
+  final Box<OutcomeCategoryEntity> outcomeCategoryBox;
+  final Box<OutcomeSubCategoryEntity> outcomeSubCategoryBox;
   final Store store;
 
-  CategoryLocalDataSourceImpl({required this.categoryBox, required this.store});
+  CategoryLocalDataSourceImpl(
+      {required this.outcomeCategoryBox,
+      required this.outcomeSubCategoryBox,
+      required this.store});
 
   @override
-  Future<List<CategoryModel>> getCategories() {
-    return Future.value(categoryBox
+  Future<List<OutcomeCategoryModel>> getCategories() {
+    return Future.value(outcomeCategoryBox
         .getAll()
-        .map((e) => CategoryModel(
+        .map((e) => OutcomeCategoryModel.fromEntity(e))
+        .toList());
+  }
+
+  @override
+  Future<void> saveCategory(OutcomeCategoryModel e) async {
+    final categoryEntity = OutcomeCategoryEntity.fromModel(e);
+
+    final newSubCategoryIds = e.outcomeSubCategory.map((sub) => sub.id).toSet();
+
+    final idsToDelete = categoryEntity.subCategories
+        .where((sub) => !newSubCategoryIds.contains(sub.id))
+        .map((sub) => sub.id)
+        .toList();
+
+    await Future.wait([
+      outcomeSubCategoryBox.removeManyAsync(idsToDelete),
+      outcomeCategoryBox.putAsync(categoryEntity),
+    ]);
+  }
+
+
+
+  @override
+  Future<void> deleteCategory(OutcomeCategory categoryModel) {
+    return outcomeCategoryBox.removeAsync(int.parse(categoryModel.id));
+  }
+
+  @override
+  Future<void> saveCategories(List<OutcomeCategoryModel> categoriesToCache) {
+    return Future(() => outcomeCategoryBox.putMany(categoriesToCache
+        .map((e) => OutcomeCategoryEntity(
+            int.parse(e.id), e.name, e.image, e.position, e.desc))
+        .toList()));
+  }
+
+  @override
+  Future<List<OutcomeCategoryModel>> filterCategories(String params) {
+    return Future.value(outcomeCategoryBox
+        .query(
+            OutcomeCategoryEntity_.name.contains(params, caseSensitive: false))
+        .build()
+        .find()
+        .map((e) => OutcomeCategoryModel(
             id: e.id.toString(),
             position: e.position!,
             name: e.name!,
@@ -41,43 +93,20 @@ class CategoryLocalDataSourceImpl implements CategoryLocalDataSource {
   }
 
   @override
-  Future<void> saveCategory(CategoryModel e) {
-    return categoryBox.putAsync(
-        CategoryEntity(int.parse(e.id), e.name, e.image, e.position, e.desc));
-  }
-
-  @override
-  Future<void> deleteCategory(CategoryModel categoryModel) {
-    return categoryBox.removeAsync(int.parse(categoryModel.id));
-  }
-
-  @override
-  Future<void> saveCategories(List<CategoryModel> categoriesToCache) {
-    return Future(() => categoryBox.putMany(categoriesToCache
-        .map((e) => CategoryEntity(
-            int.parse(e.id), e.name, e.image, e.position, e.desc))
-        .toList()));
-  }
-
-  @override
   Future<void> generateCategories() async {
     final jsonData =
         json.decode(categoryInitializeData) as Map<String, dynamic>;
     final List<dynamic> data = jsonData['data'];
 
     for (var category in data) {
-      final categoryEntity = CategoryEntity(
+      final outcomeCategoryEntity = OutcomeCategoryEntity(
           int.parse(category["_id"]),
           category["name"],
           category["image"],
           category["position"],
           category["desc"]);
-      categoryBox.put(categoryEntity);
+      outcomeCategoryBox.put(outcomeCategoryEntity);
     }
-    // if (Admin.isAvailable()) {
-    //   // Keep a reference until no longer needed or manually closed.
-    //   final admin = Admin(store);
-    // }
   }
 }
 

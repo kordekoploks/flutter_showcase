@@ -1,14 +1,16 @@
-import 'package:eshop/data/models/category/category_model.dart';
-import 'package:eshop/domain/entities/category/category.dart';
+import 'package:eshop/data/models/category/outcome_category_model.dart';
+import 'package:eshop/domain/entities/category/outcome_category.dart';
 import 'package:eshop/presentation/widgets/vw_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../widgets/input_text_form_field.dart';
+import '../../../../widgets/input_text_form_field.dart';
+import '../../../../widgets/vw_button.dart';
+
 
 class CategoryEditBottomSheet extends StatefulWidget {
-  final Function(CategoryModel) onSave;
-  final Category category;
+  final Function(OutcomeCategoryModel) onSave;
+  final OutcomeCategory category;
 
   CategoryEditBottomSheet({
     Key? key,
@@ -53,10 +55,10 @@ class _CategoryEditBottomSheetState extends State<CategoryEditBottomSheet> {
 
             ),
             SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
+            VwButton(
+              onClick: () {
                 widget.onSave(
-                  CategoryModel(
+                  OutcomeCategoryModel(
                     id: widget.category.id,
                     position: widget.category.position,
                     name: nameController.text,
@@ -66,7 +68,7 @@ class _CategoryEditBottomSheetState extends State<CategoryEditBottomSheet> {
                 );
                 Navigator.pop(context);
               },
-              child: Text('Save'),
+              titleText: 'Simpan',
             ),
           ],
         ),

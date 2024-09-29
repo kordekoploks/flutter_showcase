@@ -1,16 +1,25 @@
 import 'package:eshop/core/network/LoggingHttpClient.dart';
-import 'package:eshop/data/data_sources/local/entity/category_entity.dart';
+import 'package:eshop/data/data_sources/local/entity/outcome_category_entity.dart';
+import 'package:eshop/data/data_sources/local/outcome_sub_category_local_data_source.dart';
+import 'package:eshop/data/repositories/outcome_sub_category_repository_impl.dart';
 import 'package:eshop/data/repositories/setting_repository_impl.dart';
+import 'package:eshop/domain/repositories/outcome_sub_category_repository.dart';
 import 'package:eshop/domain/repositories/setting_repository.dart';
-import 'package:eshop/domain/usecases/category/add_category_usecase.dart';
+import 'package:eshop/domain/usecases/outcome_category/add_category_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/clear_local_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/edit_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/get_selected_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/select_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/order/clear_local_order_usecase.dart';
+import 'package:eshop/domain/usecases/outcome_sub_category/add_outcome_sub_category_usecase.dart';
+import 'package:eshop/domain/usecases/outcome_sub_category/delete_outcome_sub_category_usecase.dart';
+import 'package:eshop/domain/usecases/outcome_sub_category/filter_outcome_sub_category_usecase.dart';
+import 'package:eshop/domain/usecases/outcome_sub_category/get_cached_outcome_sub_category_usecase.dart';
+import 'package:eshop/domain/usecases/outcome_sub_category/update_outcome_sub_category_usecase.dart';
 import 'package:eshop/domain/usecases/setting/get_cached_setting_usecase.dart';
 import 'package:eshop/domain/usecases/setting/save_setting_usecase.dart';
 import 'package:eshop/objectbox.g.dart';
+import 'package:eshop/presentation/blocs/outcome_sub_category/outcome_sub_category_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -18,7 +27,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/data_sources/local/cart_local_data_source.dart';
-import '../../data/data_sources/local/category_local_data_source.dart';
+import '../../data/data_sources/local/outcome_category_local_data_source.dart';
 import '../../data/data_sources/local/delivery_info_local_data_source.dart';
 import '../../data/data_sources/local/order_local_data_source.dart';
 import '../../data/data_sources/local/product_local_data_source.dart';
@@ -30,7 +39,7 @@ import '../../data/data_sources/remote/order_remote_data_source.dart';
 import '../../data/data_sources/remote/product_remote_data_source.dart';
 import '../../data/data_sources/remote/user_remote_data_source.dart';
 import '../../data/repositories/cart_repository_impl.dart';
-import '../../data/repositories/category_repository_impl.dart';
+import '../../data/repositories/outcome_category_repository_impl.dart';
 import '../../data/repositories/delivery_info_impl.dart';
 import '../../data/repositories/order_repository_impl.dart';
 import '../../data/repositories/product_repository_impl.dart';
@@ -45,11 +54,11 @@ import '../../domain/usecases/cart/add_cart_item_usecase.dart';
 import '../../domain/usecases/cart/clear_cart_usecase.dart';
 import '../../domain/usecases/cart/get_cached_cart_usecase.dart';
 import '../../domain/usecases/cart/sync_cart_usecase.dart';
-import '../../domain/usecases/category/delete_category_usecase.dart';
-import '../../domain/usecases/category/filter_category_usecase.dart';
-import '../../domain/usecases/category/get_cached_category_usecase.dart';
-import '../../domain/usecases/category/get_remote_category_usecase.dart';
-import '../../domain/usecases/category/update_category_usecase.dart';
+import '../../domain/usecases/outcome_category/delete_category_usecase.dart';
+import '../../domain/usecases/outcome_category/filter_category_usecase.dart';
+import '../../domain/usecases/outcome_category/get_cached_category_usecase.dart';
+import '../../domain/usecases/outcome_category/get_remote_category_usecase.dart';
+import '../../domain/usecases/outcome_category/update_category_usecase.dart';
 import '../../domain/usecases/delivery_info/add_dilivey_info_usecase.dart';
 import '../../domain/usecases/delivery_info/get_cached_delivery_info_usecase.dart';
 import '../../domain/usecases/delivery_info/get_remote_delivery_info_usecase.dart';
@@ -103,7 +112,7 @@ Future<void> init() async {
   //Features - Category
   // Bloc
   sl.registerFactory(
-    () => CategoryBloc(sl(), sl(), sl(), sl(), sl(), sl()),
+    () => OutcomeCategoryBloc(sl(), sl(), sl(), sl(), sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetRemoteCategoryUseCase(sl()));
@@ -114,7 +123,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => FilterCategoryUseCase(sl()));
   // Repository
   sl.registerLazySingleton<CategoryRepository>(
-    () => CategoryRepositoryImpl(
+    () => OutcomeCategoryRepositoryImpl(
       remoteDataSource: sl(),
       localDataSource: sl(),
       networkInfo: sl(),
@@ -124,8 +133,32 @@ Future<void> init() async {
   sl.registerLazySingleton<CategoryRemoteDataSource>(
     () => CategoryRemoteDataSourceImpl(client: sl()),
   );
-  sl.registerLazySingleton<CategoryLocalDataSource>(
-    () => CategoryLocalDataSourceImpl(categoryBox: sl(), store: sl()),
+  sl.registerLazySingleton<OutcomeCategoryLocalDataSource>(
+    () => CategoryLocalDataSourceImpl(outcomeCategoryBox: sl(), outcomeSubCategoryBox: sl(), store: sl()),
+  );
+
+
+  //Features - Category
+  // Bloc
+  sl.registerFactory(
+        () => OutcomeSubCategoryBloc(sl(), sl(), sl(), sl(), sl()),
+  );
+  // Use cases
+  sl.registerLazySingleton(() => GetCachedOutcomeSubCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => AddOutcomeSubCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateOutcomeSubCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteOutcomeSubCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => FilterOutcomeSubCategoryUseCase(sl()));
+  // Repository
+  sl.registerLazySingleton<OutcomeSubCategoryRepository>(
+        () => OutcomeSubCategoryRepositoryImpl(
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  // Data sources
+  sl.registerLazySingleton<OutcomeSubCategoryLocalDataSource>(
+        () => OutcomeSubCategoryLocalDataSourceImpl(outcomeSubCategoryBox: sl(), store: sl()),
   );
 
   //Features - Cart

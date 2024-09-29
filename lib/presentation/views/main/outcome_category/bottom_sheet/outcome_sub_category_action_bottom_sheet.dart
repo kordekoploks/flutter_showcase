@@ -1,16 +1,16 @@
+import 'package:eshop/domain/entities/category/outcome_sub_category.dart';
 import 'package:flutter/material.dart';
 import 'package:eshop/presentation/widgets/menu_bottom_sheet_item_card.dart';
 import 'package:eshop/presentation/widgets/vw_bottom_sheet.dart';
 
-import '../../../../domain/entities/category/category.dart';
-import 'category_edit_bottom_sheet.dart';
+import '../../../../../domain/entities/category/outcome_category.dart';
 
-class CategoryActionBottomSheet extends StatefulWidget {
-  final Function(Category) onEdit;
-  final Function(Category) onDelete;
-  final Category category;
+class OutcomeSubCategoryActionBottomSheet extends StatefulWidget {
+  final Function(OutcomeSubCategory) onEdit;
+  final Function(OutcomeSubCategory) onDelete;
+  final OutcomeSubCategory category;
 
-  CategoryActionBottomSheet({
+  OutcomeSubCategoryActionBottomSheet({
     Key? key,
     required this.category,
     required this.onEdit,
@@ -18,12 +18,11 @@ class CategoryActionBottomSheet extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _CategoryActionBottomSheetState createState() =>
-      _CategoryActionBottomSheetState();
+  _OutcomeSubCategoryActionBottomSheetState createState() =>
+      _OutcomeSubCategoryActionBottomSheetState();
 }
 
-class _CategoryActionBottomSheetState extends State<CategoryActionBottomSheet> {
-
+class _OutcomeSubCategoryActionBottomSheetState extends State<OutcomeSubCategoryActionBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return VWBottomSheet(
@@ -34,21 +33,23 @@ class _CategoryActionBottomSheetState extends State<CategoryActionBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 16),
             MenuBottomSheetItemCard(
               title: "Edit",
-              icon: Icon(Icons.edit),
+              icon: Icon(Icons.edit, color: Colors.grey.withOpacity(0.5)),
               onClick: () {
-                Navigator.pop(context);  // Close the current bottom sheet
+                Navigator.pop(context); // Close the current bottom sheet
                 widget.onEdit(widget.category);
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             MenuBottomSheetItemCard(
               title: "Delete",
-              icon: Icon(Icons.delete),
+              icon: Icon(
+                Icons.delete,
+                color: Colors.grey.withOpacity(0.5),
+              ),
               onClick: () {
-                Navigator.pop(context);  // Close the current bottom sheet
+                Navigator.pop(context); // Close the current bottom sheet
                 widget.onDelete(widget.category);
               },
             ),
