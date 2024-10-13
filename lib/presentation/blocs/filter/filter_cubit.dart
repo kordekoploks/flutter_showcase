@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../../../domain/entities/category/category.dart';
+import '../../../domain/entities/category/outcome_category.dart';
 import '../../../domain/usecases/product/get_product_usecase.dart';
 
 class FilterCubit extends Cubit<FilterProductParams> {
@@ -10,10 +10,10 @@ class FilterCubit extends Cubit<FilterProductParams> {
 
   void update({
     String? keyword,
-    List<Category>? categories,
-    Category? category,
+    List<OutcomeCategory>? categories,
+    OutcomeCategory? category,
   }) {
-    List<Category> updatedCategories = [];
+    List<OutcomeCategory> updatedCategories = [];
     if (category != null) {
       updatedCategories.add(category);
     } else if (categories != null) {
@@ -28,9 +28,9 @@ class FilterCubit extends Cubit<FilterProductParams> {
   }
 
   void updateCategory({
-    required Category category,
+    required OutcomeCategory category,
   }) {
-    List<Category> updatedCategories = [];
+    List<OutcomeCategory> updatedCategories = [];
     updatedCategories.addAll(state.categories);
     if (updatedCategories.contains(category)) {
       updatedCategories.remove(category);

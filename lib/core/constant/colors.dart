@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
-Color kLightBackgroundColor = const Color(0xffffffff);
-Color kBackgroundColor = const Color(0xFFFFFFFF);
-Color kLightPrimaryColor = const Color(0xffff8900);
-Color kLightSecondaryColor = const Color(0xff040415);
-Color kLightParticlesColor = const Color(0x44948282);
-Color kLightTextColor = Colors.black54;
+Color vWLightBackgroundColor = const Color(0xffffffff);
+Color vwBackgroundColor = const Color(0xFFFFFFFF);
+Color vWPrimaryColor = const Color(0xffffba24);
+Color vWSecondaryColor = const Color(0xff040415);
+Color vWButtonPrimaryColor = const Color(0xffffba24);
+Color vWButtonSecondaryColor = Colors.white10;
+Color vWInputBackgroundColor = const Color(0xFFEAEAEA);
+Color vWInputLabelColor = const Color(0xFF848484);
+Color vWTextColor = const Color(0xff040415);
+Color vWTextDescColor = const Color(0xFF848484);
+Color vLightSecondaryColor = const Color.fromRGBO(235,239,254,1);
 
 Color kDarkBackgroundColor = const Color(0xFF1A2127);
 Color kDarkPrimaryColor = const Color(0xFF1A2127);

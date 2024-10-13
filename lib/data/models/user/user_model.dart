@@ -11,11 +11,13 @@ class UserModel extends User {
     required String id,
     required String firstName,
     required String lastName,
+    required String phoneNumber,
     required String email,
   }) : super(
     id: id,
     firstName: firstName,
     lastName: lastName,
+    phoneNumber: phoneNumber,
     email: email,
   );
 
@@ -23,12 +25,14 @@ class UserModel extends User {
     id: json["_id"],
     firstName: json["firstName"],
     lastName: json["lastName"],
+    phoneNumber: json["phoneNumber"],
     email: json["email"],
   );
 
   Map<String, dynamic> toJson() => {
     "_id": id,
     "firstName": firstName,
+    "phoneNumber": phoneNumber,
     "lastName": lastName,
     "email": email,
   };

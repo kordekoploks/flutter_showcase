@@ -7,7 +7,7 @@ import '../../../../core/router/app_router.dart';
 import '../../../../domain/entities/cart/cart_item.dart';
 import '../../../blocs/cart/cart_bloc.dart';
 import '../../../widgets/cart_item_card.dart';
-import '../../../widgets/input_form_button.dart';
+import '../../../widgets/input_button.dart';
 
 class CartView extends StatefulWidget {
   const CartView({Key? key}) : super(key: key);
@@ -145,7 +145,7 @@ class _CartViewState extends State<CartView> {
                       SizedBox(
                         height: 40,
                         width: 100,
-                        child: InputFormButton(
+                        child: InputButton(
                           color: Colors.black87,
                           cornerRadius: 36,
                           padding: EdgeInsets.zero,

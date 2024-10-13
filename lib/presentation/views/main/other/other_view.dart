@@ -8,7 +8,7 @@ import '../../../../core/constant/images.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../blocs/cart/cart_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
-import '../../../widgets/other_item_card.dart';
+import '../../../widgets/menu_item_card.dart';
 
 class OtherView extends StatelessWidget {
   const OtherView({Key? key}) : super(key: key);
@@ -95,7 +95,7 @@ class OtherView extends StatelessWidget {
           const SizedBox(height: 25),
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
-              return OtherItemCard(
+              return MenuItemCard(
                 onClick: () {
                   if (state is UserLogged) {
                     Navigator.of(context).pushNamed(
@@ -115,7 +115,7 @@ class OtherView extends StatelessWidget {
               if (state is UserLogged) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 6),
-                  child: OtherItemCard(
+                  child: MenuItemCard(
                     onClick: () {
                       Navigator.of(context).pushNamed(AppRouter.orders);
                     },
@@ -132,7 +132,7 @@ class OtherView extends StatelessWidget {
               if (state is UserLogged) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 6),
-                  child: OtherItemCard(
+                  child: MenuItemCard(
                     onClick: () {
                       Navigator.of(context)
                           .pushNamed(AppRouter.deliveryDetails);
@@ -146,21 +146,28 @@ class OtherView extends StatelessWidget {
             },
           ),
           const SizedBox(height: 6),
-          OtherItemCard(
+          MenuItemCard(
             onClick: () {
               Navigator.of(context).pushNamed(AppRouter.settings);
             },
             title: "Settings",
           ),
           const SizedBox(height: 6),
-          OtherItemCard(
+          MenuItemCard(
+            onClick: () {
+              Navigator.of(context).pushNamed(AppRouter.category);
+            },
+            title: "Category",
+          ),
+          const SizedBox(height: 6),
+          MenuItemCard(
             onClick: () {
               Navigator.of(context).pushNamed(AppRouter.notifications);
             },
             title: "Notifications",
           ),
           const SizedBox(height: 6),
-          OtherItemCard(
+          MenuItemCard(
             onClick: () {
               Navigator.of(context).pushNamed(AppRouter.about);
             },
@@ -170,7 +177,7 @@ class OtherView extends StatelessWidget {
           BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
               if (state is UserLogged) {
-                return OtherItemCard(
+                return MenuItemCard(
                   onClick: () {
                     context.read<UserBloc>().add(SignOutUser());
                     context.read<CartBloc>().add(const ClearCart());

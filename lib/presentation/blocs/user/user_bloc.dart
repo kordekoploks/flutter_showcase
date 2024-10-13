@@ -8,11 +8,14 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/error/failures.dart';
 import '../../../core/usecases/usecase.dart';
+import '../../../data/models/setting/setting_model.dart';
+import '../../../domain/entities/setting/setting.dart';
 import '../../../domain/entities/user/user.dart';
 import '../../../domain/usecases/user/get_cached_user_usecase.dart';
 import '../../../domain/usecases/user/sign_in_usecase.dart';
 
 part 'user_event.dart';
+
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
@@ -20,12 +23,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final SignInUseCase _signInUseCase;
   final SignUpUseCase _signUpUseCase;
   final SignOutUseCase _signOutUseCase;
+
   UserBloc(
-    this._signInUseCase,
     this._getCachedUserUseCase,
-    this._signOutUseCase,
+    this._signInUseCase,
     this._signUpUseCase,
-  ) : super(UserInitial()) {
+    this._signOutUseCase,
+   ) : super(UserInitial()) {
     on<SignInUser>(_onSignIn);
     on<SignUpUser>(_onSignUp);
     on<CheckUser>(_onCheckUser);
@@ -58,6 +62,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 
+
   FutureOr<void> _onSignUp(SignUpUser event, Emitter<UserState> emit) async {
     try {
       emit(UserLoading());
@@ -80,4 +85,5 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UserLoggedFail(ExceptionFailure()));
     }
   }
+
 }

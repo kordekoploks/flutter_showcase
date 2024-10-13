@@ -2,7 +2,7 @@
 const String appTitle = 'EShop';
 
 // Networking and APIs
-const String baseUrl = 'https://rich-jade-mackerel-kit.cyclic.app';
+const String baseUrl = 'http://demo9404297.mockable.io';
 const String defaultApiKey = '';
 const String defaultSources = '';
 

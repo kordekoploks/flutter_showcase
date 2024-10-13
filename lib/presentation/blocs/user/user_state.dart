@@ -20,6 +20,7 @@ class UserLogged extends UserState {
   List<Object> get props => [user];
 }
 
+
 class UserLoggedFail extends UserState {
   final Failure failure;
   UserLoggedFail(this.failure);
