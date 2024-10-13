@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/usecases/usecase.dart';
-import '../../entities/category/category.dart';
+import '../../entities/category/outcome_category.dart';
 import '../../entities/product/product_response.dart';
 import '../../repositories/product_repository.dart';
 
@@ -20,7 +20,7 @@ class GetProductUseCase
 
 class FilterProductParams {
   final String? keyword;
-  final List<Category> categories;
+  final List<OutcomeCategory> categories;
   final double minPrice;
   final double maxPrice;
   final int? limit;
@@ -38,7 +38,7 @@ class FilterProductParams {
   FilterProductParams copyWith({
     int? skip,
     String? keyword,
-    List<Category>? categories,
+    List<OutcomeCategory>? categories,
     double? minPrice,
     double? maxPrice,
     int? limit,

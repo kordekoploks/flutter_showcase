@@ -2,9 +2,9 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:eshop/core/error/failures.dart';
 import 'package:eshop/core/usecases/usecase.dart';
-import 'package:eshop/domain/usecases/category/filter_category_usecase.dart';
-import 'package:eshop/domain/usecases/category/get_cached_category_usecase.dart';
-import 'package:eshop/domain/usecases/category/get_remote_category_usecase.dart';
+import 'package:eshop/domain/usecases/outcome_category/filter_category_usecase.dart';
+import 'package:eshop/domain/usecases/outcome_category/get_cached_category_usecase.dart';
+import 'package:eshop/domain/usecases/outcome_category/get_remote_category_usecase.dart';
 import 'package:eshop/presentation/blocs/category/category_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -20,7 +20,7 @@ class MockGetCachedCategoryUseCase extends Mock
 class MockFilterCategoryUseCase extends Mock implements FilterCategoryUseCase {}
 
 void main() {
-  late CategoryBloc bloc;
+  late OutcomeCategoryBloc bloc;
   late MockGetRemoteCategoryUseCase mockGetRemoteCategoryUseCase;
   late MockGetCachedCategoryUseCase mockGetCachedCategoryUseCase;
   late MockFilterCategoryUseCase mockFilterCategoryUseCase;
@@ -30,7 +30,7 @@ void main() {
     mockGetCachedCategoryUseCase = MockGetCachedCategoryUseCase();
     mockFilterCategoryUseCase = MockFilterCategoryUseCase();
 
-    bloc = CategoryBloc(
+    bloc = OutcomeCategoryBloc(
       mockGetRemoteCategoryUseCase,
       mockGetCachedCategoryUseCase,
       mockFilterCategoryUseCase,
@@ -39,10 +39,10 @@ void main() {
 
   test('initialState should be Empty', () {
     /// Assert
-    expect(bloc.state, equals(const CategoryLoading(categories: [])));
+    expect(bloc.state, equals(const OutcomeCategoryLoading(categories: [])));
   });
 
-  blocTest<CategoryBloc, CategoryState>(
+  blocTest<OutcomeCategoryBloc, OutcomeCategoryState>(
     'emits [CategoryLoading, CategoryCacheLoaded, CategoryLoaded] when GetCategories is added',
     build: () {
       when(() => mockGetCachedCategoryUseCase(NoParams()))
@@ -53,13 +53,13 @@ void main() {
     },
     act: (bloc) => bloc.add(const GetCategories()),
     expect: () => [
-      const CategoryLoading(categories: []),
+      const OutcomeCategoryLoading(categories: []),
       const CategoryCacheLoaded(categories: []),
-      const CategoryLoaded(categories: []),
+      const OutcomeCategoryLoaded(categories: []),
     ],
   );
 
-  blocTest<CategoryBloc, CategoryState>(
+  blocTest<OutcomeCategoryBloc, OutcomeCategoryState>(
     'emits [CategoryLoading, CategoryCacheLoaded] when FilterCategories is added',
     build: () {
       when(() => mockFilterCategoryUseCase('keyword'))
@@ -68,12 +68,12 @@ void main() {
     },
     act: (bloc) => bloc.add(const FilterCategories('keyword')),
     expect: () => [
-      const CategoryLoading(categories: []),
+      const OutcomeCategoryLoading(categories: []),
       const CategoryCacheLoaded(categories: []),
     ],
   );
 
-  blocTest<CategoryBloc, CategoryState>(
+  blocTest<OutcomeCategoryBloc, OutcomeCategoryState>(
     'emits [CategoryLoading, CategoryError] when GetCategories encounters an error',
     build: () {
       when(() => mockGetCachedCategoryUseCase(NoParams()))
@@ -84,13 +84,13 @@ void main() {
     },
     act: (bloc) => bloc.add(const GetCategories()),
     expect: () => [
-      const CategoryLoading(categories: []),
+      const OutcomeCategoryLoading(categories: []),
       const CategoryCacheLoaded(categories: [tCategoryModel]),
-      CategoryError(categories: const [tCategoryModel], failure: ExceptionFailure()),
+      OutcomeCateogryError(categories: const [tCategoryModel], failure: ExceptionFailure()),
     ],
   );
 
-  blocTest<CategoryBloc, CategoryState>(
+  blocTest<OutcomeCategoryBloc, OutcomeCategoryState>(
     'emits [CategoryLoading, CategoryError] when FilterCategories encounters an error',
     build: () {
       when(() => mockFilterCategoryUseCase('keyword'))
@@ -99,15 +99,15 @@ void main() {
     },
     act: (bloc) => bloc.add(const FilterCategories('keyword')),
     expect: () => [
-      const CategoryLoading(categories: []),
-      CategoryError(
+      const OutcomeCategoryLoading(categories: []),
+      OutcomeCateogryError(
         categories: const [],
         failure: ExceptionFailure(),
       ),
     ],
   );
 
-  blocTest<CategoryBloc, CategoryState>(
+  blocTest<OutcomeCategoryBloc, OutcomeCategoryState>(
     'emits [CategoryLoading, CategoryCacheLoaded] when FilterCategories returns an empty list',
     build: () {
       when(() => mockFilterCategoryUseCase('keyword'))
@@ -116,7 +116,7 @@ void main() {
     },
     act: (bloc) => bloc.add(const FilterCategories('keyword')),
     expect: () => [
-      const CategoryLoading(categories: []),
+      const OutcomeCategoryLoading(categories: []),
       const CategoryCacheLoaded(categories: []),
     ],
   );

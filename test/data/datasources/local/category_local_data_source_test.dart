@@ -1,6 +1,6 @@
 import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/data/data_sources/local/category_local_data_source.dart';
-import 'package:eshop/data/models/category/category_model.dart';
+import 'package:eshop/data/data_sources/local/outcome_category_local_data_source.dart';
+import 'package:eshop/data/models/category/outcome_category_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +17,7 @@ void main() {
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
     dataSource =
-        CategoryLocalDataSourceImpl(sharedPreferences: mockSharedPreferences);
+        CategoryLocalDataSourceImpl();
   });
 
   group('getCategories', () {
@@ -50,7 +50,7 @@ void main() {
     test('should call SharedPreferences.setString with the correct arguments',
         () async {
       /// Arrange
-      final List<CategoryModel> categories = [tCategoryModel];
+      final List<OutcomeCategoryModel> categories = [tCategoryModel];
       when(() => mockSharedPreferences.setString(
               cachedCategories, categoryModelListToJson(categories)))
           .thenAnswer((invocation) => Future<bool>.value(true));

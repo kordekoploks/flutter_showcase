@@ -1,8 +1,8 @@
 import 'package:eshop/core/error/failures.dart';
 import 'package:eshop/core/network/network_info.dart';
-import 'package:eshop/data/data_sources/local/category_local_data_source.dart';
+import 'package:eshop/data/data_sources/local/outcome_category_local_data_source.dart';
 import 'package:eshop/data/data_sources/remote/category_remote_data_source.dart';
-import 'package:eshop/data/repositories/category_repository_impl.dart';
+import 'package:eshop/data/repositories/outcome_category_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -10,12 +10,12 @@ import '../../fixtures/constant_objects.dart';
 
 class MockRemoteDataSource extends Mock implements CategoryRemoteDataSource {}
 
-class MockLocalDataSource extends Mock implements CategoryLocalDataSource {}
+class MockLocalDataSource extends Mock implements OutcomeCategoryLocalDataSource {}
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
-  late CategoryRepositoryImpl repository;
+  late OutcomeCategoryRepositoryImpl repository;
   late MockRemoteDataSource mockRemoteDataSource;
   late MockLocalDataSource mockLocalDataSource;
   late MockNetworkInfo mockNetworkInfo;
@@ -24,7 +24,7 @@ void main() {
     mockRemoteDataSource = MockRemoteDataSource();
     mockLocalDataSource = MockLocalDataSource();
     mockNetworkInfo = MockNetworkInfo();
-    repository = CategoryRepositoryImpl(
+    repository = OutcomeCategoryRepositoryImpl(
       remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
       networkInfo: mockNetworkInfo,

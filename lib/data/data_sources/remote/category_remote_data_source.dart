@@ -2,10 +2,10 @@ import 'package:eshop/core/error/failures.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/constant/strings.dart';
-import '../../models/category/category_model.dart';
+import '../../models/category/outcome_category_model.dart';
 
 abstract class CategoryRemoteDataSource {
-  Future<List<CategoryModel>> getCategories();
+  Future<List<OutcomeCategoryModel>> getCategories();
 }
 
 class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
@@ -13,10 +13,10 @@ class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
   CategoryRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<List<CategoryModel>> getCategories() =>
+  Future<List<OutcomeCategoryModel>> getCategories() =>
       _getCategoryFromUrl('$baseUrl/categories');
 
-  Future<List<CategoryModel>> _getCategoryFromUrl(String url) async {
+  Future<List<OutcomeCategoryModel>> _getCategoryFromUrl(String url) async {
     final response = await client.get(
       Uri.parse(url),
       headers: {
