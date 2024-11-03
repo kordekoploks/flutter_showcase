@@ -5,8 +5,11 @@ import '../../models/cart/cart_item_model.dart';
 
 abstract class CartLocalDataSource {
   Future<List<CartItemModel>> getCart();
+
   Future<void> saveCart(List<CartItemModel> cart);
+
   Future<void> saveCartItem(CartItemModel cartItem);
+
   Future<bool> clearCart();
 }
 
@@ -14,6 +17,7 @@ const cachedCart = 'CACHED_CART';
 
 class CartLocalDataSourceImpl implements CartLocalDataSource {
   final SharedPreferences sharedPreferences;
+
   CartLocalDataSourceImpl({required this.sharedPreferences});
 
   @override
@@ -53,7 +57,7 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   }
 
   @override
-  Future<bool> clearCart()async {
+  Future<bool> clearCart() async {
     return sharedPreferences.remove(cachedCart);
   }
 }

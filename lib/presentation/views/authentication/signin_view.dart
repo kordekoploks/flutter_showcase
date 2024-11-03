@@ -88,7 +88,7 @@ class _SignInViewState extends State<SignInView> {
                               child: Text(
                                 "Forgot your credentials?",
                                 style: TextStyle(
-                                    fontSize: size.width * 0.04,
+                                    fontSize: size.width * 0.05,
                                     color: Colors.black54),
                                 textAlign: TextAlign.end,
                               ),
@@ -99,8 +99,9 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     SizedBox(
                       width: size.width,
-                      height: size.height * 0.87,
-                      child: Stack(children: [
+                      height: size.height * 0.9,
+                      child: Stack(children:
+                      [
                         Column(
                           children: [
                             const Spacer(flex: 8),
@@ -123,12 +124,12 @@ class _SignInViewState extends State<SignInView> {
                                       SizedBox(height: size.height * 0.03),
                                       Text(
                                         "Let's Sign You In",
-                                        style: Theme.of(context).textTheme.headline6,
+                                        style: Theme.of(context).textTheme.headlineSmall,
                                         textAlign: TextAlign.center,
                                       ),
                                       Text(
                                         "Welcome back, you've been missed!",
-                                        style: Theme.of(context).textTheme.subtitle1,
+                                        style: Theme.of(context).textTheme.headlineSmall,
                                         textAlign: TextAlign.center,
                                       ),
                                       Spacer(),
