@@ -49,6 +49,8 @@ class _CategoryViewState extends State<CategoryView> {
 
   void _fetchData() {
     context.read<OutcomeCategoryBloc>().add(const GetCategories());
+    //todo  untuk mennampilkan income data
+
   }
 
   @override
@@ -59,24 +61,32 @@ class _CategoryViewState extends State<CategoryView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<OutcomeCategoryBloc, OutcomeCategoryState>(
+      // todo untuk melisten income
         listener: (context, state) {
           if (state is OutcomeCategoryLoaded) {
             _setData(state);
+            //todo untuk set data income,
           } else if (state is OutcomeCategoryAdded) {
             _addSubCategory(state);
+
           } else if (state is OutcomeCategoryDeleted) {
             _removeSubCategory(state);
+
           } else if (state is OutcomeCategoryUpdated) {
-            _updateSubCategory(state);
+            _updateCategory(state);
+            //todo untuk update data category outcome,
+          } else if (state is OutcomeCategoryLoading) {
+            // _updateSubCategory(state);
           } else if (state is OutcomeCategoryEmpty)
             _emptyData(state);
+          //todo untuk menampilkan bahwa data kosong,
         },
         child: Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => _showAddCategoryBottomSheet(context),
             label: Text(
-              'Add',
+              'AdD',
               style: Theme
                   .of(context)
                   .textTheme
@@ -102,22 +112,35 @@ class _CategoryViewState extends State<CategoryView> {
   }
 
   Widget _buildEmptyState() {
-    return const AlertCard(
-      image: kEmpty,
-      message: "Categories not found!",
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(kEmpty),
+          const SizedBox(height: 16),
+          Text("Categories is not found!", textAlign: TextAlign.center),
+          IconButton(
+            onPressed: () =>
+                context.read<OutcomeCategoryBloc>().add(const GetCategories()),
+            //todo untuk membaca bahwa kategori lengit terus munculkan tobol repres yg di drag
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
     );
+
   }
 
   void _setData(OutcomeCategoryLoaded state) {
     setState(() {
-      _data.clear();
-      _data.addAll(state.data);
+      _data.clear();// untuk menghapus data di view
+      _data.addAll(state.data); //  untuk menambahkan data baru dari bloc
     });
   }
 
   void _emptyData(OutcomeCategoryEmpty state) {
     setState(() {
-      _data.clear();
+      _data.clear();//todo untuk mengosngkan data dari view
     });
   }
 
@@ -153,7 +176,7 @@ class _CategoryViewState extends State<CategoryView> {
     }
   }
 
-  void _updateSubCategory(OutcomeCategoryUpdated state) {
+  void _updateCategory(OutcomeCategoryUpdated state) {
     final index = _data.indexWhere(
           (subCategory) => subCategory.id == state.dataUpdated.id,
     );
@@ -172,12 +195,14 @@ class _CategoryViewState extends State<CategoryView> {
           onSave: (name) {
             final currentState = context
                 .read<OutcomeCategoryBloc>()
+            //todo untuk membaca dari bloc untuk menambahkan data pada saat menambahkan kategori
                 .state;
             int position = currentState is OutcomeCategoryLoaded
+            //todo untuk emit dari bloc sebelum edit selesai
                 ? currentState.data.length + 1
                 : 0;
 
-            final newCategory = OutcomeCategoryModel(
+            final newCategory = OutcomeCategoryModel( //todo untuk menambahkan deskripsi dan gambar untuk field kategori view
               id: UuidHelper.generateNumericUUID(),
               name: name,
               desc: '$name Description here',
@@ -186,13 +211,13 @@ class _CategoryViewState extends State<CategoryView> {
             );
 
             context.read<OutcomeCategoryBloc>().add(AddCategory(newCategory));
-          },
+          },//todo untuk membaca categori yang telah ditambahin
         );
       },
     );
   }
 
-  Widget _buildErrorState(BuildContext context, OutcomeCateogryError state) {
+  Widget _buildErrorState(BuildContext context, OutcomeCateogryError state) { //todo untuk menampilka apa wae saat error terjadi
     final imagePath = state.failure is NetworkFailure
         ? 'assets/status_image/no-connection.png'
         : 'assets/status_image/internal-server-error.png';
@@ -209,7 +234,7 @@ class _CategoryViewState extends State<CategoryView> {
           Text(message, textAlign: TextAlign.center),
           IconButton(
             onPressed: () =>
-                context.read<OutcomeCategoryBloc>().add(const GetCategories()),
+                context.read<OutcomeCategoryBloc>().add(const GetCategories()), //todo untuk membaca category yang memunculkan icon repres
             icon: const Icon(Icons.refresh),
           ),
         ],
@@ -235,11 +260,11 @@ class _CategoryViewState extends State<CategoryView> {
       controller: _filterController,
       autofocus: false,
       onSubmitted: (val) {
-        context.read<OutcomeCategoryBloc>().add(FilterCategories(val));
+        context.read<OutcomeCategoryBloc>().add(FilterCategories(val));//todo untuk membaca filter kategori di search saat enter
       },
       onChanged: (val) =>
           setState(() {
-            context.read<OutcomeCategoryBloc>().add(FilterCategories(val));
+            context.read<OutcomeCategoryBloc>().add(FilterCategories(val));//todo untuk membaca saat memasukan huruf di search
           }),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 20, bottom: 22, top: 22),
@@ -255,7 +280,7 @@ class _CategoryViewState extends State<CategoryView> {
               setState(() {
                 _filterController.clear();
                 context
-                    .read<OutcomeCategoryBloc>()
+                    .read<OutcomeCategoryBloc>() //todo untuk membaca kategori dari bloc untuk filter categori
                     .add(const FilterCategories(''));
               });
             },
@@ -289,6 +314,9 @@ class _CategoryViewState extends State<CategoryView> {
               .read<OutcomeCategoryBloc>()
               .add(const GetCategories());
         },
+        //todo add read for incme caegory bloc
+        //todo make income category file for class
+
         child: FutureBuilder(
           future: Future.delayed(Duration.zero),
           builder: (context, snapshot) {
@@ -315,18 +343,17 @@ class _CategoryViewState extends State<CategoryView> {
     }
   }
 
-  Widget _buildCategoryItem(BuildContext context, OutcomeCategory categoryModel,
+  Widget _buildCategoryItem(BuildContext context, OutcomeCategory categoryModel, //todo untuk menampilkan data yang telah diisi
       Animation<double> animation, int index) {
     return SizeTransition(
       sizeFactor: animation,
-      child: OutcomeCategoryCard(
+      child: OutcomeCategoryCard( //todo untuk mendapatkan data dari outcome categori card
         category: categoryModel,
         onClickMoreAction: (category) =>
             _showCategoryActionBottomSheet(context, categoryModel, index),
         onUpdate: (editedCategory) {
           context
-              .read<OutcomeCategoryBloc>()
-              .add(UpdateCategory(editedCategory));
+              .read<OutcomeCategoryBloc>().add(UpdateCategory(editedCategory)); // todo untuk membaca update kategori yang telah di tambahkan
         },
         onClickToggle: (item) {
           _showSubCategoriesBottomSheet(context, categoryModel, index);
@@ -343,11 +370,11 @@ class _CategoryViewState extends State<CategoryView> {
   }
 
   void _showCategoryActionBottomSheet(BuildContext context,
-      OutcomeCategory categoryModel, int index) {
+      OutcomeCategory categoryModel, int index) { //todo untuk menapmpilkan data untuk bottom sheet
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return OutcomeCategoryActionBottomSheet(
+        return OutcomeCategoryActionBottomSheet( //todo untuk menampilkan data kembali untuk bottomshet
           category: categoryModel,
           onEdit: (category) =>
               _showEditCategoryBottomSheet(context, categoryModel, index),
@@ -362,7 +389,7 @@ class _CategoryViewState extends State<CategoryView> {
   }
 
   void _showEditCategoryBottomSheet(BuildContext context,
-      OutcomeCategory categoryModel, int index) {
+      OutcomeCategory categoryModel, int index) { //todo untuk mendapatkan data untuk bottomshit
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -370,7 +397,7 @@ class _CategoryViewState extends State<CategoryView> {
           category: categoryModel,
           onSave: (editedCategory) {
             context
-                .read<OutcomeCategoryBloc>()
+                .read<OutcomeCategoryBloc>() //todo untuk membaca kategori yang di edit
                 .add(UpdateCategory(editedCategory));
           },
         );
@@ -389,7 +416,7 @@ class _CategoryViewState extends State<CategoryView> {
   }
 
   void _showDeleteConfirmationBottomSheet(BuildContext context,
-      OutcomeCategory categoryModel, int index) {
+      OutcomeCategory categoryModel, int index) { //todo untuk menampilkan data peringatan saaat mau delete
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -422,7 +449,7 @@ class _CategoryViewState extends State<CategoryView> {
           negativeLabel: "Tidak",
           onPositiveClick: () {
             context
-                .read<OutcomeCategoryBloc>()
+                .read<OutcomeCategoryBloc>()//todo untuk membaca categori dari bloc
                 .add(DeleteCategory(categoryModel));
           },
         );
