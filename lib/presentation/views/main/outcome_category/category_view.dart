@@ -1,6 +1,7 @@
 import 'package:eshop/domain/entities/category/outcome_sub_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:eshop/data/models/category/outcome_category_model.dart';
@@ -68,6 +69,8 @@ class _CategoryViewState extends State<CategoryView> {
             _removeSubCategory(state);
           } else if (state is OutcomeCategoryUpdated) {
             _updateSubCategory(state);
+          } else if (state is OutcomeCategoryLoading) {
+            showToast('LOADING...',duration: Duration(seconds: 2));
           } else if (state is OutcomeCategoryEmpty)
             _emptyData(state);
         },
@@ -230,6 +233,8 @@ class _CategoryViewState extends State<CategoryView> {
     );
   }
 
+
+
   Widget _buildFilterTextField(BuildContext context) {
     return TextField(
       controller: _filterController,
@@ -284,36 +289,40 @@ class _CategoryViewState extends State<CategoryView> {
       return _buildEmptyState();
     } else {
       return RefreshIndicator(
-        onRefresh: () async{
-          context
-              .read<OutcomeCategoryBloc>()
-              .add(const GetCategories());
+        onRefresh: () async {
+          context.read<OutcomeCategoryBloc>().add(const GetCategories());
         },
         child: FutureBuilder(
           future: Future.delayed(Duration.zero),
           builder: (context, snapshot) {
+            // Safeguard: Ensure _data is not modified during the build phase
+            if (_data.isEmpty) {
+              return _buildEmptyState();
+            }
+
             return AnimatedList(
               key: _listKey,
-                initialItemCount: _data.isNotEmpty ? _data.length : 0,
+              initialItemCount: _data.length, // Ensure this matches _data's length
               padding: EdgeInsets.only(
                 top: 28,
-                bottom: 80 + MediaQuery
-                    .of(context)
-                    .padding
-                    .bottom,
+                bottom: 80 + MediaQuery.of(context).padding.bottom,
               ),
               itemBuilder: (context, index, animation) {
+                if (index >= _data.length) {
+                  // Prevent accessing out-of-bound indexes
+                  return const SizedBox.shrink();
+                }
+
                 final categoryModel = _data[index];
-                return _buildCategoryItem(
-                    context, categoryModel, animation, index);
+                return _buildCategoryItem(context, categoryModel, animation, index);
               },
             );
           },
-        )
-        ,
+        ),
       );
     }
   }
+
 
   Widget _buildCategoryItem(BuildContext context, OutcomeCategory categoryModel,
       Animation<double> animation, int index) {
