@@ -50,7 +50,7 @@ class _MenuItemSlideCardState extends State<MenuItemSlideCard> {
               Expanded(
                 child: Text(
                   widget.title,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
               GestureDetector(

@@ -18,13 +18,16 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return product == null
-        ? Shimmer.fromColors(
-            baseColor: Colors.grey.shade100,
-            highlightColor: Colors.white,
-            child: buildBody(context),
-          )
-        : buildBody(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: product == null
+          ? Shimmer.fromColors(
+              baseColor: Colors.grey.shade100,
+              highlightColor: Colors.white,
+              child: buildBody(context),
+            )
+          : buildBody(context),
+    );
   }
 
   Widget buildBody(BuildContext context) {
@@ -39,58 +42,54 @@ class ProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-              child: Ink(
+              child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Theme.of(context).shadowColor.withOpacity(0.1),
-                  spreadRadius: 1,
-                  blurRadius: 8,
-                  offset: const Offset(0, 1),
+                  color: Colors.grey.shade100,
+                  blurRadius: 4,
+                  // offset: Offset(4, 8), // Shadow position
                 ),
               ],
-              border: Border.all(
-                color: Theme.of(context).shadowColor.withOpacity(0.15),
-              ),
             ),
-            // Card(
-            //   color: Colors.white,
-            //   elevation: 0,
-            //   margin: const EdgeInsets.all(4),
-            //   clipBehavior: Clip.antiAlias,
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(12),
-            //   ),
-            child: product == null
-                ? Material(
-                    child: GridTile(
-                      footer: Container(),
+            child: Card(
+              color: Colors.white,
+              elevation: 2,
+              margin: const EdgeInsets.all(4),
+              clipBehavior: Clip.antiAlias,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: product == null
+                  ? Material(
+                      child: GridTile(
+                        footer: Container(),
+                        child: Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Container(
+                            color: Colors.grey.shade300,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Hero(
+                      tag: product!.id,
                       child: Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Container(
-                          color: Colors.grey.shade300,
+                        padding: const EdgeInsets.all(32.0),
+                        child: CachedNetworkImage(
+                          imageUrl: product!.images.first,
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: Colors.grey.shade100,
+                            highlightColor: Colors.white,
+                            child: Container(),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              const Center(child: Icon(Icons.error)),
                         ),
                       ),
                     ),
-                  )
-                : Hero(
-                    tag: product!.id,
-                    child: Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: CachedNetworkImage(
-                        imageUrl: product!.images.first,
-                        placeholder: (context, url) => Shimmer.fromColors(
-                          baseColor: Colors.grey.shade100,
-                          highlightColor: Colors.white,
-                          child: Container(),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Center(child: Icon(Icons.error)),
-                      ),
-                    ),
-                  ),
+            ),
           )),
           Padding(
               padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),

@@ -124,12 +124,12 @@ class _SignInViewState extends State<SignInView> {
                                       SizedBox(height: size.height * 0.03),
                                       Text(
                                         "Let's Sign You In",
-                                        style: Theme.of(context).textTheme.headlineSmall,
+                                        style: Theme.of(context).textTheme.headlineLarge,
                                         textAlign: TextAlign.center,
                                       ),
                                       Text(
                                         "Welcome back, you've been missed!",
-                                        style: Theme.of(context).textTheme.headlineSmall,
+                                        style: Theme.of(context).textTheme.headlineMedium,
                                         textAlign: TextAlign.center,
                                       ),
                                       Spacer(),
