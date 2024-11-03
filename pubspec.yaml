@@ -55,13 +55,17 @@ dependencies:
   flutter_snake_navigationbar: ^0.6.1
   shimmer:
   cached_network_image: 3.3.0
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   smooth_page_indicator: ^1.1.0
   flutter_easyloading: ^3.0.5
   objectbox: ^4.0.1
   objectbox_flutter_libs: any
   uuid: 4.4.2
-
+  flutter_colorpicker: ^1.0.3
+  path_provider: ^2.0.11
+  html_editor_enhanced: 2.6.0
+  table_calendar: ^3.1.2
+  syncfusion_flutter_calendar: ^27.1.56
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,7 +79,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
   build_runner: ^2.4.9
   objectbox_generator: 4.0.1
 

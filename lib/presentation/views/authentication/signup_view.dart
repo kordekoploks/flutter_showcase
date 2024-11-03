@@ -145,14 +145,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           "Getting Started",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline6,
+                                              .headlineMedium,
                                           textAlign: TextAlign.center,
                                         ),
                                         Text(
                                           "Create an account to continue!",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .subtitle1,
+                                              .headlineMedium,
                                           textAlign: TextAlign.center,
                                         ),
                                         SizedBox(height: size.height * 0.07),
