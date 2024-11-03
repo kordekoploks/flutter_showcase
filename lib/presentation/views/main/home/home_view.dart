@@ -30,7 +30,9 @@ class _HomeViewState extends State<HomeView> {
     double scrollPercentage = 0.7;
     if (currentScroll > (maxScroll * scrollPercentage)) {
       if (context.read<ProductBloc>().state is ProductLoaded) {
-        context.read<ProductBloc>().add(const GetMoreProducts());
+        context
+            .read<ProductBloc>()
+            .add(const GetMoreProducts());
       }
     }
   }

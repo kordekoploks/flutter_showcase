@@ -145,7 +145,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           "Getting Started",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .displayLarge2,
+                                              .headlineMedium,
                                           textAlign: TextAlign.center,
                                         ),
                                         Text(

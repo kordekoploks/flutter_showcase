@@ -36,10 +36,7 @@ class AppRouter {
   static const String notifications = '/notifications';
   static const String about = '/about';
   static const String filter = '/filter';
-  //about
-  static const String dateofmanufacture = '/date-of-manufacture';
-  static const String version= '/version';
-  static const String language = '/language';
+
 
   static Route<dynamic> onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
