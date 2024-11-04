@@ -15,7 +15,7 @@ class VwAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       forceMaterialTransparency: true,
       leading: IconButton(
-        icon: Icon(Icons.keyboard_arrow_left),
+        icon: Icon(Icons.keyboard_arrow_left,size: 40,),
         onPressed: () {
           if (onBackPressed != null) {
             onBackPressed!();
@@ -24,8 +24,8 @@ class VwAppBar extends StatelessWidget implements PreferredSizeWidget {
           }
         },
       ),
-      centerTitle: true,
-      title: Text(title),
+      centerTitle: false,
+      title: Text(title,style: TextStyle(fontWeight: FontWeight.bold),),
     );
   }
 

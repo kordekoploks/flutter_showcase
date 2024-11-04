@@ -42,7 +42,7 @@ Future<void> main() async {
   sl.registerLazySingleton(() => objectBoxStore);
   sl.registerLazySingleton(() => objectBoxStore.box<OutcomeCategoryEntity>());
   sl.registerLazySingleton(() => objectBoxStore.box<OutcomeSubCategoryEntity>());
-
+// todo penambahan income category entity
   runApp(const MyApp());
   configLoading();
 }
@@ -68,10 +68,14 @@ class MyApp extends StatelessWidget {
           create: (context) =>
           di.sl<OutcomeCategoryBloc>()..add(const GetCategories()),
         ),
+
+        //todo tambah income categori bloc provider
         BlocProvider(
           create: (context) =>
           di.sl<OutcomeSubCategoryBloc>(),
         ),
+
+        //todo tambah income sub categori bloc
         BlocProvider(
           create: (context) => di.sl<CartBloc>()..add(const GetCart()),
         ),

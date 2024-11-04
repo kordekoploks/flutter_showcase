@@ -300,7 +300,8 @@ class _HomeViewState extends State<HomeView> {
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 0.55,
-                        crossAxisSpacing: 6,
+                        crossAxisSpacing: 12,
+                        mainAxisSpacing: 20,
                       ),
                       physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
@@ -309,12 +310,13 @@ class _HomeViewState extends State<HomeView> {
                           return ProductCard(
                             product: state.products[index],
                           );
+                        } else {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey.shade100,
+                            highlightColor: Colors.white,
+                            child: const ProductCard(),
+                          );
                         }
-                        return Shimmer.fromColors(
-                          baseColor: Colors.grey.shade100,
-                          highlightColor: Colors.white,
-                          child: const ProductCard(),
-                        );
                       },
                     ),
                   );

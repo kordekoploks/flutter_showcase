@@ -37,6 +37,7 @@ class AppRouter {
   static const String about = '/about';
   static const String filter = '/filter';
 
+
   static Route<dynamic> onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case home:
