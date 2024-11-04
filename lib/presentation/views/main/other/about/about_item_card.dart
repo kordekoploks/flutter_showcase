@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/constant/colors.dart';
+
 class AboutItemCard extends StatelessWidget {
   final String title;
   final Function()? onClick;
@@ -8,8 +10,7 @@ class AboutItemCard extends StatelessWidget {
     Key? key,
     required this.title,
     this.onClick,
-    required this.data
-  }) : super(key: key);
+    required this.data}) : super(key: key);
 
 
   @override
@@ -33,10 +34,7 @@ class AboutItemCard extends StatelessWidget {
 
                 Text(
                   data,
-                  style: Theme
-                      .of(context)
-                      .primaryTextTheme
-                      .bodyLarge
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: vWPrimaryColor)
                 ),
                  // const  Icon(Icons.keyboard_arrow_right,color: Colors.grey,),
               ],
