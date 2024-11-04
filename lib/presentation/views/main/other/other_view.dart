@@ -23,8 +23,7 @@ class OtherView extends StatelessWidget {
       color: vWPrimaryColor,
       child: SizedBox(
         width: size.width,
-        height: size.
-        height * 0.30,
+        height: size.height * 0.30,
         child: Stack(
           children: [
             Column(

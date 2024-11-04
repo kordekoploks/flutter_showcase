@@ -68,7 +68,7 @@ class _CategoryViewState extends State<CategoryView> {
           } else if (state is OutcomeCategoryDeleted) {
             _removeSubCategory(state);
           } else if (state is OutcomeCategoryUpdated) {
-            _updateSubCategory(state);
+            _updateCategory(state);
           } else if (state is OutcomeCategoryEmpty)
             _emptyData(state);
         },
