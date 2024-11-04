@@ -3,6 +3,10 @@ part of 'category_bloc.dart';
 abstract class OutcomeCategoryState extends Equatable {
   final List<OutcomeCategory> data;
 
+  //todo make abstarct class for income category state(biar bisa jadi turunan)
+
+  //todo make something similiar like outcome category
+
   const OutcomeCategoryState({required this.data});
 }
 

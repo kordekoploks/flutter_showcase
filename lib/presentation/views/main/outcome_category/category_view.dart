@@ -68,9 +68,7 @@ class _CategoryViewState extends State<CategoryView> {
           } else if (state is OutcomeCategoryDeleted) {
             _removeSubCategory(state);
           } else if (state is OutcomeCategoryUpdated) {
-            _updateSubCategory(state);
-          } else if (state is OutcomeCategoryLoading) {
-            showToast('LOADING...',duration: Duration(seconds: 2));
+            _updateCategory(state);
           } else if (state is OutcomeCategoryEmpty)
             _emptyData(state);
         },
@@ -105,9 +103,21 @@ class _CategoryViewState extends State<CategoryView> {
   }
 
   Widget _buildEmptyState() {
-    return const AlertCard(
-      image: kEmpty,
-      message: "Categories not found!",
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(kEmpty),
+          const SizedBox(height: 16),
+          Text("Categories is not found!", textAlign: TextAlign.center),
+          IconButton(
+            onPressed: () =>
+                context.read<OutcomeCategoryBloc>().add(const GetCategories()),
+            //todo untuk membaca bahwa kategori lengit terus munculkan tobol repres yg di drag
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
     );
   }
 
@@ -156,7 +166,7 @@ class _CategoryViewState extends State<CategoryView> {
     }
   }
 
-  void _updateSubCategory(OutcomeCategoryUpdated state) {
+  void _updateCategory(OutcomeCategoryUpdated state) {
     final index = _data.indexWhere(
           (subCategory) => subCategory.id == state.dataUpdated.id,
     );
@@ -233,8 +243,6 @@ class _CategoryViewState extends State<CategoryView> {
     );
   }
 
-
-
   Widget _buildFilterTextField(BuildContext context) {
     return TextField(
       controller: _filterController,
@@ -289,8 +297,10 @@ class _CategoryViewState extends State<CategoryView> {
       return _buildEmptyState();
     } else {
       return RefreshIndicator(
-        onRefresh: () async {
-          context.read<OutcomeCategoryBloc>().add(const GetCategories());
+        onRefresh: () async{
+          context
+              .read<OutcomeCategoryBloc>()
+              .add(const GetCategories());
         },
         child: FutureBuilder(
           future: Future.delayed(Duration.zero),
@@ -305,7 +315,10 @@ class _CategoryViewState extends State<CategoryView> {
               initialItemCount: _data.length, // Ensure this matches _data's length
               padding: EdgeInsets.only(
                 top: 28,
-                bottom: 80 + MediaQuery.of(context).padding.bottom,
+                bottom: 80 + MediaQuery
+                    .of(context)
+                    .padding
+                    .bottom,
               ),
               itemBuilder: (context, index, animation) {
                 if (index >= _data.length) {
@@ -314,7 +327,8 @@ class _CategoryViewState extends State<CategoryView> {
                 }
 
                 final categoryModel = _data[index];
-                return _buildCategoryItem(context, categoryModel, animation, index);
+                return _buildCategoryItem(
+                    context, categoryModel, animation, index);
               },
             );
           },
@@ -322,7 +336,6 @@ class _CategoryViewState extends State<CategoryView> {
       );
     }
   }
-
 
   Widget _buildCategoryItem(BuildContext context, OutcomeCategory categoryModel,
       Animation<double> animation, int index) {

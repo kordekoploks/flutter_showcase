@@ -152,7 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           "Create an account to continue!",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headlineMedium,
+                                              .headlineLarge,
                                           textAlign: TextAlign.center,
                                         ),
                                         SizedBox(height: size.height * 0.07),
