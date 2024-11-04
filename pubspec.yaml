@@ -61,7 +61,11 @@ dependencies:
   objectbox: ^4.0.1
   objectbox_flutter_libs: any
   uuid: 4.4.2
-
+  flutter_colorpicker: ^1.0.3
+  path_provider: ^2.0.11
+  html_editor_enhanced: 2.6.0
+  table_calendar: ^3.1.2
+  syncfusion_flutter_calendar: ^27.1.56
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,8 +79,8 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
-  build_runner: 2.4.10
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.9
   objectbox_generator: 4.0.1
 
 # For information on the generic Dart part of this file, see the
