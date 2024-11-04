@@ -1,6 +1,7 @@
 import 'package:eshop/domain/entities/category/outcome_sub_category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:shimmer/shimmer.dart';
 
 import 'package:eshop/data/models/category/outcome_category_model.dart';
@@ -49,8 +50,6 @@ class _CategoryViewState extends State<CategoryView> {
 
   void _fetchData() {
     context.read<OutcomeCategoryBloc>().add(const GetCategories());
-    //todo  untuk mennampilkan income data
-
   }
 
   @override
@@ -61,32 +60,24 @@ class _CategoryViewState extends State<CategoryView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<OutcomeCategoryBloc, OutcomeCategoryState>(
-      // todo untuk melisten income
         listener: (context, state) {
           if (state is OutcomeCategoryLoaded) {
             _setData(state);
-            //todo untuk set data income,
           } else if (state is OutcomeCategoryAdded) {
             _addSubCategory(state);
-
           } else if (state is OutcomeCategoryDeleted) {
             _removeSubCategory(state);
-
           } else if (state is OutcomeCategoryUpdated) {
-            _updateCategory(state);
-            //todo untuk update data category outcome,
-          } else if (state is OutcomeCategoryLoading) {
-            // _updateSubCategory(state);
+            _updateSubCategory(state);
           } else if (state is OutcomeCategoryEmpty)
             _emptyData(state);
-          //todo untuk menampilkan bahwa data kosong,
         },
         child: Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => _showAddCategoryBottomSheet(context),
             label: Text(
-              'AdD',
+              'Add',
               style: Theme
                   .of(context)
                   .textTheme
@@ -128,19 +119,18 @@ class _CategoryViewState extends State<CategoryView> {
         ],
       ),
     );
-
   }
 
   void _setData(OutcomeCategoryLoaded state) {
     setState(() {
-      _data.clear();// untuk menghapus data di view
-      _data.addAll(state.data); //  untuk menambahkan data baru dari bloc
+      _data.clear();
+      _data.addAll(state.data);
     });
   }
 
   void _emptyData(OutcomeCategoryEmpty state) {
     setState(() {
-      _data.clear();//todo untuk mengosngkan data dari view
+      _data.clear();
     });
   }
 
@@ -195,14 +185,12 @@ class _CategoryViewState extends State<CategoryView> {
           onSave: (name) {
             final currentState = context
                 .read<OutcomeCategoryBloc>()
-            //todo untuk membaca dari bloc untuk menambahkan data pada saat menambahkan kategori
                 .state;
             int position = currentState is OutcomeCategoryLoaded
-            //todo untuk emit dari bloc sebelum edit selesai
                 ? currentState.data.length + 1
                 : 0;
 
-            final newCategory = OutcomeCategoryModel( //todo untuk menambahkan deskripsi dan gambar untuk field kategori view
+            final newCategory = OutcomeCategoryModel(
               id: UuidHelper.generateNumericUUID(),
               name: name,
               desc: '$name Description here',
@@ -211,13 +199,13 @@ class _CategoryViewState extends State<CategoryView> {
             );
 
             context.read<OutcomeCategoryBloc>().add(AddCategory(newCategory));
-          },//todo untuk membaca categori yang telah ditambahin
+          },
         );
       },
     );
   }
 
-  Widget _buildErrorState(BuildContext context, OutcomeCateogryError state) { //todo untuk menampilka apa wae saat error terjadi
+  Widget _buildErrorState(BuildContext context, OutcomeCateogryError state) {
     final imagePath = state.failure is NetworkFailure
         ? 'assets/status_image/no-connection.png'
         : 'assets/status_image/internal-server-error.png';
@@ -234,7 +222,7 @@ class _CategoryViewState extends State<CategoryView> {
           Text(message, textAlign: TextAlign.center),
           IconButton(
             onPressed: () =>
-                context.read<OutcomeCategoryBloc>().add(const GetCategories()), //todo untuk membaca category yang memunculkan icon repres
+                context.read<OutcomeCategoryBloc>().add(const GetCategories()),
             icon: const Icon(Icons.refresh),
           ),
         ],
@@ -260,11 +248,11 @@ class _CategoryViewState extends State<CategoryView> {
       controller: _filterController,
       autofocus: false,
       onSubmitted: (val) {
-        context.read<OutcomeCategoryBloc>().add(FilterCategories(val));//todo untuk membaca filter kategori di search saat enter
+        context.read<OutcomeCategoryBloc>().add(FilterCategories(val));
       },
       onChanged: (val) =>
           setState(() {
-            context.read<OutcomeCategoryBloc>().add(FilterCategories(val));//todo untuk membaca saat memasukan huruf di search
+            context.read<OutcomeCategoryBloc>().add(FilterCategories(val));
           }),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 20, bottom: 22, top: 22),
@@ -280,7 +268,7 @@ class _CategoryViewState extends State<CategoryView> {
               setState(() {
                 _filterController.clear();
                 context
-                    .read<OutcomeCategoryBloc>() //todo untuk membaca kategori dari bloc untuk filter categori
+                    .read<OutcomeCategoryBloc>()
                     .add(const FilterCategories(''));
               });
             },
@@ -314,15 +302,17 @@ class _CategoryViewState extends State<CategoryView> {
               .read<OutcomeCategoryBloc>()
               .add(const GetCategories());
         },
-        //todo add read for incme caegory bloc
-        //todo make income category file for class
-
         child: FutureBuilder(
           future: Future.delayed(Duration.zero),
           builder: (context, snapshot) {
+            // Safeguard: Ensure _data is not modified during the build phase
+            if (_data.isEmpty) {
+              return _buildEmptyState();
+            }
+
             return AnimatedList(
               key: _listKey,
-                initialItemCount: _data.isNotEmpty ? _data.length : 0,
+              initialItemCount: _data.length, // Ensure this matches _data's length
               padding: EdgeInsets.only(
                 top: 28,
                 bottom: 80 + MediaQuery
@@ -331,29 +321,34 @@ class _CategoryViewState extends State<CategoryView> {
                     .bottom,
               ),
               itemBuilder: (context, index, animation) {
+                if (index >= _data.length) {
+                  // Prevent accessing out-of-bound indexes
+                  return const SizedBox.shrink();
+                }
+
                 final categoryModel = _data[index];
                 return _buildCategoryItem(
                     context, categoryModel, animation, index);
               },
             );
           },
-        )
-        ,
+        ),
       );
     }
   }
 
-  Widget _buildCategoryItem(BuildContext context, OutcomeCategory categoryModel, //todo untuk menampilkan data yang telah diisi
+  Widget _buildCategoryItem(BuildContext context, OutcomeCategory categoryModel,
       Animation<double> animation, int index) {
     return SizeTransition(
       sizeFactor: animation,
-      child: OutcomeCategoryCard( //todo untuk mendapatkan data dari outcome categori card
+      child: OutcomeCategoryCard(
         category: categoryModel,
         onClickMoreAction: (category) =>
             _showCategoryActionBottomSheet(context, categoryModel, index),
         onUpdate: (editedCategory) {
           context
-              .read<OutcomeCategoryBloc>().add(UpdateCategory(editedCategory)); // todo untuk membaca update kategori yang telah di tambahkan
+              .read<OutcomeCategoryBloc>()
+              .add(UpdateCategory(editedCategory));
         },
         onClickToggle: (item) {
           _showSubCategoriesBottomSheet(context, categoryModel, index);
@@ -370,11 +365,11 @@ class _CategoryViewState extends State<CategoryView> {
   }
 
   void _showCategoryActionBottomSheet(BuildContext context,
-      OutcomeCategory categoryModel, int index) { //todo untuk menapmpilkan data untuk bottom sheet
+      OutcomeCategory categoryModel, int index) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return OutcomeCategoryActionBottomSheet( //todo untuk menampilkan data kembali untuk bottomshet
+        return OutcomeCategoryActionBottomSheet(
           category: categoryModel,
           onEdit: (category) =>
               _showEditCategoryBottomSheet(context, categoryModel, index),
@@ -389,7 +384,7 @@ class _CategoryViewState extends State<CategoryView> {
   }
 
   void _showEditCategoryBottomSheet(BuildContext context,
-      OutcomeCategory categoryModel, int index) { //todo untuk mendapatkan data untuk bottomshit
+      OutcomeCategory categoryModel, int index) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -397,7 +392,7 @@ class _CategoryViewState extends State<CategoryView> {
           category: categoryModel,
           onSave: (editedCategory) {
             context
-                .read<OutcomeCategoryBloc>() //todo untuk membaca kategori yang di edit
+                .read<OutcomeCategoryBloc>()
                 .add(UpdateCategory(editedCategory));
           },
         );
@@ -416,7 +411,7 @@ class _CategoryViewState extends State<CategoryView> {
   }
 
   void _showDeleteConfirmationBottomSheet(BuildContext context,
-      OutcomeCategory categoryModel, int index) { //todo untuk menampilkan data peringatan saaat mau delete
+      OutcomeCategory categoryModel, int index) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -449,7 +444,7 @@ class _CategoryViewState extends State<CategoryView> {
           negativeLabel: "Tidak",
           onPositiveClick: () {
             context
-                .read<OutcomeCategoryBloc>()//todo untuk membaca categori dari bloc
+                .read<OutcomeCategoryBloc>()
                 .add(DeleteCategory(categoryModel));
           },
         );
