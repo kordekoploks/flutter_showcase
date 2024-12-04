@@ -66,31 +66,9 @@ class OtherView extends StatelessWidget {
                                               arguments: state.user,
                                             );
                                           },
-                                          child: Row(
-                                            children: [
-                                              state.user.image != null
-                                                  ? CachedNetworkImage(
-                                                      imageUrl: state.user.image!,
-                                                      imageBuilder:
-                                                          (context, image) =>
-                                                              CircleAvatar(
-                                                        radius: 36.0,
-                                                        backgroundImage: image,
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                      ),
-                                                    )
-                                                  : const CircleAvatar(
-                                                      radius: 36.0,
-                                                      backgroundImage:
-                                                          AssetImage(kUserAvatar),
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                    ),
-                                              const SizedBox(width: 12),
-                                              Column(
+                                          child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     "${state.user.firstName} ${state.user.lastName}",
@@ -100,8 +78,6 @@ class OtherView extends StatelessWidget {
                                                   ),
                                                   Text(state.user.email),
                                                 ],
-                                              ),
-                                            ],
                                           ),
                                         );
                                       } else {
@@ -110,9 +86,6 @@ class OtherView extends StatelessWidget {
                                             Navigator.of(context)
                                                 .pushNamed(AppRouter.signIn);
                                           },
-                                          child: Row(
-                                            children: [],
-                                          ),
                                         );
                                       }
                                     },
@@ -224,7 +197,6 @@ class OtherView extends StatelessWidget {
                                           context
                                               .read<OrderFetchCubit>()
                                               .clearLocalOrders();
-
                                         },
                                         title: "Sign Out",
                                       );
@@ -248,28 +220,28 @@ class OtherView extends StatelessWidget {
               ],
             ),
             Align(
-              alignment: const Alignment(0, -1.2),
+              alignment: const Alignment(0, -0.7),
               child: Container(
-                width: size.width * 0.5,
-                height: size.height * 0.5,
-                child: SizedBox(
-                  height: 80,
-                  child: Image.asset(kThumb),
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(70),
                 ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(1),
+                    child: Icon(
+                      Icons.settings,
+                      size: 110,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+
               ),
             ),
-            Align(
-              alignment: const Alignment(4.7,-0.35),
-              child: Container(
-                width: size.width * 0.9,
-                height: size.height * 0.2,
-                child: SizedBox(
-                  height: 80,
-                  child: Text("Flying Dutchman",style: TextStyle(color: vWPrimaryColor,fontWeight: FontWeight.bold,fontSize: 18)),
-                ),
-              ),
-            ),
-             VwAppBar(title: "Setting"),
+            VwAppBar(title: "Setting"),
       ],
         ),
       ),

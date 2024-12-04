@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:eshop/core/error/failures.dart';
+import 'package:eshop/domain/usecases/user/edit_usecase.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/error/exceptions.dart';
@@ -12,12 +13,14 @@ import '../../models/user/authentication_response_model.dart';
 abstract class UserRemoteDataSource {
   Future<AuthenticationResponseModel> signIn(SignInParams params);
   Future<AuthenticationResponseModel> signUp(SignUpParams params);
+  Future<AuthenticationResponseModel> edit(EditParams params);
+  //copy dan ganti menjadi edit/update pake param signup
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final http.Client client;
   UserRemoteDataSourceImpl({required this.client});
-
+  
   @override
   Future<AuthenticationResponseModel> signIn(SignInParams params) async {
     final response =
@@ -28,7 +31,9 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
             body: json.encode({
               'identifier': params.username,
               'password': params.password,
-            }));
+            }
+            )
+        );
     if (response.statusCode == 200) {
       return authenticationResponseModelFromJson(response.body);
     } else if (response.statusCode == 400 || response.statusCode == 401) {
@@ -51,7 +56,32 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
               'phoneNumber': params.phoneNumber,
               'email': params.email,
               'password': params.password,
-            }));
+            }
+            )
+        );
+    if (response.statusCode == 200) {
+      return authenticationResponseModelFromJson(response.body);
+    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      throw CredentialFailure();
+    } else {
+      throw ServerException();
+    }
+  }
+
+  @override
+  Future<AuthenticationResponseModel> edit(EditParams params) async {
+    final response =
+    await client.post(Uri.parse('$baseUrl/authentication/local/edit'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'firstName': params.firstName,
+          'lastName': params.lastName,
+          'phoneNumber': params.phoneNumber,
+          'email': params.email,
+          'password': params.password,
+        }));
     if (response.statusCode == 200) {
       return authenticationResponseModelFromJson(response.body);
     } else if (response.statusCode == 400 || response.statusCode == 401) {
@@ -61,3 +91,4 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     }
   }
 }
+//copy ganti signup menjadi edit/update

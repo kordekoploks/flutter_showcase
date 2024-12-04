@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/constant/colors.dart';
 
-class AboutItemCard extends StatelessWidget {
+class ProfileItemCard extends StatelessWidget {
   final String title;
   final Function()? onClick;
   final String data;
-  const AboutItemCard({
+  const ProfileItemCard({
     Key? key,
     required this.title,
     this.onClick,
@@ -33,17 +33,17 @@ class AboutItemCard extends StatelessWidget {
                 ),
 
                 Text(
-                  data,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold,color: vWPrimaryColor)
+                    data,
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)
                 ),
-                 // const  Icon(Icons.keyboard_arrow_right,color: Colors.grey,),
+                // const  Icon(Icons.keyboard_arrow_right,color: Colors.grey,),
               ],
             ),
-            Divider(height: 20,
-              thickness: 1,
-              indent: 0,
-              endIndent: 5,
-              color: Colors.black12,)
+            // Divider(height: 20,
+            //   thickness: 1,
+            //   indent: 0,
+            //   endIndent: 5,
+            //   color: Colors.black12,)
           ],
         ),
       ),

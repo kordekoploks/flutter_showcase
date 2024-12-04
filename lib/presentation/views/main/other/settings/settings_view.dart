@@ -25,11 +25,18 @@ class SettingsView extends StatelessWidget {
         child: BlocBuilder<SettingBloc, SettingState>(builder: (context, state) {
       bool isDarkModeEnabled =
           state is SettingApplied && state.setting.darkMode;
-      return  SfCalendar(
-        view: CalendarView.schedule,
-        dataSource: MeetingDataSource(_getDataSource()),
-        scheduleViewSettings: ScheduleViewSettings(
-      ));
+      return ListView(physics: const BouncingScrollPhysics(), children: [
+        const SizedBox(height: 6),
+        MenuItemSlideCard(
+          title: 'Dark Mode',
+          icon: Icon(Icons.settings),
+          isToggled: isDarkModeEnabled,
+          onToggle: (bool isToggled) {
+            context.read<SettingBloc>().add(SaveSetting( SettingModel(darkMode: isToggled)));
+            // Add your logic here based on the toggled state
+          },
+        )
+      ]);
     }));
   }
 }
