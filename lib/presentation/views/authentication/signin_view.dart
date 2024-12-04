@@ -15,6 +15,7 @@ import '../../blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.
 import '../../blocs/user/user_bloc.dart';
 import '../../widgets/input_button.dart';
 import '../../widgets/input_text_form_field.dart';
+import '../../widgets/vw_appbar.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({Key? key}) : super(key: key);
@@ -26,202 +27,140 @@ class SignInView extends StatefulWidget {
 class _SignInViewState extends State<SignInView> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController textinputcontroller = TextEditingController();
+  final TextEditingController passwordcontroller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery
+        .of(context)
+        .size;
     return BlocListener<UserBloc, UserState>(
-      listener: (context, state) {
-        EasyLoading.dismiss();
-        if (state is UserLoading) {
-          EasyLoading.show(status: 'Loading...');
-        } else if (state is UserLogged) {
-          context.read<CartBloc>().add(const GetCart());
-          context.read<DeliveryInfoFetchCubit>().fetchDeliveryInfo();
-          context.read<OrderFetchCubit>().getOrders();
-          context.read<NavbarCubit>().update(0);
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.home,
-            ModalRoute.withName(''),
-          );
-        } else if (state is UserLoggedFail) {
-          if (state.failure is CredentialFailure) {
-            EasyLoading.showError("Username/Password Wrong!");
-          } else {
-            EasyLoading.showError("Error");
+        listener: (context, state) {
+          EasyLoading.dismiss();
+          if (state is UserLoading) {
+            EasyLoading.show(status: 'Loading...');
+          } else if (state is UserLogged) {
+            context.read<CartBloc>().add(const GetCart());
+            context.read<DeliveryInfoFetchCubit>().fetchDeliveryInfo();
+            context.read<OrderFetchCubit>().getOrders();
+            context.read<NavbarCubit>().update(0);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              AppRouter.home,
+              ModalRoute.withName(''),
+            );
+          } else if (state is UserLoggedFail) {
+            if (state.failure is CredentialFailure) {
+              EasyLoading.showError("Username/Password Wrong!");
+            } else {
+              EasyLoading.showError("Error");
+            }
           }
-        }
-      },
-      child: Scaffold(
-        backgroundColor: vLightSecondaryColor,
-        resizeToAvoidBottomInset: true,
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: SafeArea(
+        },
+        child: Scaffold(
+          backgroundColor: vWPrimaryColor,
+          appBar: VwAppBar(title: "Sign In"),
+          body: Container(
+            width: 400,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+            ),
             child: Padding(
-              padding: EdgeInsets.fromLTRB(0, size.height * 0.05, 0, size.height * 0.03),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: size.width * 0.06),
-                      child: Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: SizedBox(
-                              height: size.height * 0.03,
-                              child: Image.asset(
-                                kClose,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                "Forgot your credentials?",
-                                style: TextStyle(
-                                    fontSize: size.width * 0.05,
-                                    color: Colors.black54),
-                                textAlign: TextAlign.end,
-                              ),
-                            ),
-                          ),
-                        ],
+              padding: const EdgeInsets.all(20),
+              child: ListView( // Changed Column to ListView for scrollable content
+                children: [
+                  Text(
+                    "Welcome Back",
+                    style: TextStyle(
+                      color: vWPrimaryColor,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 0),
+                  Text(
+                    "Hello There, Sign In To Continue",
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  SizedBox(height: 20),
+                  Center(child: Image.asset(kSignUp,height: 150,width: 150,)),
+                  SizedBox(height: 25),
+                  InputTextFormField(
+                    controller: textinputcontroller,
+                    hint: "Text Input",
+                    prefixIcon: Icons.person_outlined,
+                    textInputAction: TextInputAction.next,
+                    isMandatory: true,
+                  ),
+                  SizedBox(height: 15),
+                  InputTextFormField(
+                    controller: passwordController,
+                    hint: "Password",
+                    isSecureField: true,
+                    prefixIcon: Icons.lock_open_outlined,
+                    textInputAction: TextInputAction.next,
+                    isMandatory: true,
+                  ),
+                  SizedBox(height: 0),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed(AppRouter.forgotPassword1);
+                      },
+                      child: Text(
+                        "Forgot Your Password?",
+                        style: TextStyle(color: Colors.grey),
                       ),
                     ),
-                    SizedBox(
-                      width: size.width,
-                      height: size.height * 0.9,
-                      child: Stack(children:
-                      [
-                        Column(
-                          children: [
-                            const Spacer(flex: 8),
-                            SizedBox(
-                              width: size.width,
-                              height: size.height * 0.7,
-                              child: Card(
-                                surfaceTintColor: Colors.white,
-                                elevation: 3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(size.width * 0.04),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: [
-                                      SizedBox(height: size.height * 0.07),
-                                      SizedBox(height: size.height * 0.03),
-                                      Text(
-                                        "Let's Sign You In",
-                                        style: Theme.of(context).textTheme.headlineLarge,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      Text(
-                                        "Welcome back, you've been missed!",
-                                        style: Theme.of(context).textTheme.headlineMedium,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      Spacer(),
-                                      InputTextFormField(
-                                        label: "Email",
-                                        controller: emailController,
-                                        prefixIcon: Icons.email_outlined,
-                                        textInputAction: TextInputAction.next,
-                                        validation: (String? val) {
-                                          if (val == null || val.isEmpty) {
-                                            return 'This field can\'t be empty';
-                                          }
-                                          if (!val.contains("@") || !val.contains('.')) {
-                                            return 'Enter a valid Email';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                      SizedBox(height: size.height * 0.02),
-                                      InputTextFormField(
-                                        label: "Password",
-                                        prefixIcon: Icons.lock_outline,
-                                        controller: passwordController,
-                                        textInputAction: TextInputAction.go,
-                                        isSecureField: true,
-                                        validation: (String? val) {
-                                          if (val == null || val.isEmpty) {
-                                            return 'This field can\'t be empty';
-                                          }
-                                          return null;
-                                        },
-                                        onFieldSubmitted: (_) {
-                                          if (_formKey.currentState!.validate()) {
-                                            context
-                                                .read<UserBloc>()
-                                                .add(SignInUser(SignInParams(
-                                              username: emailController.text,
-                                              password: passwordController.text,
-                                            )));
-                                          }
-                                        },
-                                      ),
-                                      SizedBox(height: size.height * 0.015),
-                                      SizedBox(height: size.height * 0.03),
-                                      VwButton(
-                                        onClick: () {
-                                          if (_formKey.currentState!.validate()) {
-                                            context
-                                                .read<UserBloc>()
-                                                .add(SignInUser(SignInParams(
-                                              username: emailController.text,
-                                              password: passwordController.text,
-                                            )));
-                                          }
-                                        },
-                                        titleText: 'Sign In',
-                                      ),
-                                      SizedBox(height: size.height * 0.015),
-                                      VwButton(
-                                        onClick: () {
-                                          Navigator.pushNamed(context, AppRouter.signUp);
-                                        },
-                                        titleText: 'Create an Account',
-                                        buttonType: ButtonType.secondary,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                  ),
+                  SizedBox(height: 10),
+                  VwButton(
+                    onClick: () {
+                    },
+                    titleText: "Sign In",
+                  ),
+                  SizedBox(height: 30,),
+
+                  Align( alignment: Alignment.center,
+                    child: Text("Or Sign In With Social Networks"),
+                  ),
+                  SizedBox(height: 20,),
+                  Row( mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(kGoogle),
+                      SizedBox(width: 15,),
+                      Image.asset(kFacebook)
+                    ],
+                  ),SizedBox(height: 5,),
+
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Don't Have an Account?"),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushNamed(AppRouter.signUp);
+                          },
+                          child: Text("Sign Up",style: TextStyle(color: vWPrimaryColor),),
                         ),
-                        Align(
-                          alignment: Alignment(0, -0.99),
-                          child: Container(
-                            width: size.width * 0.9,
-                            height: size.height * 0.4,
-                            child: SizedBox(
-                              height: 80,
-                              child: Image.asset(kThumb),
-                            ),
-                          ),
-                        ),
-                      ]),
+                      ],
                     ),
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
+        )
+
+);
+}
 }

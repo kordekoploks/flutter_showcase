@@ -1,4 +1,10 @@
 import 'package:eshop/presentation/views/main/home/filter/filter_view.dart';
+import 'package:eshop/presentation/views/main/other/profile/forget_password/change_password.dart';
+import 'package:eshop/presentation/views/main/other/profile/forget_password/change_password2.dart';
+import 'package:eshop/presentation/views/main/other/profile/forget_password/forgot_password1.dart';
+import 'package:eshop/presentation/views/main/other/profile/forget_password/forgot_password2.dart';
+import 'package:eshop/presentation/views/main/other/profile/profile_edit_view.dart';
+import 'package:eshop/presentation/views/main/other/profile/profile_pengguna.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/cart/cart_item.dart';
@@ -23,7 +29,13 @@ class AppRouter {
   static const String home = '/';
   //authentication
   static const String signIn = '/sign-in';
+  static const String forgotPassword1 = '/forgot-password1';
+  static const String forgotPassword2 = '/forgot-password2';
+  static const String changePassword = '/change-password';
+  static const String changePassword2 = '/change-password2';
   static const String signUp = '/sign-up';
+  static const String profilePengguna = '/profile-pengguna';
+  static const String profileEditView = '/profile-edit-view';
   //products
   static const String productDetails = '/product-details';
   //other
@@ -44,8 +56,18 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const MainView());
       case signIn:
         return MaterialPageRoute(builder: (_) => const SignInView());
+      case forgotPassword1:
+        return MaterialPageRoute(builder: (_) => const ForgotPassword1());
+      case forgotPassword2:
+        return MaterialPageRoute(builder: (_) => const ForgotPassword2());
+        case changePassword:
+        return MaterialPageRoute(builder: (_) => const ChangePassword());
+      case changePassword2:
+        return MaterialPageRoute(builder: (_) => const ChangePassword2());
       case signUp:
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      case profilePengguna:
+        return MaterialPageRoute(builder: (_) => const ProfilePengguna());
       case productDetails:
         Product product = routeSettings.arguments as Product;
         return MaterialPageRoute(
@@ -76,6 +98,11 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const AboutView());
       case filter:
         return MaterialPageRoute(builder: (_) => const FilterView());
+      case profileEditView:
+        User user = routeSettings.arguments as User;
+        return MaterialPageRoute(builder: (_) => ProfileEditView(
+              user: user,));
+
       default:
         throw const RouteException('Route not found!');
     }

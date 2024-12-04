@@ -20,21 +20,33 @@ class UserRepositoryImpl implements UserRepository {
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
-  });
+  }
+  );
 
   @override
   Future<Either<Failure, User>> signIn(params) async {
     return await _authenticate(() {
       return remoteDataSource.signIn(params);
-    });
+    }
+    );
   }
 
   @override
   Future<Either<Failure, User>> signUp(params) async {
     return await _authenticate(() {
       return remoteDataSource.signUp(params);
-    });
+    }
+    );
   }
+
+  @override
+  Future<Either<Failure, User>> edit(params) async {
+    return await _authenticate(() {
+      return remoteDataSource.edit(params);
+    }
+    );
+  }
+  //copy dan buat tapi ganti jadi edit/update
 
   @override
   Future<Either<Failure, User>> getCachedUser() async {
@@ -72,6 +84,4 @@ class UserRepositoryImpl implements UserRepository {
       return Left(NetworkFailure());
     }
   }
-
-
 }

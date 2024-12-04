@@ -28,3 +28,5 @@ class AuthenticationResponseModel {
         "user": user.toJson(),
       };
 }
+
+
