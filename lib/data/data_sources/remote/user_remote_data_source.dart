@@ -87,7 +87,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     } else if (response.statusCode == 400 || response.statusCode == 401) {
       throw CredentialFailure();
     } else {
-      throw ServerException();
+      throw ServerException("terjadi kesalahan server");
     }
   }
 }

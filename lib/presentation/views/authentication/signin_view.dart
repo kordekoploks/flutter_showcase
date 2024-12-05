@@ -54,7 +54,7 @@ class _SignInViewState extends State<SignInView> {
             if (state.failure is CredentialFailure) {
               EasyLoading.showError("Username/Password Wrong!");
             } else {
-              EasyLoading.showError("Error");
+              EasyLoading.showToast("Error tai",toastPosition: EasyLoadingToastPosition.bottom, dismissOnTap: true);
             }
           }
         },
@@ -62,7 +62,7 @@ class _SignInViewState extends State<SignInView> {
           backgroundColor: vWPrimaryColor,
           appBar: VwAppBar(title: "Sign In"),
           body: Container(
-            width: 400,
+            width: size.width,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(
@@ -70,92 +70,103 @@ class _SignInViewState extends State<SignInView> {
                 topRight: Radius.circular(30),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: ListView( // Changed Column to ListView for scrollable content
-                children: [
-                  Text(
-                    "Welcome Back",
-                    style: TextStyle(
-                      color: vWPrimaryColor,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 0),
-                  Text(
-                    "Hello There, Sign In To Continue",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  SizedBox(height: 20),
-                  Center(child: Image.asset(kSignUp,height: 150,width: 150,)),
-                  SizedBox(height: 25),
-                  InputTextFormField(
-                    controller: textinputcontroller,
-                    hint: "Text Input",
-                    prefixIcon: Icons.person_outlined,
-                    textInputAction: TextInputAction.next,
-                    isMandatory: true,
-                  ),
-                  SizedBox(height: 15),
-                  InputTextFormField(
-                    controller: passwordController,
-                    hint: "Password",
-                    isSecureField: true,
-                    prefixIcon: Icons.lock_open_outlined,
-                    textInputAction: TextInputAction.next,
-                    isMandatory: true,
-                  ),
-                  SizedBox(height: 0),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(AppRouter.forgotPassword1);
-                      },
-                      child: Text(
-                        "Forgot Your Password?",
-                        style: TextStyle(color: Colors.grey),
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: ListView( // Changed Column to ListView for scrollable content
+                  children: [
+                    Text(
+                      "Welcome Back",
+                      style: TextStyle(
+                        color: vWPrimaryColor,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  VwButton(
-                    onClick: () {
-                    },
-                    titleText: "Sign In",
-                  ),
-                  SizedBox(height: 30,),
-
-                  Align( alignment: Alignment.center,
-                    child: Text("Or Sign In With Social Networks"),
-                  ),
-                  SizedBox(height: 20,),
-                  Row( mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(kGoogle),
-                      SizedBox(width: 15,),
-                      Image.asset(kFacebook)
-                    ],
-                  ),SizedBox(height: 5,),
-
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Don't Have an Account?"),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(AppRouter.signUp);
-                          },
-                          child: Text("Sign Up",style: TextStyle(color: vWPrimaryColor),),
-                        ),
-                      ],
+                    SizedBox(height: 0),
+                    Text(
+                      "Hello There, Sign In To Continue",
+                      style: TextStyle(fontSize: 12),
                     ),
-                  )
-                ],
+                    SizedBox(height: 20),
+                    Center(child: Image.asset(kSignUp,height: 150,width: 150,)),
+                    SizedBox(height: 25),
+                    InputTextFormField(
+                      controller: textinputcontroller,
+                      hint: "Text Input",
+                      prefixIcon: Icons.person_outlined,
+                      textInputAction: TextInputAction.next,
+                      isMandatory: true,
+                    ),
+                    SizedBox(height: 15),
+                    InputTextFormField(
+                      controller: passwordController,
+                      hint: "Password",
+                      isSecureField: true,
+                      prefixIcon: Icons.lock_open_outlined,
+                      textInputAction: TextInputAction.next,
+                      isMandatory: true,
+                    ),
+                    SizedBox(height: 0),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(AppRouter.forgotPassword1);
+                        },
+                        child: Text(
+                          "Forgot Your Password?",
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    VwButton(
+                      onClick: () {
+                        if (_formKey.currentState!.validate()) {
+                          context
+                              .read<UserBloc>()
+                              .add(SignInUser(SignInParams(
+                            username: emailController.text,
+                            password: passwordController.text,
+                          )));
+                        }
+                      },
+                      titleText: "Sign In",
+                    ),
+                    SizedBox(height: 30,),
+
+                    Align( alignment: Alignment.center,
+                      child: Text("Or Sign In With Social Networks"),
+                    ),
+                    SizedBox(height: 20,),
+                    Row( mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(kGoogle),
+                        SizedBox(width: 15,),
+                        Image.asset(kFacebook)
+                      ],
+                    ),SizedBox(height: 5,),
+
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("Don't Have an Account?"),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pushNamed(AppRouter.signUp);
+                            },
+                            child: Text("Sign Up",style: TextStyle(color: vWPrimaryColor),),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

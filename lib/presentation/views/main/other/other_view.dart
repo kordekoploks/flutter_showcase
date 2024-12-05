@@ -86,6 +86,26 @@ class OtherView extends StatelessWidget {
                                             Navigator.of(context)
                                                 .pushNamed(AppRouter.signIn);
                                           },
+                                          child: Row(
+                                            children: [
+                                              const CircleAvatar(
+                                                radius: 36.0,
+                                                backgroundImage: AssetImage(kUserAvatar),
+                                                backgroundColor: Colors.transparent,
+                                              ),
+                                              const SizedBox(width: 12),
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Login in your account",
+                                                    style: Theme.of(context).textTheme.titleLarge,
+                                                  ),
+                                                  const Text("")
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         );
                                       }
                                     },

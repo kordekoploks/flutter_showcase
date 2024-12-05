@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:eshop/core/error/exceptions.dart';
 import 'package:eshop/domain/usecases/user/sign_out_usecase.dart';
 import 'package:eshop/domain/usecases/user/sign_up_usecase.dart';
 import 'package:flutter/cupertino.dart';
@@ -89,11 +90,13 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UserLoading());
       final result = await _editUseCase(event.params);
       result.fold(
-            (failure) => emit(UserLoggedFail(failure)),
+            (failure) => emit(UserEditFail(failure)),
             (user) => emit(UserLogged(user)),
       );
     } catch (e) {
-      emit(UserLoggedFail(ExceptionFailure()));
+      if(e is ServerException) {
+        emit(UserEditFail(ExceptionFailure(e.message)));
+      }
     }
   }
 //copy dan ganti jadi edit/update, ganti user loged
