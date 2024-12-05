@@ -21,12 +21,29 @@ class UserLogged extends UserState {
   //copy dan ganti menjadi edit/update user= user terupdate
 }
 
+class UserEdited extends UserState {
+  final User user;
+  UserEdited(this.user);
+  @override
+  List<Object> get props => [user];
+//copy dan ganti menjadi edit/update user= user terupdate
+}
+
 class UserEdit extends UserState {
   final User user;
   UserEdit(this.user);
   @override
   List<Object> get props => [user];
 //copy dan ganti menjadi edit/update user= user terupdate
+}
+
+
+class UserEditFail extends UserState {
+  final Failure failure;
+  UserEditFail(this.failure);
+  @override
+  List<Object> get props => [failure];
+//buat user edit/update, failure ganti update
 }
 
 

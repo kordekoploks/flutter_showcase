@@ -51,10 +51,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       EasyLoading.dismiss();
       if (state is UserLoading) {
         EasyLoading.show(status: 'Loading...');
-      } else if (state is UserLogged) {
-
-      } else if (state is UserLoggedFail) {
-        EasyLoading.showError("Error");
+      } else if (state is UserEdited) {
+        EasyLoading.showSuccess("berhasil di edit");
+      } else if (state is UserEditFail) {
+        EasyLoading.showError(state.failure.message);
       }
     },
     child: Container(
@@ -191,7 +191,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     ],
                   );
                 }
-                else {return SizedBox();}
+                else {return Text("tai");}
               }),
 
                 VwAppBar(title: "Profile Edit"),
