@@ -22,6 +22,12 @@ class EditUser extends UserEvent {
 //copy dan ganti jadi edit/update user
 }
 
+class EditFullNameUser extends UserEvent {
+  final EditFullNameParams params;
+  EditFullNameUser(this.params);
+//copy dan ganti jadi edit/update user
+}
+
 class SignOutUser extends UserEvent {}
 
 class CheckUser extends UserEvent {}

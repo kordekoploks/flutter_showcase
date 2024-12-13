@@ -125,13 +125,15 @@ class _CategoryViewState extends State<CategoryView> {
     setState(() {
       _data.clear();
       _data.addAll(state.data);
-    });
+    }
+    );
   }
 
   void _emptyData(OutcomeCategoryEmpty state) {
     setState(() {
       _data.clear();
-    });
+    }
+    );
   }
 
   void _addSubCategory(OutcomeCategoryAdded state) {
@@ -173,7 +175,8 @@ class _CategoryViewState extends State<CategoryView> {
     if (index >= 0) {
       setState(() {
         _data[index] = state.dataUpdated.copyWith(isUpdated: true);
-      });
+      }
+      );
     }
   }
 

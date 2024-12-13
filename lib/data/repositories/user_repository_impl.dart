@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:eshop/core/usecases/usecase.dart';
+import 'package:eshop/domain/usecases/user/edit_full_name_usecase.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
@@ -49,6 +50,14 @@ class UserRepositoryImpl implements UserRepository {
   //copy dan buat tapi ganti jadi edit/update
 
   @override
+  Future<Either<Failure, User>> editFullName(params) async {
+    return await _authenticate(() {
+      return remoteDataSource.editFullName(params);
+    }
+    );
+  }
+
+  @override
   Future<Either<Failure, User>> getCachedUser() async {
     try {
       final user = await localDataSource.getUser();
@@ -84,4 +93,5 @@ class UserRepositoryImpl implements UserRepository {
       return Left(NetworkFailure());
     }
   }
-}
+  }
+
