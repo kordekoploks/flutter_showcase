@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eshop/core/constant/images.dart';
+import 'package:eshop/data/data_sources/local/user_local_data_source.dart';
+import 'package:eshop/presentation/views/main/other/profile/bottomsheet/fullname_edit_bottom_sheet.dart';
 import 'package:eshop/presentation/views/main/other/profile/profile_item_card.dart';
 import 'package:eshop/presentation/widgets/vw_appbar.dart';
 import 'package:eshop/presentation/widgets/vw_button.dart';
@@ -8,11 +10,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/constant/colors.dart';
 import '../../../../../core/router/app_router.dart';
+import '../../../../../data/models/user/user_model.dart';
 import '../../../../../domain/entities/user/user.dart';
 import '../../../../blocs/user/user_bloc.dart';
 import '../../../../widgets/input_button.dart';
 import '../../../../widgets/input_text_form_field.dart';
 import '../../../../widgets/menu_item_card.dart';
+import '../../outcome_category/bottom_sheet/outcome_category_edit_bottom_sheet.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final User user;
@@ -85,19 +89,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                         onClick: () {
                                           Navigator.of(context).pushNamed(AppRouter.orders);
                                         },
-                                        title: "First Name",
-                                        data: state.user.firstName,
-                                      ),
-                                    ),Padding(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: ProfileItemCard(
-                                        onClick: () {
-                                          Navigator.of(context).pushNamed(AppRouter.orders);
-                                        },
-                                        title: "Last Name",
-                                        data: state.user.lastName,
+                                        title: "Full Name",
+                                        data: "",
+                                        dataWidget:                                         Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            GestureDetector(onTap: (){_showEditCategoryBottomSheet(context);},
+                                              child: Row(
+                                                children: [
+                                                  Text("${state.user.firstName} ${state.user.lastName}", style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge
+                                                      ?.copyWith(fontWeight: FontWeight.bold)),
+                                                  Icon(Icons.edit,color: Colors.blue,),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                        ,
                                       ),
                                     ),
+
+
                                     Padding(
                                       padding: const EdgeInsets.only(top: 5),
                                       child: ProfileItemCard(
@@ -168,4 +182,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
     );
   }
+
+  void _showEditCategoryBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return FullNameEditBottomSheet(
+          userModel: widget.user,
+          onSave: (editUserParams) {
+            context
+                .read<UserBloc>()
+                .add(EditFullNameUser(editUserParams));
+          },
+        );
+      },
+    );
+  }
+
+
 }

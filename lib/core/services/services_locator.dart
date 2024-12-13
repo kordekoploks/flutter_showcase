@@ -18,6 +18,7 @@ import 'package:eshop/domain/usecases/outcome_sub_category/get_cached_outcome_su
 import 'package:eshop/domain/usecases/outcome_sub_category/update_outcome_sub_category_usecase.dart';
 import 'package:eshop/domain/usecases/setting/get_cached_setting_usecase.dart';
 import 'package:eshop/domain/usecases/setting/save_setting_usecase.dart';
+import 'package:eshop/domain/usecases/user/edit_full_name_usecase.dart';
 import 'package:eshop/domain/usecases/user/edit_usecase.dart';
 import 'package:eshop/objectbox.g.dart';
 import 'package:eshop/presentation/blocs/outcome_sub_category/outcome_sub_category_bloc.dart';
@@ -255,13 +256,14 @@ Future<void> init() async {
   //Features - User
   // Bloc
   sl.registerFactory(
-    () => UserBloc(sl(), sl(), sl(), sl(), sl()),
+    () => UserBloc(sl(), sl(), sl(), sl(), sl(),sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedUserUseCase(sl()));
   sl.registerLazySingleton(() => SignInUseCase(sl()));
   sl.registerLazySingleton(() => SignUpUseCase(sl()));
   sl.registerLazySingleton(() => EditUseCase(sl()));
+  sl.registerLazySingleton(() => EditFullNameUseCase(sl()));
   sl.registerLazySingleton(() => SignOutUseCase(sl()));
   // Repository
   sl.registerLazySingleton<UserRepository>(

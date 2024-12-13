@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eshop/core/error/exceptions.dart';
+import 'package:eshop/domain/usecases/user/edit_full_name_usecase.dart';
 import 'package:eshop/domain/usecases/user/sign_out_usecase.dart';
 import 'package:eshop/domain/usecases/user/sign_up_usecase.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +26,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final SignUpUseCase _signUpUseCase;
   final SignOutUseCase _signOutUseCase;
   final EditUseCase _editUseCase;
+  final EditFullNameUseCase _editFullNameUseCase;
   //buat edit/update usecase
 
   UserBloc(
@@ -33,6 +35,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     this._signUpUseCase,
     this._signOutUseCase,
     this._editUseCase,
+      this._editFullNameUseCase,
     //buat this. edit/update usecase
    ) : super(UserInitial()) {
     on<SignInUser>(_onSignIn);
@@ -40,6 +43,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<CheckUser>(_onCheckUser);
     on<SignOutUser>(_onSignOut);
     on<EditUser>(_onEdit);
+    on<EditFullNameUser>(_onEditFullName);
     //buat user initial edit/update
   }
 
@@ -100,6 +104,22 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     }
   }
 //copy dan ganti jadi edit/update, ganti user loged
+
+  FutureOr<void> _onEditFullName(EditFullNameUser event, Emitter<UserState> emit) async {
+    try {
+      //emit dilakukan memanggil state untuk berkomunikasi dengan ui
+      emit(UserLoading());
+      final result = await _editFullNameUseCase(event.params);
+      result.fold(
+            (failure) => emit(UserEditFail(failure)),
+            (user) => emit(UserLogged(user)),
+      );
+    } catch (e) {
+      if(e is ServerException) {
+        emit(UserEditFail(ExceptionFailure(e.message)));
+      }
+    }
+  }
 
 
   void _onSignOut(SignOutUser event, Emitter<UserState> emit) async {

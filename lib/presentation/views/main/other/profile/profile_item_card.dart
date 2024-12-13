@@ -6,18 +6,21 @@ class ProfileItemCard extends StatelessWidget {
   final String title;
   final Function()? onClick;
   final String data;
-  const ProfileItemCard({
-    Key? key,
-    required this.title,
-    this.onClick,
-    required this.data}) : super(key: key);
+  final Widget? dataWidget;
 
+  const ProfileItemCard(
+      {Key? key,
+      required this.title,
+      this.onClick,
+      required this.data,
+      this.dataWidget})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 1),
-      child:Padding(
+      child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 6),
         child: Column(
           children: [
@@ -26,16 +29,17 @@ class ProfileItemCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .bodyLarge,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
 
-                Text(
-                    data,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold)
-                ),
+                dataWidget == null
+                    ? Text(data,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(fontWeight: FontWeight.bold))
+                    : dataWidget!,
+
                 // const  Icon(Icons.keyboard_arrow_right,color: Colors.grey,),
               ],
             ),
@@ -48,6 +52,5 @@ class ProfileItemCard extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
