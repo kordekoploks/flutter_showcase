@@ -11,9 +11,7 @@ import '../../../../../core/router/app_router.dart';
 import '../../../../../domain/entities/user/user.dart';
 import '../../../../../domain/usecases/user/edit_usecase.dart';
 import '../../../../blocs/user/user_bloc.dart';
-import '../../../../widgets/input_button.dart';
 import '../../../../widgets/input_text_form_field.dart';
-import '../../../../widgets/menu_item_card.dart';
 
 class ProfileEditView extends StatefulWidget {
   final User user;
@@ -26,179 +24,117 @@ class ProfileEditView extends StatefulWidget {
 
 class _ProfileEditViewState extends State<ProfileEditView> {
   final TextEditingController firstNameController = TextEditingController();
-  final TextEditingController id = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
+  late User user;
 
   @override
   void initState() {
     firstNameController.text = widget.user.firstName;
     lastNameController.text = widget.user.lastName;
     emailController.text = widget.user.email;
-    phoneNumberController.text =widget.user.phoneNumber.toString();
+    phoneNumberController.text = widget.user.phoneNumber.toString();
+    user = widget.user;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return BlocListener<UserBloc, UserState>(
-        listener: (context, state) {
-      EasyLoading.dismiss();
-      if (state is UserLoading) {
-        EasyLoading.show(status: 'Loading...');
-      } else if (state is UserEdited) {
-        EasyLoading.showSuccess("berhasil di edit");
-      } else if (state is UserEditFail) {
-        EasyLoading.showError(state.failure.message);
-      }
-    },
-    child: Container(
-      color: vWPrimaryColor,
-      child: SizedBox(
-        width: size.width,
-        height: size.height * 0.30,
-        child: Form(
-          key: _formKey,
-          child: Stack(
-            children: [
-              BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-               if (state is UserLogged) {
-                 return Column(
+      listener: (context, state) {
+        if (state is UserLoading) {
+          EasyLoading.show(status: 'Loading...');
+        } else if (state is UserEdited) {
+          EasyLoading.showSuccess("Profile updated successfully!");
+        } else if (state is UserEditFail) {
+          EasyLoading.showError(state.failure.message);
+        }
+      },
+      child: Scaffold(
+        appBar: VwAppBar(title: "Profile Edit"),
+        body: SingleChildScrollView(
+          child: Container(
+            color: vWPrimaryColor,
+            child: Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0,54,0,0),
+                child: Card(
+                  color: Colors.white,
+                  child: Column(
                     children: [
-                      const Spacer(flex: 8),
-                      SizedBox(
-                        width: size.width,
-                        height: size.height * 0.80,
-                        child: Card(
-                          color: Colors.white,
-                          surfaceTintColor: Colors.white,
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                              bottomLeft: Radius.zero,
-                              bottomRight: Radius.zero,
+                      const SizedBox(height: 20),
+                      CircleAvatar(
+                        radius: 50,
+                        backgroundImage: widget.user.image != null
+                            ? CachedNetworkImageProvider(widget.user.image!)
+                            : const AssetImage(kUserAvatar) as ImageProvider,
+                        backgroundColor: Colors.white,
+                      ),
+                      const SizedBox(height: 20),
+                      Padding(
+                        padding: EdgeInsets.all(size.width * 0.04),
+                        child: Column(
+                          children: [
+                            InputTextFormField(
+                              controller: firstNameController,
+                              label: 'First Name',
+                              textInputAction: TextInputAction.next,
+                              isMandatory: true,
                             ),
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.all(size.width * 0.04),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: ListView(
-                                    physics: const BouncingScrollPhysics(),
-                                    children: [
-                                      Align(
-                                        // alignment: const Alignment(0,-0.85),
-                                        child: Container(
-                                          width: 160,
-                                          height: 100,
-                                          child: SizedBox(
-                                            height: 0,
-                                            child: state.user.image != null
-                                                ? CachedNetworkImage(
-                                              imageUrl: state.user.image!,
-                                              imageBuilder: (context, image) =>
-                                                  CircleAvatar(
-                                                    radius: 36.0,
-                                                    backgroundImage: image,
-                                                    backgroundColor: Colors.white,
-                                                  ),
-                                            )
-                                                : Image.asset(kUserAvatar),
-                                          ),
-                                        ),
-
-                                      ), SizedBox(height: 10,),
-                                      InputTextFormField(
-                                        controller: firstNameController,
-                                        label: 'First Name',
-                                        textInputAction: TextInputAction.next,
-                                        isMandatory: true,
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      InputTextFormField(
-                                        controller: lastNameController,
-                                        label: 'Last Name',
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      InputTextFormField(
-                                        controller: emailController,
-                                        enable: false,
-                                        label: 'Email Address',
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ), InputTextFormField(
-                                        controller: phoneNumberController,
-                                        enable: false,
-                                        label: 'Phone Number',
-                                      ),
-
-                                      SizedBox(
-                                        height:
-                                        MediaQuery
-                                            .of(context)
-                                            .padding
-                                            .bottom +
-                                            50,
-                                      ),
-                                      VwButton(
-                                        onClick: () {
-                                          if (_formKey.currentState!.validate()) {
-                                            // Extract only digits from the phone number input
-                                            String phoneNumberText = phoneNumberController.text.replaceAll(RegExp(r'\D'), '');
-
-                                            // Validate if the resulting string is a valid phone number length (optional)
-                                            if (phoneNumberText.length >= 10 && phoneNumberText.length <= 15) {
-                                              context.read<UserBloc>().add(EditUser(
-                                                EditParams(
-                                                  firstName: firstNameController.text.trim(),
-                                                  lastName: lastNameController.text.trim(),
-                                                  phoneNumber: int.parse(phoneNumberText),
-                                                  email: emailController.text.trim(),
-                                                  password: passwordController.text,
-                                                  id: state.user.id,
-                                                ),
-                                              ));
-                                            } else {
-                                              // Handle invalid phone number case (e.g., show a message to the user)
-                                              print("Invalid phone number format.");
-                                            }
-                                          }
-
-                                        },
-                                        titleText: "Confirm x",
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            const SizedBox(height: 20),
+                            InputTextFormField(
+                              controller: lastNameController,
+                              label: 'Last Name',
                             ),
-                          ),
+                            const SizedBox(height: 20),
+                            InputTextFormField(
+                              controller: emailController,
+                              enable: false,
+                              label: 'Email Address',
+                            ),
+                            const SizedBox(height: 20),
+                            InputTextFormField(
+                              controller: phoneNumberController,
+                              enable: false,
+                              label: 'Phone Number',
+                            ),
+                            const SizedBox(height: 20),
+                            VwButton(
+                              onClick: () {
+                                if (_formKey.currentState!.validate()) {
+                                  context.read<UserBloc>().add(
+                                    EditUser(
+                                      EditParams(
+                                        firstName: firstNameController.text.trim(),
+                                        lastName: lastNameController.text.trim(),
+                                        phoneNumber: int.parse(phoneNumberController.text),
+                                        email: emailController.text.trim(),
+                                        password: passwordController.text,
+                                        id: user.id,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              titleText: "Confirm",
+                            ),
+                          ],
                         ),
                       ),
                     ],
-                  );
-                }
-                else {return Text("tai");}
-              }),
-
-                VwAppBar(title: "Profile Edit"),
-            ],
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 }

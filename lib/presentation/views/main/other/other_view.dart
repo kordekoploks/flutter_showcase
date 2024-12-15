@@ -261,7 +261,7 @@ class OtherView extends StatelessWidget {
 
               ),
             ),
-            VwAppBar(title: "Setting"),
+            VwAppBar(title: "Setting", transparantMode: true,),
       ],
         ),
       ),

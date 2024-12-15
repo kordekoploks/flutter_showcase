@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:eshop/core/usecases/usecase.dart';
+import 'package:eshop/data/models/user/edit_response_model.dart';
 import 'package:eshop/domain/usecases/user/edit_full_name_usecase.dart';
 
 import '../../../../core/error/failures.dart';
@@ -11,6 +12,7 @@ import '../data_sources/remote/user_remote_data_source.dart';
 import '../models/user/authentication_response_model.dart';
 
 typedef _DataSourceChooser = Future<AuthenticationResponseModel> Function();
+typedef _DataEditSourceChooser = Future<EditUserResponseModel> Function();
 
 class UserRepositoryImpl implements UserRepository {
   final UserRemoteDataSource remoteDataSource;
@@ -51,7 +53,7 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<Either<Failure, User>> editFullName(params) async {
-    return await _authenticate(() {
+    return await _updateUserLocal(() {
       return remoteDataSource.editFullName(params);
     }
     );
@@ -84,6 +86,22 @@ class UserRepositoryImpl implements UserRepository {
       try {
         final remoteResponse = await getDataSource();
         localDataSource.saveToken(remoteResponse.token);
+        localDataSource.saveUser(remoteResponse.user);
+        return Right(remoteResponse.user);
+      } on Failure catch (failure) {
+        return Left(failure);
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+
+  Future<Either<Failure, User>> _updateUserLocal(
+      _DataEditSourceChooser getDataSource,
+      ) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await getDataSource();
         localDataSource.saveUser(remoteResponse.user);
         return Right(remoteResponse.user);
       } on Failure catch (failure) {

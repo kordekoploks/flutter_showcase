@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -99,6 +100,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       );
     } catch (e) {
       if(e is ServerException) {
+        log(e.message);
         emit(UserEditFail(ExceptionFailure(e.message)));
       }
     }
@@ -112,7 +114,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final result = await _editFullNameUseCase(event.params);
       result.fold(
             (failure) => emit(UserEditFail(failure)),
-            (user) => emit(UserLogged(user)),
+            (user) => emit(UserEdited(user)),
       );
     } catch (e) {
       if(e is ServerException) {
