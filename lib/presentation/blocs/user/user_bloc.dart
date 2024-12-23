@@ -19,6 +19,7 @@ import '../../../domain/usecases/user/get_cached_user_usecase.dart';
 import '../../../domain/usecases/user/sign_in_usecase.dart';
 
 part 'user_event.dart';
+
 part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
@@ -28,7 +29,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final SignOutUseCase _signOutUseCase;
   final EditUseCase _editUseCase;
   final EditFullNameUseCase _editFullNameUseCase;
-  //buat edit/update usecase
 
   UserBloc(
     this._getCachedUserUseCase,
@@ -36,16 +36,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     this._signUpUseCase,
     this._signOutUseCase,
     this._editUseCase,
-      this._editFullNameUseCase,
-    //buat this. edit/update usecase
-   ) : super(UserInitial()) {
+    this._editFullNameUseCase,
+  ) : super(UserInitial()) {
     on<SignInUser>(_onSignIn);
     on<SignUpUser>(_onSignUp);
     on<CheckUser>(_onCheckUser);
     on<SignOutUser>(_onSignOut);
     on<EditUser>(_onEdit);
     on<EditFullNameUser>(_onEditFullName);
-    //buat user initial edit/update
   }
 
   void _onSignIn(SignInUser event, Emitter<UserState> emit) async {
@@ -64,16 +62,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   void _onCheckUser(CheckUser event, Emitter<UserState> emit) async {
     try {
       emit(UserLoading());
-      final result = await _getCachedUserUseCase(NoParams());
-      result.fold(
-        (failure) => emit(UserLoggedFail(failure)),
-        (user) => emit(UserLogged(user)),
-      );
+      checkUser();
     } catch (e) {
       emit(UserLoggedFail(ExceptionFailure()));
     }
   }
 
+  void checkUser() async {
+    final result = await _getCachedUserUseCase(NoParams());
+    result.fold(
+      (failure) => emit(UserLoggedFail(failure)),
+      (user) => emit(UserLogged(user)),
+    );
+  }
 
   FutureOr<void> _onSignUp(SignUpUser event, Emitter<UserState> emit) async {
     try {
@@ -91,38 +92,41 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   FutureOr<void> _onEdit(EditUser event, Emitter<UserState> emit) async {
     try {
-      //emit dilakukan memanggil state untuk berkomunikasi dengan ui
       emit(UserLoading());
       final result = await _editUseCase(event.params);
       result.fold(
-            (failure) => emit(UserEditFail(failure)),
-            (user) => emit(UserLogged(user)),
+        (failure) => emit(UserEditFail(failure)),
+        (user) => emit(UserLogged(user)),
       );
     } catch (e) {
-      if(e is ServerException) {
+      if (e is ServerException) {
         log(e.message);
         emit(UserEditFail(ExceptionFailure(e.message)));
       }
     }
   }
-//copy dan ganti jadi edit/update, ganti user loged
 
-  FutureOr<void> _onEditFullName(EditFullNameUser event, Emitter<UserState> emit) async {
+  FutureOr<void> _onEditFullName(
+      EditFullNameUser event, Emitter<UserState> emit) async {
     try {
-      //emit dilakukan memanggil state untuk berkomunikasi dengan ui
       emit(UserLoading());
+      await Future.delayed(const Duration(seconds: 10));
       final result = await _editFullNameUseCase(event.params);
       result.fold(
-            (failure) => emit(UserEditFail(failure)),
-            (user) => emit(UserEdited(user)),
+        (failure) => emit(UserEditFail(failure)),
+        (user) {
+          emit(UserEdited(user));
+
+        },
       );
     } catch (e) {
-      if(e is ServerException) {
+      if (e is ServerException) {
         emit(UserEditFail(ExceptionFailure(e.message)));
       }
     }
-  }
+    checkUser();
 
+  }
 
   void _onSignOut(SignOutUser event, Emitter<UserState> emit) async {
     try {
@@ -133,5 +137,4 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UserLoggedFail(ExceptionFailure()));
     }
   }
-
 }

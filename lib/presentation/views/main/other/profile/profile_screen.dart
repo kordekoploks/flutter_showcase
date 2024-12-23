@@ -24,9 +24,14 @@ class UserProfileScreen extends StatefulWidget {
 
   UserProfileScreen({Key? key, required this.user}) : super(key: key);
 
+
+
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
+String getInitials(String fullName) {
+  List<String> nameParts = fullName.trim().split(' ');
+  return nameParts.map((part) => part.isNotEmpty ? part[0].toUpperCase() : '').join();}
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
   final TextEditingController firstNameController = TextEditingController();
@@ -40,134 +45,251 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     lastNameController.text = widget.user.lastName;
     email.text = widget.user.email;
     phoneNumber.text = widget.user.phoneNumber.toString();
+    String fullName = "John Doe";
+    String initials = getInitials(fullName);
     super.initState();
   }
+
+  void main() {
+  }
+
+  void _showSnackbar(BuildContext context, String message,
+      {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        padding: EdgeInsets.all(16.0),
+        content: Text(message,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white)),
+        duration: const Duration(seconds: 5),
+        backgroundColor: isError ? Colors.red : Colors.green,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16.0),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return BlocListener<UserBloc, UserState>(
-      listener: (context, state) {
-        if (state is UserLoading) {
-          EasyLoading.show(status: 'Loading...');
-        } else if (state is UserEdited) {
-          setState(() {
-            widget.user =
-                state.user; // Assuming state has an updatedUser property
-            firstNameController.text = widget.user.firstName;
-            lastNameController.text = widget.user.lastName;
-            email.text = widget.user.email;
-            phoneNumber.text = widget.user.phoneNumber.toString();
-          });
-          EasyLoading.showSuccess("Profile updated successfully!");
-        } else if (state is UserEditFail) {
-          EasyLoading.showError(state.failure.message);
-        }
-      },
-      child: Scaffold(
-        appBar: VwAppBar(
-          title: "Profile",
-          transparantMode: false,
-        ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              color: vWPrimaryColor,
-              child: Column(
-                children: [
-                  Align(
-                    alignment: const Alignment(0, -0.85),
-                    child: Container(
-                      width: size.width * 0.3,
-                      height: size.width * 0.80, // Use width to avoid overflow
-                      child: widget.user.image != null
-                          ? CachedNetworkImage(
-                              imageUrl: widget.user.image!,
-                              imageBuilder: (context, image) => CircleAvatar(
-                                radius: 36.0,
-                                backgroundImage: image,
-                                backgroundColor: Colors.white,
-                              ),
-                            )
-                          : Image.asset(kUserAvatar),
-                    ),
+    return Scaffold(
+      appBar: VwAppBar(
+        title: "Profile",
+        transparantMode: false,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Container(
+                height: 400,
+                color: vWPrimaryColor,
+                child:  Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    getInitials(widget.user.firstName + " " + widget.user.lastName),
+                    style: TextStyle(fontSize: 60, color: Colors.white,fontWeight: FontWeight.bold),
                   ),
-                  Card(
-                    color: Colors.white,
-                    surfaceTintColor: Colors.white,
-                    elevation: 3,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ProfileItemCard(
-                            onClick: () {
-                              Navigator.of(context).pushNamed(AppRouter.orders);
-                            },
-                            data: "",
-                            title: "Full Name",
-                            dataWidget: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () =>
-                                      _showEditCategoryBottomSheet(context),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "${widget.user.firstName} ${widget.user.lastName}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              Align(
+                alignment: Alignment(0,0),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 370),
+                      height:290 ,
+                      width: 360,
+                      child: Card(
+                        color: Colors.white,
+                        surfaceTintColor: Colors.white,
+                        elevation: 3,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ProfileItemCard(
+                                onClick: () {
+                                  Navigator.of(context).pushNamed(AppRouter.orders);
+                                },
+                                data: "",
+                                title: "Full Name",
+                                dataWidget: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () => _showEditCategoryBottomSheet(context),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            "${widget.user.firstName} ${widget.user.lastName}",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(fontWeight: FontWeight.bold),
+                                          ),
+                                          const Icon(Icons.edit, color: Colors.blue),
+                                        ],
                                       ),
-                                      const Icon(Icons.edit,
-                                          color: Colors.blue),
-                                    ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Divider(
+                                color: Colors.grey, // You can customize the color
+                                thickness: 1.0,    // Customize thickness
+                                height: 20.0,      // Space around the divider
+                              ),
+
+                              SizedBox(height: 20,),
+                              ProfileItemCard(
+                                onClick: () {
+                                  Navigator.of(context)
+                                      .pushNamed(AppRouter.orders);
+                                },
+                                title: "Email",
+                                data: widget.user.email,
+                              ),
+                              ProfileItemCard(
+                                onClick: () {
+                                  Navigator.of(context)
+                                      .pushNamed(AppRouter.orders);
+                                },
+                                title: "Phone Number",
+                                data: widget.user.phoneNumber,
+                              ),const Divider(
+                                color: Colors.grey, // You can customize the color
+                                thickness: 1.0,    // Customize thickness
+                                height: 20.0,      // Space around the divider
+                              ),
+                              const SizedBox(height: 10),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushNamed(
+                                    AppRouter.profileEditView,
+                                    arguments: widget.user,
+                                  );
+                                },
+                                child: Align(alignment: Alignment.bottomCenter,
+                                  child: Text(
+                                    "See profile details",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue, // Customize the text color
+                                    ),
                                   ),
                                 ),
-                              ],
+                              ),
+
+                            ],
+                          ),
+                        ),
+                      ),),
+                    SizedBox(height: 20,),
+                    Container(
+                      height:290 ,
+                      width: 360,
+                      child: Card(
+                      color: Colors.white,
+                      surfaceTintColor: Colors.white,
+                      elevation: 3,
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ProfileItemCard(
+                              onClick: () {
+                                Navigator.of(context).pushNamed(AppRouter.orders);
+                              },
+                              data: "",
+                              title: "Full Name",
+                              dataWidget: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () => _showEditCategoryBottomSheet(context),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "${widget.user.firstName} ${widget.user.lastName}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge
+                                              ?.copyWith(fontWeight: FontWeight.bold),
+                                        ),
+                                        const Icon(Icons.edit, color: Colors.blue),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          ProfileItemCard(
-                            onClick: () {
-                              Navigator.of(context).pushNamed(AppRouter.orders);
-                            },
-                            title: "Email",
-                            data: widget.user.email,
-                          ),
-                          ProfileItemCard(
-                            onClick: () {
-                              Navigator.of(context).pushNamed(AppRouter.orders);
-                            },
-                            title: "Phone Number",
-                            data: widget.user.phoneNumber,
-                          ),
-                          const SizedBox(height: 50),
-                          VwButton(
-                            onClick: () {
-                              Navigator.of(context).pushNamed(
-                                AppRouter.profileEditView,
-                                arguments: widget.user,
-                              );
-                            },
-                            titleText: "Edit",
-                          ),
-                        ],
+                            const Divider(
+                              color: Colors.grey, // You can customize the color
+                              thickness: 1.0,    // Customize thickness
+                              height: 20.0,      // Space around the divider
+                            ),
+
+                            SizedBox(height: 20,),
+                            ProfileItemCard(
+                              onClick: () {
+                                Navigator.of(context)
+                                    .pushNamed(AppRouter.orders);
+                              },
+                              title: "Email",
+                              data: widget.user.email,
+                            ),
+                            ProfileItemCard(
+                              onClick: () {
+                                Navigator.of(context)
+                                    .pushNamed(AppRouter.orders);
+                              },
+                              title: "Phone Number",
+                              data: widget.user.phoneNumber,
+                            ),const Divider(
+                              color: Colors.grey, // You can customize the color
+                              thickness: 1.0,    // Customize thickness
+                              height: 20.0,      // Space around the divider
+                            ),
+                            const SizedBox(height: 10),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(
+                                  AppRouter.profileEditView,
+                                  arguments: widget.user,
+                                );
+                              },
+                              child: Align(alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  "Seee Profile Details",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue, // Customize the text color
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
-                ],
+                    ),)
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         ),
       ),
