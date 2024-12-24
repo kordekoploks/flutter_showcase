@@ -29,6 +29,7 @@ import 'presentation/blocs/setting/setting_bloc.dart';
 
 late Store objectBoxStore;
 late final Admin _admin;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
@@ -41,7 +42,8 @@ Future<void> main() async {
   }
   sl.registerLazySingleton(() => objectBoxStore);
   sl.registerLazySingleton(() => objectBoxStore.box<OutcomeCategoryEntity>());
-  sl.registerLazySingleton(() => objectBoxStore.box<OutcomeSubCategoryEntity>());
+  sl.registerLazySingleton(
+      () => objectBoxStore.box<OutcomeSubCategoryEntity>());
 // todo penambahan income category entity
   runApp(const MyApp());
   configLoading();
@@ -66,13 +68,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-          di.sl<OutcomeCategoryBloc>()..add(const GetCategories()),
+              di.sl<OutcomeCategoryBloc>()..add(const GetCategories()),
         ),
 
         //todo tambah income categori bloc provider
         BlocProvider(
-          create: (context) =>
-          di.sl<OutcomeSubCategoryBloc>(),
+          create: (context) => di.sl<OutcomeSubCategoryBloc>(),
         ),
 
         //todo tambah income sub categori bloc
@@ -86,7 +87,8 @@ class MyApp extends StatelessWidget {
           create: (context) => di.sl<DeliveryInfoActionCubit>(),
         ),
         BlocProvider(
-          create: (context) => di.sl<DeliveryInfoFetchCubit>()..fetchDeliveryInfo(),
+          create: (context) =>
+              di.sl<DeliveryInfoFetchCubit>()..fetchDeliveryInfo(),
         ),
         BlocProvider(
           create: (context) => di.sl<OrderFetchCubit>()..getOrders(),
@@ -120,16 +122,17 @@ class MyApp extends StatelessWidget {
 
 void configLoading() {
   EasyLoading.instance
-    ..displayDuration = const Duration(milliseconds: 2500)
-    ..indicatorType = EasyLoadingIndicatorType.fadingCircle
+    ..displayDuration = const Duration(milliseconds: 2000)
     ..loadingStyle = EasyLoadingStyle.custom
-    ..indicatorSize = 45.0
-    ..radius = 10.0
-    ..progressColor = Colors.white
-    ..backgroundColor = Colors.black
-    ..indicatorColor = Colors.white
-    ..textColor = Colors.white
+    ..toastPosition= EasyLoadingToastPosition.bottom
+    ..indicatorSize = 60
+    ..textColor = Colors.black
+    ..radius = 20
+    ..backgroundColor = Colors.transparent
+    ..maskColor = Colors.white
+    ..indicatorColor = Colors.black54
     ..userInteractions = false
-    ..maskType = EasyLoadingMaskType.black
-    ..dismissOnTap = true;
+    ..dismissOnTap = false
+    ..boxShadow = <BoxShadow>[]
+    ..indicatorType = EasyLoadingIndicatorType.pouringHourGlass;
 }

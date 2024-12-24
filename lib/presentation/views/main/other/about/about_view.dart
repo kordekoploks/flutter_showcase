@@ -1,10 +1,12 @@
 import 'package:eshop/presentation/views/main/other/about/about_item_card.dart';
+import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constant/colors.dart';
 import '../../../../../core/router/app_router.dart';
 import '../../../../blocs/user/user_bloc.dart';
 import '../../../../widgets/vw_appbar.dart';
+import '../profile/profile_pengguna.dart';
 
 
 class AboutView extends StatelessWidget {
@@ -75,7 +77,10 @@ class AboutView extends StatelessWidget {
             ),
           ]
       ),
-      )
+      ),
+            VwButton(onClick: () {
+              Navigator.of(context)
+                  .pushNamed(AppRouter.profilePengguna);},titleText: "OK"),
           ],
     )
     );

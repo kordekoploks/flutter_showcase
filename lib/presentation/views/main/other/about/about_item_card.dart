@@ -34,7 +34,7 @@ class AboutItemCard extends StatelessWidget {
 
                 Text(
                   data,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold, color: vWPrimaryColor)
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold,color: vWPrimaryColor)
                 ),
                  // const  Icon(Icons.keyboard_arrow_right,color: Colors.grey,),
               ],
