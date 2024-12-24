@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:eshop/core/usecases/usecase.dart';
+import 'package:eshop/data/models/user/edit_response_model.dart';
+import 'package:eshop/domain/usecases/user/edit_full_name_usecase.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
@@ -10,6 +12,7 @@ import '../data_sources/remote/user_remote_data_source.dart';
 import '../models/user/authentication_response_model.dart';
 
 typedef _DataSourceChooser = Future<AuthenticationResponseModel> Function();
+typedef _DataEditSourceChooser = Future<EditUserResponseModel> Function();
 
 class UserRepositoryImpl implements UserRepository {
   final UserRemoteDataSource remoteDataSource;
@@ -20,20 +23,40 @@ class UserRepositoryImpl implements UserRepository {
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
-  });
+  }
+  );
 
   @override
   Future<Either<Failure, User>> signIn(params) async {
     return await _authenticate(() {
       return remoteDataSource.signIn(params);
-    });
+    }
+    );
   }
 
   @override
   Future<Either<Failure, User>> signUp(params) async {
     return await _authenticate(() {
       return remoteDataSource.signUp(params);
-    });
+    }
+    );
+  }
+
+  @override
+  Future<Either<Failure, User>> edit(params) async {
+    return await _authenticate(() {
+      return remoteDataSource.edit(params);
+    }
+    );
+  }
+  //copy dan buat tapi ganti jadi edit/update
+
+  @override
+  Future<Either<Failure, User>> editFullName(params) async {
+    return await _updateUserLocal(() {
+      return remoteDataSource.editFullName(params);
+    }
+    );
   }
 
   @override
@@ -73,5 +96,20 @@ class UserRepositoryImpl implements UserRepository {
     }
   }
 
+  Future<Either<Failure, User>> _updateUserLocal(
+      _DataEditSourceChooser getDataSource,
+      ) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteResponse = await getDataSource();
+        localDataSource.saveUser(remoteResponse.user);
+        return Right(remoteResponse.user);
+      } on Failure catch (failure) {
+        return Left(failure);
+      }
+    } else {
+      return Left(NetworkFailure());
+    }
+  }
+  }
 
-}

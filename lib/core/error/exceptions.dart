@@ -1,5 +1,11 @@
 //date
-class ServerException implements Exception {}
+class ServerException implements Exception {
+  final String? _message;
+
+  ServerException([this._message]);
+
+  String get message => _message ?? '';
+}
 
 class CacheException implements Exception {}
 

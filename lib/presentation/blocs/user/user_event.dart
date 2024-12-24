@@ -1,5 +1,6 @@
 part of 'user_bloc.dart';
 
+
 @immutable
 abstract class UserEvent {}
 
@@ -11,6 +12,20 @@ class SignInUser extends UserEvent {
 class SignUpUser extends UserEvent {
   final SignUpParams params;
   SignUpUser(this.params);
+
+}
+
+//turunan event per halaman
+class EditUser extends UserEvent {
+  final EditParams params;
+  EditUser(this.params);
+
+}
+
+class EditFullNameUser extends UserEvent {
+  final EditFullNameParams params;
+  EditFullNameUser(this.params);
+
 }
 
 class SignOutUser extends UserEvent {}
