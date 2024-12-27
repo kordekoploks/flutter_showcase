@@ -1,0 +1,9 @@
+{
+  "helloWorld": "Hallo Dunia!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "fullName": "Nama Lengkap",
+  "phoneNumber": "Nomor Telepon",
+  "seeProfileDetails": "Lihat Detail Lebih Jauh"
+}

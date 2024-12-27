@@ -3,9 +3,12 @@ import 'package:eshop/objectbox.g.dart';
 import 'package:eshop/presentation/blocs/outcome_sub_category/outcome_sub_category_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'core/constant/strings.dart';
 import 'core/database/ObjectBox.dart';
@@ -27,6 +30,7 @@ import 'presentation/blocs/product/product_bloc.dart';
 import 'presentation/blocs/user/user_bloc.dart';
 import 'presentation/blocs/setting/setting_bloc.dart';
 
+
 late Store objectBoxStore;
 late final Admin _admin;
 
@@ -44,7 +48,7 @@ Future<void> main() async {
   sl.registerLazySingleton(() => objectBoxStore.box<OutcomeCategoryEntity>());
   sl.registerLazySingleton(
       () => objectBoxStore.box<OutcomeSubCategoryEntity>());
-// todo penambahan income category entity
+
   runApp(const MyApp());
   configLoading();
 }
@@ -71,12 +75,10 @@ class MyApp extends StatelessWidget {
               di.sl<OutcomeCategoryBloc>()..add(const GetCategories()),
         ),
 
-        //todo tambah income categori bloc provider
         BlocProvider(
           create: (context) => di.sl<OutcomeSubCategoryBloc>(),
         ),
 
-        //todo tambah income sub categori bloc
         BlocProvider(
           create: (context) => di.sl<CartBloc>()..add(const GetCart()),
         ),
@@ -106,6 +108,9 @@ class MyApp extends StatelessWidget {
 
           return OKToast(
             child: MaterialApp(
+              locale: Locale('en', 'US'),
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
               debugShowCheckedModeBanner: false,
               initialRoute: AppRouter.home,
               onGenerateRoute: AppRouter.onGenerateRoute,

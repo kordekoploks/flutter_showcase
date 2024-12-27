@@ -8,6 +8,8 @@ import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../../core/constant/colors.dart';
 import '../../../../../core/router/app_router.dart';
@@ -120,7 +122,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   Navigator.of(context).pushNamed(AppRouter.orders);
                                 },
                                 data: "",
-                                title: "Full Name",
+                                title: AppLocalizations.of(context)!.fullName,
                                 dataWidget: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -162,7 +164,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                   Navigator.of(context)
                                       .pushNamed(AppRouter.orders);
                                 },
-                                title: "Phone Number",
+                                title: AppLocalizations.of(context)!.phoneNumber,
                                 data: widget.user.phoneNumber,
                               ),const Divider(
                                 color: Colors.grey, // You can customize the color
@@ -179,7 +181,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 },
                                 child: Align(alignment: Alignment.bottomCenter,
                                   child: Text(
-                                    "See profile details",
+                                    AppLocalizations.of(context)!.seeProfileDetails,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -213,7 +215,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 Navigator.of(context).pushNamed(AppRouter.orders);
                               },
                               data: "",
-                              title: "Full Name",
+                              title: AppLocalizations.of(context)!.fullName,
                               dataWidget: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -255,7 +257,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 Navigator.of(context)
                                     .pushNamed(AppRouter.orders);
                               },
-                              title: "Phone Number",
+                              title: AppLocalizations.of(context)!.phoneNumber,
                               data: widget.user.phoneNumber,
                             ),const Divider(
                               color: Colors.grey, // You can customize the color
@@ -271,8 +273,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                                 );
                               },
                               child: Align(alignment: Alignment.bottomCenter,
-                                child: Text(
-                                  "Seee Profile Details",
+                                child: Text(AppLocalizations.of(context)!.seeProfileDetails,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
