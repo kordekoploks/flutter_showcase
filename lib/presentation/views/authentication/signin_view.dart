@@ -5,6 +5,7 @@ import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/constant/images.dart';
 import '../../../core/error/failures.dart';
@@ -40,7 +41,7 @@ class _SignInViewState extends State<SignInView> {
         listener: (context, state) {
           EasyLoading.dismiss();
           if (state is UserLoading) {
-            EasyLoading.show(status: 'Loading...');
+            EasyLoading.show(status: AppLocalizations.of(context)!.loading);
           } else if (state is UserLogged) {
             context.read<CartBloc>().add(const GetCart());
             context.read<DeliveryInfoFetchCubit>().fetchDeliveryInfo();
@@ -52,15 +53,15 @@ class _SignInViewState extends State<SignInView> {
             );
           } else if (state is UserLoggedFail) {
             if (state.failure is CredentialFailure) {
-              EasyLoading.showError("Username/Password Wrong!");
+              EasyLoading.showError(AppLocalizations.of(context)!.thisFieldCantBeEmpty);
             } else {
-              EasyLoading.showToast("Error tai",toastPosition: EasyLoadingToastPosition.bottom, dismissOnTap: true);
+              EasyLoading.showToast(AppLocalizations.of(context)!.error,toastPosition: EasyLoadingToastPosition.bottom, dismissOnTap: true);
             }
           }
         },
         child: Scaffold(
           backgroundColor: vWPrimaryColor,
-          appBar: VwAppBar(title: "Sign In"),
+          appBar: VwAppBar(title: AppLocalizations.of(context)!.signIn),
           body: Container(
             width: size.width,
             decoration: BoxDecoration(
@@ -77,7 +78,7 @@ class _SignInViewState extends State<SignInView> {
                 child: ListView( // Changed Column to ListView for scrollable content
                   children: [
                     Text(
-                      "Welcome Back",
+                      AppLocalizations.of(context)!.welcomeBack,
                       style: TextStyle(
                         color: vWPrimaryColor,
                         fontSize: 24,
@@ -86,7 +87,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                     SizedBox(height: 0),
                     Text(
-                      "Hello There, Sign In To Continue",
+                      AppLocalizations.of(context)!.helloThereSignInToContinue,
                       style: TextStyle(fontSize: 12),
                     ),
                     SizedBox(height: 20),
@@ -94,7 +95,7 @@ class _SignInViewState extends State<SignInView> {
                     SizedBox(height: 25),
                     InputTextFormField(
                       controller: textinputcontroller,
-                      hint: "Text Input",
+                      hint: AppLocalizations.of(context)!.textInput,
                       prefixIcon: Icons.person_outlined,
                       textInputAction: TextInputAction.next,
                       isMandatory: true,
@@ -102,7 +103,7 @@ class _SignInViewState extends State<SignInView> {
                     SizedBox(height: 15),
                     InputTextFormField(
                       controller: passwordController,
-                      hint: "Password",
+                      hint: AppLocalizations.of(context)!.password,
                       isSecureField: true,
                       prefixIcon: Icons.lock_open_outlined,
                       textInputAction: TextInputAction.next,
@@ -116,7 +117,7 @@ class _SignInViewState extends State<SignInView> {
                           Navigator.of(context).pushNamed(AppRouter.forgotPassword1);
                         },
                         child: Text(
-                          "Forgot Your Password?",
+                          AppLocalizations.of(context)!.forgotYourPassword,
                           style: TextStyle(color: Colors.grey),
                         ),
                       ),
@@ -133,12 +134,12 @@ class _SignInViewState extends State<SignInView> {
                           )));
                         }
                       },
-                      titleText: "Sign In",
+                      titleText: AppLocalizations.of(context)!.signIn,
                     ),
                     SizedBox(height: 30,),
 
                     Align( alignment: Alignment.center,
-                      child: Text("Or Sign In With Social Networks"),
+                      child: Text(AppLocalizations.of(context)!.orSignInWithSocialNetwork),
                     ),
                     SizedBox(height: 20,),
                     Row( mainAxisAlignment: MainAxisAlignment.center,
@@ -154,13 +155,13 @@ class _SignInViewState extends State<SignInView> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text("Don't Have an Account?"),
+                          Text(AppLocalizations.of(context)!.dontHaveAnAccount),
                           TextButton(
                             onPressed: () {
                               Navigator.of(context)
                                   .pushNamed(AppRouter.signUp);
                             },
-                            child: Text("Sign Up",style: TextStyle(color: vWPrimaryColor),),
+                            child: Text(AppLocalizations.of(context)!.signUP,style: TextStyle(color: vWPrimaryColor),),
                           ),
                         ],
                       ),
