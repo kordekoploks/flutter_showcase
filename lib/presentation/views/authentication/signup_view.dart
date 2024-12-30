@@ -3,6 +3,7 @@ import 'package:eshop/presentation/widgets/vw_text_link.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/constant/colors.dart';
 import '../../../core/constant/images.dart';
@@ -39,7 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: AppLocalizations.of(context)!.loading);
         } else if (state is UserLogged) {
           context.read<CartBloc>().add(const GetCart());
           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -47,11 +48,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ModalRoute.withName(''),
           );
         } else if (state is UserLoggedFail) {
-          EasyLoading.showError("Error");
+          EasyLoading.showError(AppLocalizations.of(context)!.error);
         }
       },
       child: Scaffold(
-        appBar: VwAppBar(title: "Sign Up"),
+        appBar: VwAppBar(title: AppLocalizations.of(context)!.signUP),
         backgroundColor: vWPrimaryColor,
         resizeToAvoidBottomInset: true,
         body: Container(
@@ -75,7 +76,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Welcome Back",
+                          AppLocalizations.of(context)!.welcomeBack,
                           style: TextStyle(
                             color: vWPrimaryColor,
                             fontSize: 24,
@@ -85,7 +86,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         SizedBox(height: 0),
                         Text(
-                          "Hello There, Create New Account",
+                          AppLocalizations.of(context)!.helloThereCreateNewAccount,
                           style: TextStyle(fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
@@ -95,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     Align(
                       alignment: Alignment.center,
-                      child: Text("Sign In With Social Networks"),
+                      child: Text(AppLocalizations.of(context)!.signInWithSosialNetwork),
                     ),
                     SizedBox(
                       height: 35,
@@ -113,12 +114,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(height:45),
                     Align(
                       alignment: Alignment.center,
-                      child: Text("Or Sign Up With Email"),
+                      child: Text(AppLocalizations.of(context)!.orSignInWithEmail),
                     ),
                     SizedBox(height: 30),
                     InputTextFormField(
                       controller: firstNameController,
-                      hint: "First Name",
+                      hint: AppLocalizations.of(context)!.firstName,
                       prefixIcon: Icons.person_outlined,
                       textInputAction: TextInputAction.next,
                       isMandatory: true,
@@ -127,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     InputTextFormField(
                       controller: lastNameController,
                       prefixIcon: Icons.person_outlined,
-                      hint: 'Last Name',
+                      hint: AppLocalizations.of(context)!.lastName,
                       textInputAction: TextInputAction.next,
                       isMandatory: true,
                     ),
@@ -135,14 +136,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     InputTextFormField(
                       controller: phoneNumberController,
                       prefixIcon: Icons.phone_android_outlined,
-                      hint: 'Phone Number',
+                      hint: AppLocalizations.of(context)!.phoneNumber,
                       textInputAction: TextInputAction.next,
                       validation: (String? val) {
                         if (val == null || val.isEmpty) {
-                          return 'This field can\'t be empty';
+                          return AppLocalizations.of(context)!.thisFieldCantBeEmpty;
                         }
                         if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(val)) {
-                          return 'Enter a valid phone number';
+                          return AppLocalizations.of(context)!.enterAValidPhoneNumber;
                         }
                         return null;
                       },
@@ -155,10 +156,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       textInputAction: TextInputAction.next,
                       validation: (String? val) {
                         if (val == null || val.isEmpty) {
-                          return 'This field can\'t be empty';
+                          return AppLocalizations.of(context)!.thisFieldCantBeEmpty;
                         }
                         if (!val.contains("@") || !val.contains('.')) {
-                          return 'Enter a valid Email';
+                          return AppLocalizations.of(context)!.enterAValidPEmail;
                         }
                         return null;
                       },
@@ -166,7 +167,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(height: 20),
                     InputTextFormField(
                       controller: passwordController,
-                      hint: 'Password',
+                      hint: AppLocalizations.of(context)!.password,
                       prefixIcon: Icons.lock_outline,
                       textInputAction: TextInputAction.next,
                       isSecureField: true,
@@ -175,14 +176,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     SizedBox(height: 20),
                     InputTextFormField(
                       controller: confirmPasswordController,
-                      hint: 'Confirm Password',
+                      hint: AppLocalizations.of(context)!.confirmPassword,
                       prefixIcon: Icons.lock_outline,
                       isSecureField: true,
                       textInputAction: TextInputAction.done,
                       isMandatory: true,
                       validation: (String? val) {
                         if (val != passwordController.text) {
-                          return 'Passwords do not match';
+                          return AppLocalizations.of(context)!.passwordDoNotMatch;
                         }
                         return null;
                       },
@@ -203,10 +204,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "By creating an account, you agree to our",
+                                AppLocalizations.of(context)!.byCreatingAnAccountYouAgreeToOur,
                                 style: TextStyle(fontSize: 12),
                               ),
-                              VwTextLink(text: "Terms and Conditions."),
+                              VwTextLink(text: AppLocalizations.of(context)!.termsAndCondition),
                             ],
                           ),
                         ),
@@ -229,7 +230,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           );
                         }
                       },
-                      titleText: 'Sign Up',
+                      titleText: AppLocalizations.of(context)!.signUP,
                       buttonType: ButtonType.primary,
                     ),
                     SizedBox(height: 10),
@@ -237,12 +238,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Align(
                       child: Row(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Already have an account?"),
+                          Text(AppLocalizations.of(context)!.alreadyHaveAnAccount),
                           TextButton(
                             onPressed: () {
                               Navigator.of(context).pushNamed(AppRouter.signIn);
                             },
-                            child: Text("Sign In",style: TextStyle(color: vWPrimaryColor)),
+                            child: Text(AppLocalizations.of(context)!.signIn,style: TextStyle(color: vWPrimaryColor)),
                           ),
                         ],
                       ),
