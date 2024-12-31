@@ -30,9 +30,7 @@ class _HomeViewState extends State<HomeView> {
     double scrollPercentage = 0.7;
     if (currentScroll > (maxScroll * scrollPercentage)) {
       if (context.read<ProductBloc>().state is ProductLoaded) {
-        context
-            .read<ProductBloc>()
-            .add(const GetMoreProducts());
+        context.read<ProductBloc>().add(const GetMoreProducts());
       }
     }
   }
@@ -275,8 +273,12 @@ class _HomeViewState extends State<HomeView> {
                                           .text)));
                             },
                             icon: const Icon(Icons.refresh)),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.1,
+                        // SizedBox(
+                        //   height: MediaQuery.of(context).size.height * 0.1,
+                        // ),
+                        FloatingActionButton(onPressed: () {
+                          Navigator.of(context).pushNamed(AppRouter.income1);
+                        }
                         )
                       ],
                     );
