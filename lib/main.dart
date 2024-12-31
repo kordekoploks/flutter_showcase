@@ -108,7 +108,7 @@ class MyApp extends StatelessWidget {
 
           return OKToast(
             child: MaterialApp(
-              locale: Locale('id', 'ID'),
+              locale: Locale('en', 'US'),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               debugShowCheckedModeBanner: false,
