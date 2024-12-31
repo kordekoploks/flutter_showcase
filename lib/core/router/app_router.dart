@@ -1,4 +1,5 @@
 import 'package:eshop/presentation/views/main/home/filter/filter_view.dart';
+import 'package:eshop/presentation/views/main/other/income_ui/income_1.dart';
 import 'package:eshop/presentation/views/main/other/profile/forget_password/change_password.dart';
 import 'package:eshop/presentation/views/main/other/profile/forget_password/change_password2.dart';
 import 'package:eshop/presentation/views/main/other/profile/forget_password/forgot_password1.dart';
@@ -36,6 +37,7 @@ class AppRouter {
   static const String signUp = '/sign-up';
   static const String profilePengguna = '/profile-pengguna';
   static const String profileEditView = '/profile-edit-view';
+  static const String income1 = '/income-1';
   //products
   static const String productDetails = '/product-details';
   //other
@@ -66,6 +68,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ChangePassword2());
       case signUp:
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
+      case income1:
+        return MaterialPageRoute(builder: (_) => const Income1());
       case profilePengguna:
         return MaterialPageRoute(builder: (_) => const ProfilePengguna());
       case productDetails:
