@@ -10,9 +10,8 @@ import '../../models/category/outcome_category_model.dart';
 import 'entity/outcome_category_entity.dart';
 import 'entity/outcome_sub_category_entity.dart';
 
-abstract class OutcomeCategoryLocalDataSource {
-  Future<List<AccountModel>>
+abstract class AccountLocalDataSource {
 }
 
-const cachedCategories = 'CACHED_CATEGORIES';
+const cachedCategories = 'CACHED_ACCOUNT';
 
