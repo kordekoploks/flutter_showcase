@@ -1,4 +1,7 @@
 import 'package:eshop/core/usecases/usecase.dart';
+import 'package:eshop/data/data_sources/local/entity/AccountEntity.dart';
+import 'package:eshop/data/data_sources/local/entity/AccountGroupEntity.dart';
+import 'package:eshop/domain/entities/account/Account.dart';
 import 'package:eshop/objectbox.g.dart';
 import 'package:eshop/presentation/blocs/outcome_sub_category/outcome_sub_category_bloc.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +51,9 @@ Future<void> main() async {
   sl.registerLazySingleton(() => objectBoxStore.box<OutcomeCategoryEntity>());
   sl.registerLazySingleton(
       () => objectBoxStore.box<OutcomeSubCategoryEntity>());
+  sl.registerLazySingleton(() => objectBoxStore.box<AccountEntity>());
+  sl.registerLazySingleton(
+          () => objectBoxStore.box<AccountGroupEntity>());
 
   runApp(const MyApp());
   configLoading();
