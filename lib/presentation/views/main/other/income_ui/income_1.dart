@@ -258,7 +258,12 @@ class _Income1State extends State<Income1> {
                     ),
                     SizedBox(height: 20),
                     VwButton(
-                      onClick: () {},
+                      onClick: () {
+
+                        Navigator.of(context).pushNamed(
+                          AppRouter.accountAndCardView,
+                        );
+                      },
                       titleText: "Confirm",
                       buttonType: ButtonType.primary,
                     ),

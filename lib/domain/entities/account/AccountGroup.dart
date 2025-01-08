@@ -18,5 +18,7 @@ class AccountGroup extends Equatable {
 
   @override
   List<Object?> get props => [id];
+
+  static from(map) {}
 }
 
