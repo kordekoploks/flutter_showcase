@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:eshop/domain/entities/account/account.dart';
+
 import '../../../core/error/failures.dart';
 import '../../../core/network/network_info.dart';
 import '../../../data/data_sources/local/account_local_data_source.dart';
@@ -32,7 +33,7 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<Failure,Account>> addAccount(AccountModel params) async {
+  Future<Either<Failure, Account>> addAccount(AccountModel params) async {
     try {
       await localDataSource.saveAccount(params);
       return Right(params);
@@ -41,10 +42,8 @@ class AccountRepositoryImpl implements AccountRepository {
     }
   }
 
-
   @override
-  Future<Either<Failure, Account>> updateAccount(
-      AccountModel keyword) async {
+  Future<Either<Failure, Account>> updateAccount(AccountModel keyword) async {
     try {
       await localDataSource.saveAccount(keyword);
       return Right(keyword);
@@ -54,8 +53,7 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<Failure, Account>> deleteAccount(
-      Account data) async {
+  Future<Either<Failure, Account>> deleteAccount(Account data) async {
     try {
       await localDataSource.deleteAccount(data);
       return Right(data);

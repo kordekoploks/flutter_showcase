@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:ffi';
 
-import 'package:eshop/data/data_sources/local/entity/AccountEntity.dart';
+import 'package:eshop/data/data_sources/local/entity/account_entity.dart';
 
-import '../../../domain/entities/account/Account.dart';
+import '../../../domain/entities/account/account.dart';
 
 
 List<AccountModel> accountModelListFromRemoteJson(String str) =>
