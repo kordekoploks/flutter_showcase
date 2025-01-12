@@ -23,26 +23,11 @@ class AccountRepositoryImpl implements AccountRepository {
   });
 
   @override
-  Future<Either<Failure, List<Account>>> getRemoteAccount() async {
-    if (await networkInfo.isConnected) {
-      try {
-        final remoteProducts = await remoteDataSource.getAccount();
-        localDataSource.saveCategories(remoteProducts);
-        return Right(remoteProducts);
-      } on Failure catch (failure) {
-        return Left(failure);
-      }
-    } else {
-      return Left(NetworkFailure());
-    }
-  }
-
-  @override
   Future<Either<Failure, List<Account>>> getCachedAccount() async {
     try {
-      final cachedAccount = await localDataSource.getAccount();
-      // if (cachedCategories.isEmpty) await localDataSource.generateCategories();
-      final finalData = await localDataSource.getAccount();
+      final cachedAccount = await localDataSource.getAccounts();
+      // if (cachedAccount.isEmpty) await localDataSource.generateAccount();
+      final finalData = await localDataSource.getAccounts();
 
       return Right(finalData);
     } on Failure catch (failure) {
@@ -53,23 +38,13 @@ class AccountRepositoryImpl implements AccountRepository {
   @override
   Future<Either<Failure,Account>> addAccount(AccountModel params) async {
     try {
-      await localDataSource.saveAccount(params);
+      // await localDataSource.saveAccount(params);
       return Right(params);
     } on Failure catch (failure) {
       return Left(failure);
     }
   }
 
-  @override
-  Future<Either<Failure, List<Account>>> filterCachedAccount(
-      params) async {
-    try {
-      final filteredAccount = await localDataSource.filterAccount(params);
-      return Right(filteredAccount);
-    } on CacheException {
-      return Left(CacheFailure());
-    }
-  }
 
   @override
   Future<Either<Failure, Account>> updateAccount(

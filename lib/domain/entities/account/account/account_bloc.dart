@@ -4,39 +4,36 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../Account.dart';
-import 'get_cached_account_usecase.dart';
+import '../../../usecases/account/get_cached_account_usecase.dart';
 
 part 'account_event.dart';
+
 part 'account_state.dart';
 
 
-
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
-  final GetCachedAccountUseCase _getCachedUseCase;
+  final GetCachedAccountUseCase _getCachedAccountsUseCase;
 
-  AccountBloc(
-  this._getCachedAccountUseCase)
+  AccountBloc(this._getCachedAccountsUseCase)
       : super(const AccountLoading(data: [])) {
-  on<GetAccount>(_onLoadAccount);
-
-
+    on<GetAccount>(_onLoadAccount);
   }
-  void _onLoadCategories(
-      GetAccount event, Emitter<AccountState> emit) async {
+
+  void _onLoadAccount(GetAccount event, Emitter<AccountState> emit) async {
     try {
       emit(const AccountLoading(data: []));
-      final cashedResult = await _getCachedAccountUseCase(NoParams());
+      final cashedResult = await _getCachedAccountsUseCase(NoParams());
       cashedResult.fold(
             (failure) =>
         (emit(AccountError(data: state.data, failure: failure))),
-            (categories) {
-          if (categories.isEmpty) {
+            (accounts) {
+          if (accounts.isEmpty) {
             emit(AccountEmpty(
-              data: categories,
+              data: accounts,
             ));
           } else {
             emit(AccountLoaded(
-              data: categories,
+              data: accounts,
             ));
           }
         },
@@ -49,5 +46,4 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       ));
     }
   }
-  }
-}
+}}
