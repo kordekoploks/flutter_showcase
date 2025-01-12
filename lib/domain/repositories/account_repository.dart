@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:eshop/data/models/category/outcome_category_model.dart';
-import 'package:eshop/domain/entities/account/Account.dart';
+import 'package:eshop/domain/entities/account/account.dart';
 
-import '../../../../core/error/failures.dart';
-import '../../../../data/models/account/account_model.dart';
+import '../../../core/error/failures.dart';
+import '../../../data/models/account/account_model.dart';
 
 abstract class AccountRepository {
 

@@ -1,7 +1,7 @@
 import 'package:eshop/core/usecases/usecase.dart';
 import 'package:eshop/data/data_sources/local/entity/AccountEntity.dart';
 import 'package:eshop/data/data_sources/local/entity/AccountGroupEntity.dart';
-import 'package:eshop/domain/entities/account/Account.dart';
+import 'package:eshop/domain/entities/account/account.dart';
 import 'package:eshop/objectbox.g.dart';
 import 'package:eshop/presentation/blocs/outcome_sub_category/outcome_sub_category_bloc.dart';
 import 'package:flutter/material.dart';

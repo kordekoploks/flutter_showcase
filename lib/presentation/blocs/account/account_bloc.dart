@@ -3,8 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
-import '../Account.dart';
-import '../../../usecases/account/get_cached_account_usecase.dart';
+import '../../../data/models/account/account_model.dart';
+import '../../../domain/entities/account/Account.dart';
+import '../../../domain/usecases/account/get_cached_account_usecase.dart';
 
 part 'account_event.dart';
 
@@ -46,4 +47,4 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       ));
     }
   }
-}}
+}

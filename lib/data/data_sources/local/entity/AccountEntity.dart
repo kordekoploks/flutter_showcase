@@ -1,7 +1,7 @@
 
 import 'dart:ffi';
 
-import 'package:eshop/domain/entities/account/Account.dart';
+import 'package:eshop/domain/entities/account/account.dart';
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
