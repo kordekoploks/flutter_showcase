@@ -4,7 +4,7 @@ import 'package:eshop/domain/entities/account/account.dart';
 
 import '../../../objectbox.g.dart';
 import '../../models/account/account_model.dart';
-import 'entity/AccountEntity.dart';
+import 'entity/account_entity.dart';
 
 abstract class AccountLocalDataSource {
   Future<List<Account>> getAccounts();
