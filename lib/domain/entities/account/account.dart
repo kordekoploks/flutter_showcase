@@ -2,7 +2,6 @@ import 'dart:ffi';
 
 import 'package:equatable/equatable.dart';
 
-import 'AccountGroup.dart';
 
 class Account extends Equatable {
   final String id;

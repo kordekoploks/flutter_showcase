@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:eshop/domain/entities/account/Account.dart';
+import 'package:eshop/domain/entities/account/account.dart';
 
-import '../../../domain/entities/account/account/account_model.dart';
 import '../../../objectbox.g.dart';
+import '../../models/account/account_model.dart';
 import 'entity/AccountEntity.dart';
 
 abstract class AccountLocalDataSource {
-  Future<List<AccountModel>> getAccounts();
+  Future<List<Account>> getAccounts();
 
   Future<void> saveAccount(AccountModel accountModel);
 
@@ -34,7 +34,7 @@ class AccountLocalDataSourceImpl implements AccountLocalDataSource {
 
   @override
   Future<void> saveAccount(AccountModel e) async {
-    final accountEntity = AccountEntity.fromModel(e);
+    final accountEntity = AccountEntity.fromModel(e as Account);
 
     await Future.wait([
       accountBox.putAsync(accountEntity),

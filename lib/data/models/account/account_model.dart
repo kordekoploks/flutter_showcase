@@ -2,20 +2,19 @@ import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:eshop/data/data_sources/local/entity/AccountEntity.dart';
-import 'package:eshop/domain/entities/account/AccountGroup.dart';
 
 import '../../../domain/entities/account/Account.dart';
-import 'account_group_model.dart';
 
-List<AccountModel> categoryModelListFromRemoteJson(String str) =>
+
+List<AccountModel> accountModelListFromRemoteJson(String str) =>
     List<AccountModel>.from(
         json.decode(str)['data'].map((x) => AccountModel.fromJson(x)));
 
-List<AccountModel> categoryModelListFromLocalJson(String str) =>
+List<AccountModel> accountModelListFromLocalJson(String str) =>
     List<AccountModel>.from(
         json.decode(str).map((x) => AccountModel.fromJson(x)));
 
-String categoryModelListToJson(List<AccountModel> data) =>
+String accountModelListToJson(List<AccountModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class AccountModel extends Account {
@@ -24,7 +23,7 @@ class AccountModel extends Account {
       required String name,
       required String desc,
       required Long initialAmt,
-      required AccountGroup accountGroup})
+      required String accountGroup})
       : super(
             id: id,
             name: name,
@@ -37,7 +36,7 @@ class AccountModel extends Account {
       name: json["name"],
       desc: json["desc"],
       initialAmt: json["initialAmt"],
-      accountGroup: AccountGroupModel.fromJson(json["accountGroup"]));
+      accountGroup: json["accountGroup"]);
 
   Map<String, dynamic> toJson() => {
         "_id": id,
@@ -60,5 +59,5 @@ class AccountModel extends Account {
       name: entity.name!,
       desc: entity.desc!,
       initialAmt: entity.initialAmt!,
-      accountGroup: entity.accountGroup.target!);
+      accountGroup: entity.accountGroup!);
 }
