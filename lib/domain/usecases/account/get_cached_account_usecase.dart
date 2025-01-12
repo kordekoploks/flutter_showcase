@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:eshop/domain/entities/account/Account.dart';
 
-import '../../../../../core/error/failures.dart';
-import '../../../../../core/usecases/usecase.dart';
-import 'account_repository.dart';
+import '../../../../core/error/failures.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../../entities/account/account/account_repository.dart';
 
 
 class GetCachedAccountUseCase implements UseCase<List<Account>, NoParams> {

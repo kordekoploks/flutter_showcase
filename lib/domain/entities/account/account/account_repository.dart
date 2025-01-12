@@ -6,12 +6,8 @@ import '../../../../core/error/failures.dart';
 import '../../../../data/models/account/account_model.dart';
 
 abstract class AccountRepository {
-  Future<Either<Failure, List<Account>>> getRemoteAccount();
 
   Future<Either<Failure, List<Account>>> getCachedAccount();
-
-  Future<Either<Failure, List<Account>>> filterCachedAccount(
-      String keyword);
 
   Future<Either<Failure, Account>> addAccount(
       AccountModel keyword);

@@ -2,7 +2,6 @@
 import 'dart:ffi';
 
 import 'package:eshop/domain/entities/account/Account.dart';
-import 'package:eshop/domain/entities/account/AccountGroup.dart';
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
@@ -16,13 +15,14 @@ class AccountEntity {
 
   String? desc;
 
-  final accountGroup = ToOne<AccountGroup>();
+  String accountGroup;
+
 
   AccountEntity(
-      this.id, this.name, this.initialAmt, this.desc);
+      this.id, this.name, this.initialAmt, this.desc, this.accountGroup);
 
   factory AccountEntity.fromModel(Account data) {
     return AccountEntity(
-        int.parse(data.id), data.name, data.initialAmt, data.desc);
+        int.parse(data.id), data.name, data.initialAmt, data.desc, data.accountGroup);
   }
 }

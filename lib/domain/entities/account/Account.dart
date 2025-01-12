@@ -9,7 +9,7 @@ class Account extends Equatable {
   final String name;
   final String desc;
   final Long initialAmt;
-  final AccountGroup? accountGroup;
+  final String accountGroup;
   final bool isUpdated;
 
   const Account({
@@ -17,7 +17,7 @@ class Account extends Equatable {
     required this.name,
     required this.desc,
     required this.initialAmt,
-    this.accountGroup = const AccountGroup(id: "0", name: "Cash"),
+    this.accountGroup = GROUP_CASH,
     this.isUpdated = false,
   });
 
@@ -35,3 +35,5 @@ class Account extends Equatable {
   @override
   List<Object?> get props => [id];
 }
+
+const String GROUP_CASH = "GROUP_CASH";
