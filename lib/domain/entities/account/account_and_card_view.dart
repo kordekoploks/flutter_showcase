@@ -11,6 +11,7 @@ import '../../../../../core/router/app_router.dart';
 
 import '../../../core/constant/images.dart';
 import '../../../presentation/blocs/cart/cart_bloc.dart';
+import '../../../presentation/blocs/category/category_bloc.dart';
 import '../../../presentation/blocs/user/user_bloc.dart';
 import '../../../presentation/views/main/other/profile/profile_item_card.dart';
 
@@ -28,6 +29,16 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
   TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  void _fetchData() {
+    context.read<OutcomeCategoryBloc>().add(const GetCategories());
+  }
 
   @override
   Widget build(BuildContext context) {

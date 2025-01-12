@@ -19,7 +19,6 @@ class FilterCategories extends OutcomeCategoryEvent {
   List<Object> get props => [];
 }
 
-
 class AddCategory extends OutcomeCategoryEvent {
   final OutcomeCategoryModel _categoryModel;
   const AddCategory(this._categoryModel);
