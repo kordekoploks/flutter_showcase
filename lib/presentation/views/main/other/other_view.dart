@@ -195,6 +195,14 @@ class OtherView extends StatelessWidget {
                                 MenuItemCard(
                                   onClick: () {
                                     Navigator.of(context)
+                                        .pushNamed(AppRouter.accountAndCardView);
+                                  },
+                                  title: "Account And Card",
+                                ),
+                                const SizedBox(height: 6),
+                                MenuItemCard(
+                                  onClick: () {
+                                    Navigator.of(context)
                                         .pushNamed(AppRouter.about);
                                   },
                                   title: "About",
