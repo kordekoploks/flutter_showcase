@@ -11,7 +11,7 @@ class AccountEntity {
 
   String? name;
 
-  Long? initialAmt;
+  double? initialAmt;
 
   String? desc;
 
