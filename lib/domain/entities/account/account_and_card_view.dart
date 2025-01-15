@@ -14,17 +14,26 @@ import '../../../presentation/blocs/cart/cart_bloc.dart';
 import '../../../presentation/blocs/category/category_bloc.dart';
 import '../../../presentation/blocs/user/user_bloc.dart';
 import '../../../presentation/views/main/other/profile/profile_item_card.dart';
+import '../../../presentation/views/main/other/profile/profile_screen.dart';
+import '../user/user.dart';
 
 class AccountAndCardView extends StatefulWidget {
-  const AccountAndCardView({Key? key}) : super(key: key);
+  User user;
+  AccountAndCardView({Key? key, required this.user}) : super(key: key);
 
   @override
   State<AccountAndCardView> createState() => _AccountAndCardViewState();
 }
+String getInitials(String fullName) {
+  List<String> nameParts = fullName.trim().split(' ');
+  return nameParts.map((part) => part.isNotEmpty ? part[0].toUpperCase() : '').join();}
+
 
 class _AccountAndCardViewState extends State<AccountAndCardView> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
   final TextEditingController categoryNumberController =
   TextEditingController();
   final TextEditingController noteController = TextEditingController();
@@ -32,224 +41,178 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
 
   @override
   void initState() {
+    firstNameController.text = widget.user.firstName;
+    lastNameController.text = widget.user.lastName;
+    String fullName = "John Doe";
+    String initials = getInitials(fullName);
     super.initState();
-    _fetchData();
   }
+
+  void main() {
+  }
+
+  void _showSnackbar(BuildContext context, String message,
+      {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        padding: EdgeInsets.all(16.0),
+        content: Text(message,
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white)),
+        duration: const Duration(seconds: 5),
+        backgroundColor: isError ? Colors.red : Colors.green,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.all(16.0),
+      ),
+    );
+  }
+
+
 
   void _fetchData() {
     context.read<OutcomeCategoryBloc>().add(const GetCategories());
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
-      listener: (context, state) {
-        EasyLoading.dismiss();
-        if (state is UserLoading) {
-          EasyLoading.show(status: AppLocalizations.of(context)!.loading);
-        } else if (state is UserLogged) {
-          context.read<CartBloc>().add(const GetCart());
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.home,
-            ModalRoute.withName(''),
-          );
-        } else if (state is UserLoggedFail) {
-          EasyLoading.showError(AppLocalizations.of(context)!.error);
-        }
-      },
-      child: Scaffold(
-        appBar: VwAppBar(title: "Account And Card"),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
+    final size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: VwAppBar(
+        title: "Account And Card",
+        transparantMode: false,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Stack(
             children: [
-              const SizedBox(height: 10),
-              AccountTabBar(
-                tabs: [
-                  AccountTabItem(
-                    icon: Icons.wallet,
-                    name: "Account",
-                    // content: Center(
-                    //   // child: Text(
-                    //   //   "Income Content",
-                    //   //   style: TextStyle(fontSize: 16),
-                    //   // ),
-                    // ),
-                  ),
-                  AccountTabItem(
-                    icon: Icons.money_off,
-                    name: "Card",
-                    // content: Center(
-                    //   child: Text(
-                    //   "Income Content",
-                    //   style: TextStyle(fontSize: 16),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 40,
-              ),
               Container(
-                height: 100,
-                width: 100,
-                child: CircleAvatar(
-                  radius: 36.0,
-                  backgroundImage: AssetImage(kUserAvatar),
-                  backgroundColor: Colors.transparent,
+                height: 400,
+                color: vWPrimaryColor,
+                child:  Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    getInitials(widget.user.firstName + " " + widget.user.lastName),
+                    style: TextStyle(fontSize: 60, color: Colors.white,fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "Smtity weber jansen",
-                style: TextStyle(
-                    color: vWPrimaryColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Column(
-                children: [
-                  Container(
-                    height: 120,
-                    width: 360,
-                    child: Card(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                          Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Cash 1", style: TextStyle(fontWeight: FontWeight
-                                .bold, fontSize: 15),),
-                            Text("1900 8988 1234",
-                              style: TextStyle(fontWeight: FontWeight.bold,
-                                  fontSize: 15),)
-                          ],
+
+              Align(
+                alignment: Alignment(0,0),
+                child: Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 370),
+                      height:290 ,
+                      width: 360,
+                      child: Card(
+                        color: Colors.white,
+                        surfaceTintColor: Colors.white,
+                        elevation: 3,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 120,
+                                width: 360,
+                                child: Card(
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Cash 1", style: TextStyle(fontWeight: FontWeight
+                                                    .bold, fontSize: 15),),
+                                                Text("1900 8988 1234",
+                                                  style: TextStyle(fontWeight: FontWeight.bold,
+                                                      fontSize: 15),)
+                                              ],
+                                            ),
+                                            SizedBox(height: 5),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Avaible Balance",
+                                                  style: TextStyle(color: Colors.grey, fontSize: 15),),
+                                                Text("Rp.20.000",
+                                                  style: TextStyle(color: Colors.grey, fontSize: 15),),
+                                              ],
+                                            ), Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Avaible Balance",
+                                                  style: TextStyle(color: Colors.grey, fontSize: 15),),
+                                                Text("Rp.20.000",
+                                                  style: TextStyle(color: Colors.grey, fontSize: 15),),
+                                              ],
+                                            ),
+                                          ]
+                                      ),
+                                    )
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 5),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Avaible Balance",
-                              style: TextStyle(color: Colors.grey, fontSize: 15),),
-                            Text("Rp.20.000",
-                              style: TextStyle(color: Colors.grey, fontSize: 15),),
-                          ],
-                        ), Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Avaible Balance",
-                            style: TextStyle(color: Colors.grey, fontSize: 15),),
-                          Text("Rp.20.000",
-                            style: TextStyle(color: Colors.grey, fontSize: 15),),
-                        ],
-                                            ),
-                          ]
-                                            ),
-                      )
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(height: 15,),
-              Column(
-                children: [
-                  Container(
-                    height: 120,
-                    width: 360,
-                    child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Cash 1", style: TextStyle(fontWeight: FontWeight
-                                        .bold, fontSize: 15),),
-                                    Text("1900 8988 1234",
-                                      style: TextStyle(fontWeight: FontWeight.bold,
-                                          fontSize: 15),)
-                                  ],
+                      ),),
+                    SizedBox(height: 20,),
+                    Column(
+                      children: [
+                        Container(
+                          height: 120,
+                          width: 360,
+                          child: Card(
+                              color: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Cash 1", style: TextStyle(fontWeight: FontWeight
+                                              .bold, fontSize: 15),),
+                                          Text("1900 8988 1234",
+                                            style: TextStyle(fontWeight: FontWeight.bold,
+                                                fontSize: 15),)
+                                        ],
+                                      ),
+                                      SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Avaible Balance",
+                                            style: TextStyle(color: Colors.grey, fontSize: 15),),
+                                          Text("Rp.20.000",
+                                            style: TextStyle(color: Colors.grey, fontSize: 15),),
+                                        ],
+                                      ), Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text("Avaible Balance",
+                                            style: TextStyle(color: Colors.grey, fontSize: 15),),
+                                          Text("Rp.20.000",
+                                            style: TextStyle(color: Colors.grey, fontSize: 15),),
+                                        ],
+                                      ),
+                                    ]
                                 ),
-                                SizedBox(height: 5),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Avaible Balance",
-                                      style: TextStyle(color: Colors.grey, fontSize: 15),),
-                                    Text("Rp.20.000",
-                                      style: TextStyle(color: Colors.grey, fontSize: 15),),
-                                  ],
-                                ), Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Avaible Balance",
-                                      style: TextStyle(color: Colors.grey, fontSize: 15),),
-                                    Text("Rp.20.000",
-                                      style: TextStyle(color: Colors.grey, fontSize: 15),),
-                                  ],
-                                ),
-                              ]
+                              )
                           ),
                         )
+                      ],
                     ),
-                  )
-                ],
-              ),
-              SizedBox(height: 15,),
-              Column(
-                children: [
-                  Container(
-                    height: 120,
-                    width: 360,
-                    child: Card(
-                        color: Colors.white,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Cash 1", style: TextStyle(fontWeight: FontWeight
-                                        .bold, fontSize: 15),),
-                                    Text("1900 8988 1234",
-                                      style: TextStyle(fontWeight: FontWeight.bold,
-                                          fontSize: 15),)
-                                  ],
-                                ),
-                                SizedBox(height: 5),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Avaible Balance",
-                                      style: TextStyle(color: Colors.grey, fontSize: 15),),
-                                    Text("Rp.20.000",
-                                      style: TextStyle(color: Colors.grey, fontSize: 15),),
-                                  ],
-                                ), Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Avaible Balance",
-                                      style: TextStyle(color: Colors.grey, fontSize: 15),),
-                                    Text("Rp.20.000",
-                                      style: TextStyle(color: Colors.grey, fontSize: 15),),
-                                  ],
-                                ),
-                              ]
-                          ),
-                        )
-                    ),
-                  )
-                ],
+                  ],
+                ),
               ),
             ],
           ),
