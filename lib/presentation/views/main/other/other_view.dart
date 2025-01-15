@@ -67,17 +67,17 @@ class OtherView extends StatelessWidget {
                                             );
                                           },
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "${state.user.firstName} ${state.user.lastName}",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleLarge,
-                                              ),
-                                              Text(state.user.email),
-                                            ],
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "${state.user.firstName} ${state.user.lastName}",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleLarge,
+                                                  ),
+                                                  Text(state.user.email),
+                                                ],
                                           ),
                                         );
                                       } else {
@@ -90,21 +90,16 @@ class OtherView extends StatelessWidget {
                                             children: [
                                               const CircleAvatar(
                                                 radius: 36.0,
-                                                backgroundImage:
-                                                    AssetImage(kUserAvatar),
-                                                backgroundColor:
-                                                    Colors.transparent,
+                                                backgroundImage: AssetImage(kUserAvatar),
+                                                backgroundColor: Colors.transparent,
                                               ),
                                               const SizedBox(width: 12),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
                                                     "Login in your account",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleLarge,
+                                                    style: Theme.of(context).textTheme.titleLarge,
                                                   ),
                                                   const Text("")
                                                 ],
@@ -199,24 +194,8 @@ class OtherView extends StatelessWidget {
                                 const SizedBox(height: 6),
                                 MenuItemCard(
                                   onClick: () {
-                                    BlocBuilder<UserBloc, UserState>(
-                                      builder: (context, state) {
-                                        return MenuItemCard(
-                                          onClick: () {
-                                            if (state is UserLogged) {
-                                              Navigator.of(context).pushNamed(
-                                                AppRouter.accountAndCardView,
-                                                arguments: state.user,
-                                              );
-                                            } else {
-                                              Navigator.of(context)
-                                                  .pushNamed(AppRouter.signIn);
-                                            }
-                                          },
-                                          title: "Account And Card",
-                                        );
-                                      },
-                                    );
+                                    Navigator.of(context)
+                                        .pushNamed(AppRouter.accountAndCardView);
                                   },
                                   title: "Account And Card",
                                 ),
@@ -256,8 +235,7 @@ class OtherView extends StatelessWidget {
                                 ),
                                 SizedBox(
                                   height:
-                                      MediaQuery.of(context).padding.bottom +
-                                          50,
+                                      MediaQuery.of(context).padding.bottom + 50,
                                 ),
                               ],
                             ),
@@ -288,13 +266,11 @@ class OtherView extends StatelessWidget {
                     ),
                   ),
                 ),
+
               ),
             ),
-            VwAppBar(
-              title: "Setting",
-              transparantMode: true,
-            ),
-          ],
+            VwAppBar(title: "Setting", transparantMode: true,),
+      ],
         ),
       ),
     );
