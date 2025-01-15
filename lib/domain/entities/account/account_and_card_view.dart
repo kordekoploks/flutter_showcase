@@ -197,9 +197,9 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
         return AccountAddBottomSheet(
           onSave: (name) {
             final currentState = context
-                .read<OutcomeCategoryBloc>()
+                .read<AccountBloc>()
                 .state;
-            int position = currentState is OutcomeCategoryLoaded
+            int position = currentState is AccountLoaded
                 ? currentState.data.length + 1
                 : 0;
 
@@ -217,14 +217,14 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, OutcomeCateogryError state) {
-    final imagePath = state.failure is NetworkFailure
-        ? 'assets/status_image/no-connection.png'
-        : 'assets/status_image/internal-server-error.png';
-    final message = state.failure is NetworkFailure
-        ? "Network failure\nTry again!"
-        : "Categories not found!";
-
+  // Widget _buildErrorState(BuildContext context, AccountError state) {
+  //   final imagePath = state.failure is NetworkFailure
+  //       ? 'assets/status_image/no-connection.png'
+  //       : 'assets/status_image/internal-server-error.png';
+  //   final message = state.failure is NetworkFailure
+  //       ? "Network failure\nTry again!"
+  //       : "Categories not found!";
+  // }
     @override
     Widget build(BuildContext context) {
       final size = MediaQuery
