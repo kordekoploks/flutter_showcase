@@ -82,9 +82,8 @@ class _AccountTabBarState extends State<AccountTabBar> with SingleTickerProvider
 }
 
 class AccountTabItem {
-  final IconData icon;
   final String name;
   // final Widget content;
 
-  AccountTabItem({required this.icon, required this.name});
+  AccountTabItem({required this.name});
 }

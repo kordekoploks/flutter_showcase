@@ -76,7 +76,7 @@ class AppRouter {
       case profilePengguna:
         return MaterialPageRoute(builder: (_) => const ProfilePengguna());
       case accountAndCardView:
-        return MaterialPageRoute(builder: (_) => const AccountAndCardView());
+        return MaterialPageRoute(builder: (_) =>  AccountAndCardView());
       case productDetails:
         Product product = routeSettings.arguments as Product;
         return MaterialPageRoute(
