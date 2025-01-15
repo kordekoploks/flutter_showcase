@@ -7,7 +7,7 @@ class Account extends Equatable {
   final String id;
   final String name;
   final String desc;
-  final Long initialAmt;
+  final double initialAmt;
   final String accountGroup;
   final bool isUpdated;
 

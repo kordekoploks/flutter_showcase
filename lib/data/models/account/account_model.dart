@@ -22,7 +22,7 @@ class AccountModel extends Account {
       {required String id,
       required String name,
       required String desc,
-      required Long initialAmt,
+      required double initialAmt,
       required String accountGroup})
       : super(
             id: id,

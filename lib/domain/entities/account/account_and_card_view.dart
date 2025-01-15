@@ -1,29 +1,18 @@
 import 'package:eshop/domain/entities/account/account.dart';
 import 'package:eshop/domain/entities/account/account_tabbar.dart';
-import 'package:eshop/presentation/views/main/other/income_ui/tabbar.dart';
 import 'package:eshop/presentation/widgets/vw_appbar.dart';
-import 'package:eshop/presentation/widgets/vw_button.dart';
-import 'package:eshop/presentation/widgets/vw_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:html_editor_enhanced/utils/utils.dart';
 
 import '../../../../../core/constant/colors.dart';
-import '../../../../../core/router/app_router.dart';
 
 import '../../../core/constant/images.dart';
 import '../../../core/error/failures.dart';
 import '../../../core/util/UuidHelper.dart';
 import '../../../data/models/account/account_model.dart';
 import '../../../presentation/blocs/account/account_bloc.dart';
-import '../../../presentation/blocs/cart/cart_bloc.dart';
 import '../../../presentation/blocs/category/category_bloc.dart';
 import '../../../presentation/blocs/user/user_bloc.dart';
-import '../../../presentation/views/main/other/profile/profile_item_card.dart';
-import '../../../presentation/views/main/other/profile/profile_screen.dart';
-import '../user/user.dart';
 import 'account_bottom_sheet/account_add_bottom_sheet.dart';
 
 class AccountAndCardView extends StatefulWidget {
@@ -217,8 +206,8 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
             final newAccount = AccountModel(
               id: UuidHelper.generateNumericUUID(),
               name: name,
-              initialAmt: 0L,
               desc: '$name Description here',
+              initialAmt: 0.0,
             );
             // tombol add terusan dari atas
             context.read<AccountBloc>().add(AddAccount(newAccount));
