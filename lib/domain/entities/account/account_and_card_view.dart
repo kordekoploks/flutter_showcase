@@ -33,12 +33,11 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController categoryNumberController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<Account> _data = [];
-
 
   @override
   void initState() {
@@ -56,8 +55,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
       SnackBar(
         padding: EdgeInsets.all(16.0),
         content: Text(message,
-            style: Theme
-                .of(context)
+            style: Theme.of(context)
                 .textTheme
                 .bodyLarge
                 ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white)),
@@ -81,46 +79,41 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AccountBloc, AccountState>(
-      listener: (context, state) {
-        if (state is AccountLoaded) {
-          _setData(state);
-        } else if (state is AccountAdded) {
-          _addSubAccount(state);
-        } else if (state is AccountDeleted) {
-          _removeSubAccount(state);
-        } else if (state is AccountUpdated) {
-          _updateAccount(state);
-        } else if (state is AccountEmpty) _emptyData(state);
-      },
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _showAddAccountBottomSheet(context),
-          label: Text(
-            'Add',
-            style: Theme
-                .of(context)
-                .textTheme
-                .bodyLarge
-                ?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+        listener: (context, state) {
+          if (state is AccountLoaded) {
+            _setData(state);
+          } else if (state is AccountAdded) {
+            _addSubAccount(state);
+          } else if (state is AccountDeleted) {
+            _removeSubAccount(state);
+          } else if (state is AccountUpdated) {
+            _updateAccount(state);
+          } else if (state is AccountEmpty) _emptyData(state);
+        },
+        child: Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () => _showAddAccountBottomSheet(context),
+            label: Text(
+              'Add',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+            ),
+            icon: const Icon(Icons.add, color: Colors.white),
+            backgroundColor: vWPrimaryColor,
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Expanded(child: buildContent(context)),
+              ],
             ),
           ),
-          icon: const Icon(Icons.add, color: Colors.white),
-          backgroundColor: vWPrimaryColor,
-          // ),
-          // body: Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 20),
-          //   child: Column(
-          //     children: [
-          //       Expanded(child: _buildAccountList(context)),
-          //     ],
-        ),
-      ),
-    );
+        ));
   }
-
 
   Widget _buildEmptyState() {
     return Center(
@@ -169,19 +162,18 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
 
   void _removeSubAccount(AccountDeleted state) {
     final index = _data.indexOf(state.dataDeleted);
-    if (index >= 0) {
-      _listKey.currentState?.removeItem(
-        index,
-            (context, animation) =>
-            _buildAccountItem(context, state.dataDeleted, animation, index),
-      );
-      _data.removeAt(index);
-    }
+    // if (index >= 0) {
+    //   _listKey.currentState?.removeItem(
+    //     index,
+    //         (context, animation) =>
+    //         _buildAccountItem(context, state.dataDeleted, animation, index),
+    //   );
+    _data.removeAt(index);
   }
 
   void _updateAccount(AccountUpdated state) {
     final index = _data.indexWhere(
-          (subAccount) => subAccount.id == state.dataUpdated.id,
+      (subAccount) => subAccount.id == state.dataUpdated.id,
     );
     if (index >= 0) {
       setState(() {
@@ -196,19 +188,17 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
       builder: (context) {
         return AccountAddBottomSheet(
           onSave: (name) {
-            final currentState = context
-                .read<AccountBloc>()
-                .state;
+            final currentState = context.read<AccountBloc>().state;
             int position = currentState is AccountLoaded
                 ? currentState.data.length + 1
                 : 0;
 
             final newAccount = AccountModel(
-              id: UuidHelper.generateNumericUUID(),
-              name: name,
-              desc: '$name Description here',
-              initialAmt: 0.0,
-            );
+                id: UuidHelper.generateNumericUUID(),
+                name: name,
+                desc: '$name Description here',
+                initialAmt: 0.0,
+                accountGroup: GROUP_CASH);
             // tombol add terusan dari atas
             context.read<AccountBloc>().add(AddAccount(newAccount));
           },
@@ -226,10 +216,8 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
   //       : "Categories not found!";
   // }
   @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery
-        .of(context)
-        .size;
+  Widget buildContent(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: VwAppBar(
         title: "Account And Card",
@@ -257,20 +245,20 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                         alignment: Alignment.center,
                         child: BlocBuilder<UserBloc, UserState>(
                             builder: (context, state) {
-                              if (state is UserLogged) {
-                                return Text(
-                                  getInitials(state.user.firstName +
-                                      " " +
-                                      state.user.lastName),
-                                  style: TextStyle(
-                                      fontSize: 60,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                );
-                              } else {
-                                return SizedBox();
-                              }
-                            })),
+                          if (state is UserLogged) {
+                            return Text(
+                              getInitials(state.user.firstName +
+                                  " " +
+                                  state.user.lastName),
+                              style: TextStyle(
+                                  fontSize: 60,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        })),
                   ),
                   // Image.asset("account_bg.png"),
                   Align(
@@ -290,7 +278,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                                       child: Column(children: [
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               "Cash 1",
@@ -309,7 +297,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                                         SizedBox(height: 10),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               "Avaible Balance",
@@ -328,7 +316,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                                         SizedBox(height: 7),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               "Avaible Balance",
@@ -365,7 +353,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                                     child: Column(children: [
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             "Cash 2",
@@ -384,7 +372,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                                       SizedBox(height: 5),
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             "Avaible Balance",
@@ -402,7 +390,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             "Avaible Balance",
@@ -434,5 +422,4 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
       ),
     );
   }
-}
 }
