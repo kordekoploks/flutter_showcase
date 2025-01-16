@@ -9,14 +9,10 @@ import '../data_sources/remote/account_remote_data_source.dart';
 import '../../domain/repositories/account_repository.dart';
 
 class AccountRepositoryImpl implements AccountRepository {
-  final AccountRemoteDataSource remoteDataSource;
   final AccountLocalDataSource localDataSource;
-  final NetworkInfo networkInfo;
 
   AccountRepositoryImpl({
-    required this.remoteDataSource,
     required this.localDataSource,
-    required this.networkInfo,
   });
 
   @override

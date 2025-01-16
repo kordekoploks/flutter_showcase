@@ -1,10 +1,11 @@
 import 'package:eshop/core/network/LoggingHttpClient.dart';
-import 'package:eshop/data/data_sources/local/entity/outcome_category_entity.dart';
 import 'package:eshop/data/data_sources/local/outcome_sub_category_local_data_source.dart';
 import 'package:eshop/data/repositories/outcome_sub_category_repository_impl.dart';
 import 'package:eshop/data/repositories/setting_repository_impl.dart';
+import 'package:eshop/domain/repositories/account_repository.dart';
 import 'package:eshop/domain/repositories/outcome_sub_category_repository.dart';
 import 'package:eshop/domain/repositories/setting_repository.dart';
+import 'package:eshop/domain/usecases/account/get_cached_account_usecase.dart';
 import 'package:eshop/domain/usecases/outcome_category/add_category_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/clear_local_delivery_info_usecase.dart';
 import 'package:eshop/domain/usecases/delivery_info/edit_delivery_info_usecase.dart';
@@ -21,6 +22,7 @@ import 'package:eshop/domain/usecases/setting/save_setting_usecase.dart';
 import 'package:eshop/domain/usecases/user/edit_full_name_usecase.dart';
 import 'package:eshop/domain/usecases/user/edit_usecase.dart';
 import 'package:eshop/objectbox.g.dart';
+import 'package:eshop/presentation/blocs/account/account_bloc.dart';
 import 'package:eshop/presentation/blocs/outcome_sub_category/outcome_sub_category_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -28,6 +30,7 @@ import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/data_sources/local/account_local_data_source.dart';
 import '../../data/data_sources/local/cart_local_data_source.dart';
 import '../../data/data_sources/local/outcome_category_local_data_source.dart';
 import '../../data/data_sources/local/delivery_info_local_data_source.dart';
@@ -40,6 +43,7 @@ import '../../data/data_sources/remote/delivery_info_remote_data_source.dart';
 import '../../data/data_sources/remote/order_remote_data_source.dart';
 import '../../data/data_sources/remote/product_remote_data_source.dart';
 import '../../data/data_sources/remote/user_remote_data_source.dart';
+import '../../data/repositories/account_repository_impl.dart';
 import '../../data/repositories/cart_repository_impl.dart';
 import '../../data/repositories/outcome_category_repository_impl.dart';
 import '../../data/repositories/delivery_info_impl.dart';
@@ -136,14 +140,14 @@ Future<void> init() async {
     () => CategoryRemoteDataSourceImpl(client: sl()),
   );
   sl.registerLazySingleton<OutcomeCategoryLocalDataSource>(
-    () => CategoryLocalDataSourceImpl(outcomeCategoryBox: sl(), outcomeSubCategoryBox: sl(), store: sl()),
+    () => CategoryLocalDataSourceImpl(
+        outcomeCategoryBox: sl(), outcomeSubCategoryBox: sl(), store: sl()),
   );
-
 
   //Features - Category
   // Bloc
   sl.registerFactory(
-        () => OutcomeSubCategoryBloc(sl(), sl(), sl(), sl(), sl()),
+    () => OutcomeSubCategoryBloc(sl(), sl(), sl(), sl(), sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedOutcomeSubCategoryUseCase(sl()));
@@ -153,14 +157,15 @@ Future<void> init() async {
   sl.registerLazySingleton(() => FilterOutcomeSubCategoryUseCase(sl()));
   // Repository
   sl.registerLazySingleton<OutcomeSubCategoryRepository>(
-        () => OutcomeSubCategoryRepositoryImpl(
+    () => OutcomeSubCategoryRepositoryImpl(
       localDataSource: sl(),
       networkInfo: sl(),
     ),
   );
   // Data sources
   sl.registerLazySingleton<OutcomeSubCategoryLocalDataSource>(
-        () => OutcomeSubCategoryLocalDataSourceImpl(outcomeSubCategoryBox: sl(), store: sl()),
+    () => OutcomeSubCategoryLocalDataSourceImpl(
+        outcomeSubCategoryBox: sl(), store: sl()),
   );
 
   //Features - Cart
@@ -256,7 +261,7 @@ Future<void> init() async {
   //Features - User
   // Bloc
   sl.registerFactory(
-    () => UserBloc(sl(), sl(), sl(), sl(), sl(),sl()),
+    () => UserBloc(sl(), sl(), sl(), sl(), sl(), sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedUserUseCase(sl()));
@@ -284,7 +289,7 @@ Future<void> init() async {
   //Setting Feature
   // Bloc
   sl.registerFactory(
-        () => SettingBloc(sl(),sl()),
+    () => SettingBloc(sl(), sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedSettingUseCase(sl()));
@@ -294,6 +299,24 @@ Future<void> init() async {
     () => SettingRepositoryImpl(
       sl(),
     ),
+  );
+
+  //Account Feature
+  //Setting Feature
+  // Bloc
+  sl.registerFactory(
+    () => AccountBloc(sl()),
+  );
+  // Use cases
+  sl.registerLazySingleton(() => GetCachedAccountUseCase(sl()));
+
+  sl.registerLazySingleton<AccountRepository>(
+    () => AccountRepositoryImpl(localDataSource: sl()),
+  );
+
+  // Data sources
+  sl.registerLazySingleton<AccountLocalDataSource>(
+    () => AccountLocalDataSourceImpl(accountBox: sl(), store: sl()),
   );
 
   ///***********************************************
@@ -309,7 +332,6 @@ Future<void> init() async {
   // if (Admin.isAvailable()) {
   //   Admin _admin = Admin(objectBox);
   // }
-
 
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => secureStorage);
