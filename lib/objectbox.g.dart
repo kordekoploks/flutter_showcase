@@ -14,6 +14,7 @@ import 'package:objectbox/internal.dart'
 import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import 'data/data_sources/local/entity/account_entity.dart';
 import 'data/data_sources/local/entity/outcome_category_entity.dart';
 import 'data/data_sources/local/entity/outcome_sub_category_entity.dart';
 
@@ -89,6 +90,40 @@ final _entities = <obx_int.ModelEntity>[
             relationTarget: 'OutcomeCategoryEntity')
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(3, 7600219410570097336),
+      name: 'AccountEntity',
+      lastPropertyId: const obx_int.IdUid(5, 3733780343171772778),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 5654376858132276058),
+            name: 'id',
+            type: 6,
+            flags: 129),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 221469678137847452),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 2045616521691828464),
+            name: 'initialAmt',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 4666283972967581651),
+            name: 'desc',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 3733780343171772778),
+            name: 'accountGroup',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -127,7 +162,7 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(2, 4764500871628775411),
+      lastEntityId: const obx_int.IdUid(3, 7600219410570097336),
       lastIndexId: const obx_int.IdUid(1, 666203549246372151),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
@@ -233,7 +268,49 @@ obx_int.ModelDefinition getObjectBoxModel() {
                   const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
               object.outcomeCategory.attach(store);
               return object;
-            })
+            }),
+    AccountEntity: obx_int.EntityDefinition<AccountEntity>(
+        model: _entities[2],
+        toOneRelations: (AccountEntity object) => [],
+        toManyRelations: (AccountEntity object) => {},
+        getId: (AccountEntity object) => object.id,
+        setId: (AccountEntity object, int id) {
+          object.id = id;
+        },
+        objectToFB: (AccountEntity object, fb.Builder fbb) {
+          final nameOffset =
+              object.name == null ? null : fbb.writeString(object.name!);
+          final descOffset =
+              object.desc == null ? null : fbb.writeString(object.desc!);
+          final accountGroupOffset = fbb.writeString(object.accountGroup);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addFloat64(2, object.initialAmt);
+          fbb.addOffset(3, descOffset);
+          fbb.addOffset(4, accountGroupOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 6);
+          final initialAmtParam =
+              const fb.Float64Reader().vTableGetNullable(buffer, rootOffset, 8);
+          final descParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 10);
+          final accountGroupParam =
+              const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 12, '');
+          final object = AccountEntity(idParam, nameParam, initialAmtParam,
+              descParam, accountGroupParam);
+
+          return object;
+        })
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -285,4 +362,27 @@ class OutcomeSubCategoryEntity_ {
   static final outcomeCategory =
       obx.QueryRelationToOne<OutcomeSubCategoryEntity, OutcomeCategoryEntity>(
           _entities[1].properties[3]);
+}
+
+/// [AccountEntity] entity fields to define ObjectBox queries.
+class AccountEntity_ {
+  /// See [AccountEntity.id].
+  static final id =
+      obx.QueryIntegerProperty<AccountEntity>(_entities[2].properties[0]);
+
+  /// See [AccountEntity.name].
+  static final name =
+      obx.QueryStringProperty<AccountEntity>(_entities[2].properties[1]);
+
+  /// See [AccountEntity.initialAmt].
+  static final initialAmt =
+      obx.QueryDoubleProperty<AccountEntity>(_entities[2].properties[2]);
+
+  /// See [AccountEntity.desc].
+  static final desc =
+      obx.QueryStringProperty<AccountEntity>(_entities[2].properties[3]);
+
+  /// See [AccountEntity.accountGroup].
+  static final accountGroup =
+      obx.QueryStringProperty<AccountEntity>(_entities[2].properties[4]);
 }

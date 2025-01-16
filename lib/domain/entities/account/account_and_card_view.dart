@@ -109,16 +109,9 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
           ),
           icon: const Icon(Icons.add, color: Colors.white),
           backgroundColor: vWPrimaryColor,
-          // ),
-          // body: Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 20),
-          //   child: Column(
-          //     children: [
-          //       Expanded(child: _buildAccountList(context)),
-          //     ],
-        ),
-      ),
-    );
+          ),
+          body: buildContent(context)
+    ));
   }
 
 
@@ -170,11 +163,11 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
   void _removeSubAccount(AccountDeleted state) {
     final index = _data.indexOf(state.dataDeleted);
     if (index >= 0) {
-      _listKey.currentState?.removeItem(
-        index,
-            (context, animation) =>
-            _buildAccountItem(context, state.dataDeleted, animation, index),
-      );
+      // _listKey.currentState?.removeItem(
+      //   index,
+      //       (context, animation) =>
+      //       _buildAccountItem(context, state.dataDeleted, animation, index),
+      // );
       _data.removeAt(index);
     }
   }
@@ -203,39 +196,27 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                 ? currentState.data.length + 1
                 : 0;
 
-            final newAccount = AccountModel(
-              id: UuidHelper.generateNumericUUID(),
-              name: name,
-              desc: '$name Description here',
-              initialAmt: 0.0,
-            );
-            // tombol add terusan dari atas
-            context.read<AccountBloc>().add(AddAccount(newAccount));
+            // final newAccount = AccountModel(
+            //   id: UuidHelper.generateNumericUUID(),
+            //   name: name,
+            //   desc: '$name Description here',
+            //   initialAmt: 0.0,
+            // );
+            // // tombol add terusan dari atas
+            // context.read<AccountBloc>().add(AddAccount(newAccount));
           },
         );
       },
     );
   }
 
-  Widget _buildErrorState(BuildContext context, OutcomeCateogryError state) {
-    final imagePath = state.failure is NetworkFailure
-        ? 'assets/status_image/no-connection.png'
-        : 'assets/status_image/internal-server-error.png';
-    final message = state.failure is NetworkFailure
-        ? "Network failure\nTry again!"
-        : "Categories not found!";
 
     @override
-    Widget build(BuildContext context) {
+    Widget buildContent(BuildContext context) {
       final size = MediaQuery
           .of(context)
           .size;
-      return Scaffold(
-        appBar: VwAppBar(
-          title: "Account And Card",
-          transparantMode: false,
-        ),
-        body: SafeArea(
+      return SafeArea(
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -431,8 +412,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
               ],
             ),
           ),
-        ),
       );
     }
   }
-}
+
