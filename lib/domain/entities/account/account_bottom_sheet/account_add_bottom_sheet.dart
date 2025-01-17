@@ -49,6 +49,7 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
                         });
                         Navigator.of(context).pop(); // Close the dialog
                       },
+                        selectedGroup: selectedGroup,
                     ),
                   ),
                 );
