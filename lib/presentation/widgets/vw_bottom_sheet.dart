@@ -27,7 +27,7 @@ class _VWBottomSheetState extends State<VWBottomSheet> {
                 width: 75,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
+                  color: Colors.white.withOpacity(0.3),
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
               ),

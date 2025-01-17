@@ -1,6 +1,9 @@
+import 'dart:ffi';
+
 import 'package:eshop/domain/entities/account/account.dart';
 import 'package:eshop/domain/entities/account/account_tabbar.dart';
 import 'package:eshop/presentation/widgets/vw_appbar.dart';
+import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +17,7 @@ import '../../../presentation/blocs/account/account_bloc.dart';
 import '../../../presentation/blocs/category/category_bloc.dart';
 import '../../../presentation/blocs/user/user_bloc.dart';
 import 'account_bottom_sheet/account_add_bottom_sheet.dart';
+import 'account_bottom_sheet/spinner_choose_group.dart';
 
 class AccountAndCardView extends StatefulWidget {
   AccountAndCardView({Key? key}) : super(key: key);
@@ -105,7 +109,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
             backgroundColor: vWPrimaryColor,
           ),
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: Column(
               children: [
                 Expanded(child: buildContent(context)),
@@ -186,23 +190,20 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return AccountAddBottomSheet(
-          onSave: (name) {
-            final currentState = context.read<AccountBloc>().state;
-            int position = currentState is AccountLoaded
-                ? currentState.data.length + 1
-                : 0;
+        return AccountAddBottomSheet(onSave: (name) {
+          final currentState = context.read<AccountBloc>().state;
+          int position =
+              currentState is AccountLoaded ? currentState.data.length + 1 : 0;
 
-            final newAccount = AccountModel(
-                id: UuidHelper.generateNumericUUID(),
-                name: name,
-                desc: '$name Description here',
-                initialAmt: 0.0,
-                accountGroup: GROUP_CASH);
-            // tombol add terusan dari atas
-            context.read<AccountBloc>().add(AddAccount(newAccount));
-          },
-        );
+          final newAccount = AccountModel(
+              id: UuidHelper.generateNumericUUID(),
+              name: name,
+              desc: '$name Description here',
+              initialAmt: 0.0,
+              accountGroup: GROUP_CASH);
+          // tombol add terusan dari atas
+          context.read<AccountBloc>().add(AddAccount(newAccount));
+        });
       },
     );
   }

@@ -41,6 +41,7 @@ class AppRouter {
   static const String income1 = '/income-1';
   static const String accountAndCardView = '/account-and-card-view';
 
+
   //products
   static const String productDetails = '/product-details';
   //other
