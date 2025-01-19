@@ -33,6 +33,7 @@ class Account extends Equatable {
 
   @override
   List<Object?> get props => [id];
+
 }
 
 const String GROUP_CASH = "GROUP_CASH";

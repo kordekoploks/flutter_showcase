@@ -59,5 +59,5 @@ class AccountModel extends Account {
       name: entity.name!,
       desc: entity.desc!,
       initialAmt: entity.initialAmt!,
-      accountGroup: entity.accountGroup!);
+      accountGroup: entity.accountGroup);
 }

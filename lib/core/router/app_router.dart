@@ -39,7 +39,7 @@ class AppRouter {
   static const String profilePengguna = '/profile-pengguna';
   static const String profileEditView = '/profile-edit-view';
   static const String income1 = '/income-1';
-  static const String accountAndCardView = '/account-and-card-view';
+  static const String accountAndCardView = '/account_card-and-card-view';
 
 
   //products

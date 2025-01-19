@@ -7,7 +7,7 @@ import '../../../../presentation/widgets/input_text_form_field.dart';
 import '../../../../presentation/widgets/vw_button.dart';
 
 class AccountAddBottomSheet extends StatefulWidget {
-  final Function(String) onSave;
+  final Function(String, double, String, String) onSave;
 
   AccountAddBottomSheet({super.key, required this.onSave});
 
@@ -17,11 +17,15 @@ class AccountAddBottomSheet extends StatefulWidget {
 
 class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
   final TextEditingController nameController = TextEditingController();
-  String selectedGroup = "Choose Group"; // Initialize with default text
+  final TextEditingController initialAmountController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  String selectedGroup = "Choose Group";
 
   @override
   void dispose() {
     nameController.dispose();
+    initialAmountController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 
@@ -30,42 +34,56 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
     return VWBottomSheet(
       title: "Add Account",
       content: Padding(
-        padding: const EdgeInsets.all(0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 0),
             GestureDetector(
               onTap: () {
                 showDialog<void>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    content: SpinnerChooseGroup(
-                      onClickGroup: (String accountGroup) {
-                        // Update the selected group text when a group is chosen
-                        setState(() {
-                          selectedGroup = accountGroup;
-                        });
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
+                    insetPadding: EdgeInsets.all(8),
+                    backgroundColor: Colors.transparent,
+                    content: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black12.withOpacity(0.3),
+                            blurRadius: 12,
+                            spreadRadius: 2,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: SpinnerChooseGroup(
+                        onClickGroup: (String accountGroup) {
+                          setState(() {
+                            selectedGroup = accountGroup;
+                          });
+                          Navigator.of(context).pop();
+                        },
                         selectedGroup: selectedGroup,
+                      ),
                     ),
                   ),
                 );
               },
               child: Container(
                 height: 60,
-                width: 360,
+                width: double.infinity, // Use responsive width
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Colors.grey),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                   child: Text(
-                    selectedGroup, // Display the updated group
+                    selectedGroup,
                     style: TextStyle(color: Colors.grey, fontSize: 16),
                   ),
                 ),
@@ -81,24 +99,40 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
             SizedBox(height: 16),
             InputTextFormField(
               hint: "Initial Amount",
-              controller: nameController,
+              controller: initialAmountController,
               textInputAction: TextInputAction.next,
               isMandatory: true,
+              isNumericInput: true,
             ),
             SizedBox(height: 16),
             InputTextFormField(
               hint: "Description",
-              controller: nameController,
+              controller: descriptionController,
               textInputAction: TextInputAction.next,
               isMandatory: true,
             ),
             SizedBox(height: 16),
             VwButton(
               onClick: () {
-                widget.onSave(nameController.text);
+                // Parse initialAmountController text to double
+                final double? initialAmount = double.tryParse(initialAmountController.text);
+                if (initialAmount == null) {
+                  // Show an error message if the value is not valid
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Please enter a valid initial amount.")),
+                  );
+                  return;
+                }
+
+                widget.onSave(
+                  nameController.text,
+                  initialAmount,
+                  descriptionController.text,
+                  selectedGroup,
+                );
                 Navigator.pop(context);
               },
-              titleText: 'Simpan',
+              titleText: 'Save',
             ),
           ],
         ),
