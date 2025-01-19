@@ -109,14 +109,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
             icon: const Icon(Icons.add, color: Colors.white),
             backgroundColor: vWPrimaryColor,
           ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: Column(
-              children: [
-                Expanded(child: buildContent(context)),
-              ],
-            ),
-          ),
+          body: buildContent(context),
         ));
   }
 
@@ -191,7 +184,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return AccountAddBottomSheet(onSave: (name,initialAmt, desc, group) {
+        return AccountAddBottomSheet(onSave: (name, initialAmt, desc, group) {
           final currentState = context.read<AccountBloc>().state;
           int position =
               currentState is AccountLoaded ? currentState.data.length + 1 : 0;
@@ -200,8 +193,8 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
               id: UuidHelper.generateNumericUUID(),
               name: name,
               desc: desc,
-              initialAmt: initialAmt ,
-              accountGroup:group);
+              initialAmt: initialAmt,
+              accountGroup: group);
           // tombol add terusan dari atas
           context.read<AccountBloc>().add(AddAccount(newAccount));
         });
@@ -209,18 +202,78 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     );
   }
 
+
+  Widget _buildAccountList(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 16),
+        Expanded(
+          child: _buildAccountListView(
+              context), // Extracted RefreshIndicator and AnimatedList logic
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAccountListView(BuildContext context) {
+    if (_data.isEmpty) {
+      return _buildEmptyState();
+    } else {
+      return RefreshIndicator(
+        onRefresh: () async{
+          context
+              .read<AccountBloc>()
+              .add(const GetAccount());
+        },
+        child: FutureBuilder(
+          future: Future.delayed(Duration.zero),
+          builder: (context, snapshot) {
+            // Safeguard: Ensure _data is not modified during the build phase
+            if (_data.isEmpty) {
+              return _buildEmptyState();
+            }
+
+            return AnimatedList(
+              key: _listKey,
+              initialItemCount: _data.length, // Ensure this matches _data's length
+              padding: EdgeInsets.only(
+                top: 28,
+                bottom: 80 + MediaQuery
+                    .of(context)
+                    .padding
+                    .bottom,
+              ),
+              itemBuilder: (context, index, animation) {
+                if (index >= _data.length) {
+                  // Prevent accessing out-of-bound indexes
+                  return const SizedBox.shrink();
+                }
+
+                final categoryModel = _data[index];
+                return _buildAccountItem(
+                    context, categoryModel, animation, index);
+              },
+            );
+          },
+        ),
+      );
+    }
+  }
+
+
   Widget _buildAccountItem(BuildContext context, Account accountModel,
       Animation<double> animation, int index) {
     return SizeTransition(
       sizeFactor: animation,
       child: AccountCard(
         account: accountModel,
-        onClickMoreAction: (category) =>
-            _showAccountActionBottomSheet(context, accountModel, index),
+        onClickMoreAction: (category) => {
+          // _showAccountActionBottomSheet(context, accountModel, index),
+        },
         onUpdate: (editedAccount) {
-          context
-              .read<AccountBloc>()
-              .add(UpdateAccount(editedAccount));
+          // context
+          //     .read<AccountBloc>()
+          //     .add(UpdateAccount(editedAccount));
         },
         onAnimationEnd: () {
           setState(() {
@@ -232,23 +285,24 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
       ),
     );
   }
-  void _showAccountActionBottomSheet(BuildContext context,
-      Account accountModel, int index) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return AccountActionBottomSheet(
-          category: accountModel,
-          onEdit: (account) =>
-              _showEditAccountBottomSheet(context, accountModel, index),
-          onDelete: (account) =>
-              _showDeleteConfirmationBottomSheet(context, accountModel, index),
-                 );
-      },
-    );
 
+  // void _showAccountActionBottomSheet(BuildContext context,
+  //     Account accountModel, int index) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (context) {
+  //       return AccountActionBottomSheet(
+  //         category: accountModel,
+  //         onEdit: (account) =>
+  //             _showEditAccountBottomSheet(context, accountModel, index),
+  //         onDelete: (account) =>
+  //             _showDeleteConfirmationBottomSheet(context, accountModel, index),
+  //                );
+  //     },
+  //   );
+  //
 
-    // Widget _buildErrorState(BuildContext context, AccountError state) {
+  // Widget _buildErrorState(BuildContext context, AccountError state) {
   //   final imagePath = state.failure is NetworkFailure
   //       ? 'assets/status_image/no-connection.png'
   //       : 'assets/status_image/internal-server-error.png';
@@ -265,200 +319,43 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
         transparantMode: false,
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              AccountTabBar(
-                tabs: [
-                  AccountTabItem(name: "Account"),
-                  AccountTabItem(name: "Card")
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Stack(
-                children: [
-                  Container(
-                    height: 400,
-                    color: vWPrimaryColor,
-                    child: Align(
-                        alignment: Alignment.center,
-                        child: BlocBuilder<UserBloc, UserState>(
-                            builder: (context, state) {
-                          if (state is UserLogged) {
-                            return Text(
-                              getInitials(state.user.firstName +
-                                  " " +
-                                  state.user.lastName),
-                              style: TextStyle(
-                                  fontSize: 60,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            );
-                          } else {
-                            return SizedBox();
-                          }
-                        })),
-                  ),
-                  // Image.asset("account_bg.png"),
-                  Align(
-                    alignment: Alignment(0, 0),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 320),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              children: [
-                                Card(
-                                    color: Colors.white,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Column(children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Cash 1",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15),
-                                            ),
-                                            Text(
-                                              "1900 8988 1234",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15),
-                                            )
-                                          ],
-                                        ),
-                                        SizedBox(height: 10),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Avaible Balance",
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 15),
-                                            ),
-                                            Text(
-                                              "Rp.20.000",
-                                              style: TextStyle(
-                                                  color: vWPrimaryColor,
-                                                  fontSize: 15),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(height: 7),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              "Avaible Balance",
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 15),
-                                            ),
-                                            Text(
-                                              "Rp.20.000",
-                                              style: TextStyle(
-                                                  color: vWPrimaryColor,
-                                                  fontSize: 15),
-                                            ),
-                                          ],
-                                        ),
-                                      ]),
-                                    ))
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Column(
-                          children: [
-                            Container(
-                              height: 120,
-                              width: 360,
-                              child: Card(
-                                  color: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Column(children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Cash 2",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15),
-                                          ),
-                                          Text(
-                                            "1900 8988 1234",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(height: 5),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Avaible Balance",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15),
-                                          ),
-                                          Text(
-                                            "Rp.20.000",
-                                            style: TextStyle(
-                                                color: vWPrimaryColor,
-                                                fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            "Avaible Balance",
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15),
-                                          ),
-                                          Text(
-                                            "Rp.20.000",
-                                            style: TextStyle(
-                                                color: vWPrimaryColor,
-                                                fontSize: 15),
-                                          ),
-                                        ],
-                                      ),
-                                    ]),
-                                  )),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        child: Column(
+          children: [
+
+            SizedBox(
+              height: 20,
+            ),
+            Stack(
+              children: [
+                Container(
+                  height: 400,
+                  color: vWPrimaryColor,
+                  child: Align(
+                      alignment: Alignment.center,
+                      child: BlocBuilder<UserBloc, UserState>(
+                          builder: (context, state) {
+                        if (state is UserLogged) {
+                          return Text(
+                            getInitials(state.user.firstName +
+                                " " +
+                                state.user.lastName),
+                            style: TextStyle(
+                                fontSize: 60,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          );
+                        } else {
+                          return SizedBox();
+                        }
+                      })),
+                ),
+                // Image.asset("account_bg.png"),
+
+              ],
+            ),
+            Expanded(child: _buildAccountList(context)),
+          ],
+
         ),
       ),
     );
