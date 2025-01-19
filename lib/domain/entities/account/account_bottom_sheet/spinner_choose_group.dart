@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:eshop/core/constant/colors.dart';
 import 'package:flutter/material.dart';
 
 class SpinnerChooseGroup extends StatefulWidget {
@@ -21,40 +21,37 @@ class _SpinnerChooseGroupState extends State<SpinnerChooseGroup> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height: 280,
+      width: 360,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(16)),),
+      padding: EdgeInsets.all(20),
       child: Column(
         children: [
           Text(
             "Choose Group",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
           ),
+          SizedBox(height: 10,),
           Divider(
-            height: 20,
+            height: 10,
             thickness: 1,
             color: Colors.black12,
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 20),
           ...groups.map((group) {
             bool isSelected = group == widget.selectedGroup; // Use widget.selectedGroup
             return GestureDetector(
               onTap: () {
                 widget.onClickGroup(group); // Notify the parent about the selection
               },
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                margin: const EdgeInsets.symmetric(vertical: 4),
-                decoration: BoxDecoration(
-                  color: isSelected ? Colors.orange : Colors.white, // Change background color
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.grey),
-                ),
-                child: Center(
-                  child: Text(
-                    group,
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.grey, // Change text color
-                      fontWeight: FontWeight.bold,
-                    ),
+              child: Container(padding: EdgeInsets.all(10),
+                child: Text(
+                  group,
+                  style: TextStyle(
+                    color: isSelected ? vWPrimaryColor : Colors.black26, // Change text color
+                    fontWeight: FontWeight.bold,fontSize: 16
                   ),
                 ),
               ),

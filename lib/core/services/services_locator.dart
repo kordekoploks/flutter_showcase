@@ -56,6 +56,7 @@ import '../../domain/repositories/delivery_info_repository.dart';
 import '../../domain/repositories/order_repository.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../../domain/repositories/user_repository.dart';
+import '../../domain/usecases/account/add_account_usecase.dart';
 import '../../domain/usecases/cart/add_cart_item_usecase.dart';
 import '../../domain/usecases/cart/clear_cart_usecase.dart';
 import '../../domain/usecases/cart/get_cached_cart_usecase.dart';
@@ -293,6 +294,7 @@ Future<void> init() async {
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedSettingUseCase(sl()));
+
   sl.registerLazySingleton(() => SaveSettingUseCase(sl()));
 
   sl.registerLazySingleton<SettingRepository>(
@@ -305,10 +307,11 @@ Future<void> init() async {
   //Setting Feature
   // Bloc
   sl.registerFactory(
-    () => AccountBloc(sl()),
+    () => AccountBloc(sl(),sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedAccountUseCase(sl()));
+  sl.registerLazySingleton(() => AddAccountUseCase(sl()));
 
   sl.registerLazySingleton<AccountRepository>(
     () => AccountRepositoryImpl(localDataSource: sl()),

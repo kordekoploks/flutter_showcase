@@ -16,6 +16,7 @@ import '../../../data/models/account/account_model.dart';
 import '../../../presentation/blocs/account/account_bloc.dart';
 import '../../../presentation/blocs/category/category_bloc.dart';
 import '../../../presentation/blocs/user/user_bloc.dart';
+import '../../../presentation/widgets/account_card/account_card.dart';
 import 'account_bottom_sheet/account_add_bottom_sheet.dart';
 import 'account_bottom_sheet/spinner_choose_group.dart';
 
@@ -190,7 +191,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return AccountAddBottomSheet(onSave: (name) {
+        return AccountAddBottomSheet(onSave: (name,initialAmt, desc, group) {
           final currentState = context.read<AccountBloc>().state;
           int position =
               currentState is AccountLoaded ? currentState.data.length + 1 : 0;
@@ -198,9 +199,9 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
           final newAccount = AccountModel(
               id: UuidHelper.generateNumericUUID(),
               name: name,
-              desc: '$name Description here',
-              initialAmt: 0.0,
-              accountGroup: GROUP_CASH);
+              desc: desc,
+              initialAmt: initialAmt ,
+              accountGroup:group);
           // tombol add terusan dari atas
           context.read<AccountBloc>().add(AddAccount(newAccount));
         });
@@ -208,7 +209,46 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     );
   }
 
-  // Widget _buildErrorState(BuildContext context, AccountError state) {
+  Widget _buildAccountItem(BuildContext context, Account accountModel,
+      Animation<double> animation, int index) {
+    return SizeTransition(
+      sizeFactor: animation,
+      child: AccountCard(
+        account: accountModel,
+        onClickMoreAction: (category) =>
+            _showAccountActionBottomSheet(context, accountModel, index),
+        onUpdate: (editedAccount) {
+          context
+              .read<AccountBloc>()
+              .add(UpdateAccount(editedAccount));
+        },
+        onAnimationEnd: () {
+          setState(() {
+            _data[index] = _data[index].copyWith(isUpdated: false);
+          });
+        },
+        index: index,
+        isUpdated: accountModel.isUpdated,
+      ),
+    );
+  }
+  void _showAccountActionBottomSheet(BuildContext context,
+      Account accountModel, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return AccountActionBottomSheet(
+          category: accountModel,
+          onEdit: (account) =>
+              _showEditAccountBottomSheet(context, accountModel, index),
+          onDelete: (account) =>
+              _showDeleteConfirmationBottomSheet(context, accountModel, index),
+                 );
+      },
+    );
+
+
+    // Widget _buildErrorState(BuildContext context, AccountError state) {
   //   final imagePath = state.failure is NetworkFailure
   //       ? 'assets/status_image/no-connection.png'
   //       : 'assets/status_image/internal-server-error.png';

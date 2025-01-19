@@ -63,9 +63,9 @@ class AccountLocalDataSourceImpl implements AccountLocalDataSource {
       final accountEntity = AccountEntity(
           int.parse(account["_id"]),
           account["name"],
-          account["image"],
           account["position"],
-          account["desc"]);
+          account["desc"],
+          account["accountGroup"]);
       accountBox.put(accountEntity);
     }
   }

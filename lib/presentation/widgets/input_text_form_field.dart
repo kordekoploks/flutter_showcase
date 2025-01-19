@@ -1,5 +1,6 @@
 import 'package:eshop/core/constant/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Required for inputFormatters
 
 class InputTextFormField extends StatefulWidget {
   final TextEditingController controller;
@@ -15,6 +16,7 @@ class InputTextFormField extends StatefulWidget {
   final IconData? prefixIcon;
   final Function(String)? onFieldSubmitted;
   final bool isMandatory;
+  final bool isNumericInput; // New property to enable numeric input
 
   const InputTextFormField({
     Key? key,
@@ -31,6 +33,7 @@ class InputTextFormField extends StatefulWidget {
     this.label,
     this.prefixIcon,
     this.isMandatory = false,
+    this.isNumericInput = false, // Default is false
   }) : super(key: key);
 
   @override
@@ -47,6 +50,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
     }
     return widget.label != null ? 85 : 60;
   }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -83,6 +87,12 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
               enabled: widget.enable,
               textInputAction: widget.textInputAction,
               onFieldSubmitted: widget.onFieldSubmitted,
+              keyboardType: widget.isNumericInput
+                  ? TextInputType.number
+                  : TextInputType.text, // Set numeric keyboard type
+              inputFormatters: widget.isNumericInput
+                  ? [FilteringTextInputFormatter.digitsOnly]
+                  : null, // Allow only numbers
               decoration: InputDecoration(
                 hintText: widget.hint,
                 hintStyle: TextStyle(color: Colors.grey),

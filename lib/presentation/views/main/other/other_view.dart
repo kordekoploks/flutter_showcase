@@ -98,7 +98,7 @@ class OtherView extends StatelessWidget {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "Login in your account",
+                                                    "Login in your account_card",
                                                     style: Theme.of(context).textTheme.titleLarge,
                                                   ),
                                                   const Text("")
