@@ -290,6 +290,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
       BuildContext context, Account accountModel, int index) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
         return AccountActionBottomSheet(
             account: accountModel,
