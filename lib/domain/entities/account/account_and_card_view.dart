@@ -102,21 +102,22 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
           } else if (state is AccountEmpty) _emptyData(state);
         },
         child: Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => _showAddAccountBottomSheet(context),
-            label: Text(
-              'Add',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-            ),
-            icon: const Icon(Icons.add, color: Colors.white),
-            backgroundColor: vWPrimaryColor,
-          ),
+          // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          // floatingActionButton: FloatingActionButton.extended(
+          //   onPressed: () => _showAddAccountBottomSheet(context),
+          //   label: Text(
+          //     'Add',
+          //     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          //           fontWeight: FontWeight.bold,
+          //           color: Colors.white,
+          //         ),
+          //   ),
+          //   icon: const Icon(Icons.add, color: Colors.white),
+          //   backgroundColor: vWPrimaryColor,
+          // ),
           body: buildContent(context),
-        ));
+        )
+    );
   }
 
   Widget _buildEmptyState() {
@@ -380,12 +381,14 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                   return <Widget>[
                     SliverAppBar(
                       automaticallyImplyLeading: false,
-                      expandedHeight: 200.0,
+                      expandedHeight: 300.0,
                       floating: false,
                       actions: [],
-                      collapsedHeight: 80,
+                      collapsedHeight: 82,
                       pinned: true,
+                      backgroundColor: Colors.white, // Sets the collapsed background color
                       flexibleSpace: FlexibleSpaceBar(
+                        collapseMode: CollapseMode.parallax,
                         centerTitle: true,
                         title: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -403,7 +406,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                                           return Text(
                                             '${state.user.firstName} ${state.user.lastName}',
                                             style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 16,
                                               color: Colors.black,
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -424,7 +427,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                               Text(
                                 "Personal Account",
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: 14,
                                   color: Colors.black45,
                                 ),
                               ),
@@ -495,20 +498,25 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                       ),
               ),
             ),
-            VwButton(
-              onClick: () {},
-              titleText: "Change Password",
-              buttonType: ButtonType.border,
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: VwButton(
+                onClick: ()  => _showAddAccountBottomSheet(context),
+                titleText: "Add Account",
+                buttonType: ButtonType.border,
+
+              ),
             ),
+
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showAddAccountBottomSheet(context),
-        label: Text('Add'),
-        icon: Icon(Icons.add),
-        backgroundColor: Colors.blue,
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () => _showAddAccountBottomSheet(context),
+      //   label: Text('Add'),
+      //   icon: Icon(Icons.add),
+      //   backgroundColor: Colors.blue,
+      // ),
     );
   }
 }
