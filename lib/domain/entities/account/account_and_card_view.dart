@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:eshop/domain/entities/account/account.dart';
 import 'package:eshop/domain/entities/account/account_tabbar.dart';
@@ -364,20 +363,6 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
   Widget buildContent(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Accounts",
-          style: TextStyle(color: Colors.white, fontSize: 18.0),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings, size: 26, color: Colors.white),
-            onPressed: () {
-              // Add your action for the settings icon here
-            },
-          ),
-        ],
-      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -385,67 +370,66 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
               padding: const EdgeInsets.only(left: 10, right: 6),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: BlocBuilder<UserBloc, UserState>(
-                              builder: (context, state) {
-                                if (state is UserLogged) {
-                                  return Text(
-                                    '${state.user.firstName} ${state.user.lastName}',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                } else {
-                                  return SizedBox();
-                                }
-                              },
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.keyboard_arrow_down,
-                              size: 24,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                      Text(
-                        "Personal Account",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black45,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                children: [],
               ),
             ),
             SizedBox(height: 8),
             Expanded(
               child: NestedScrollView(
-                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                headerSliverBuilder:
+                    (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverAppBar(
+                      automaticallyImplyLeading: false,
                       expandedHeight: 200.0,
                       floating: false,
+                      actions: [],
+                      collapsedHeight: 70,
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
                         centerTitle: true,
-                        title: Text(
-                          "Accounts",
-                          style: TextStyle(color: Colors.white, fontSize: 16.0),
+                        title: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: BlocBuilder<UserBloc, UserState>(
+                                      builder: (context, state) {
+                                        if (state is UserLogged) {
+                                          return Text(
+                                            '${state.user.firstName} ${state.user.lastName}',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          );
+                                        } else {
+                                          return SizedBox();
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.keyboard_arrow_down,
+                                    size: 24,
+                                    color: Colors.black,
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                "Personal Account",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black45,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         background: Container(
                           height: 380,
@@ -487,25 +471,25 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                 },
                 body: _data.isEmpty
                     ? Center(
-                  child: Text("No accounts available. Pull to refresh."),
-                )
+                        child: Text("No accounts available. Pull to refresh."),
+                      )
                     : RefreshIndicator(
-                  onRefresh: () async {
-                    _fetchData();
-                  },
-                  child: AnimatedList(
-                    key: _listKey,
-                    initialItemCount: _data.length,
-                    itemBuilder: (context, index, animation) {
-                      return _buildAccountItem(
-                        context,
-                        _data[index],
-                        animation,
-                        index,
-                      );
-                    },
-                  ),
-                ),
+                        onRefresh: () async {
+                          _fetchData();
+                        },
+                        child: AnimatedList(
+                          key: _listKey,
+                          initialItemCount: _data.length,
+                          itemBuilder: (context, index, animation) {
+                            return _buildAccountItem(
+                              context,
+                              _data[index],
+                              animation,
+                              index,
+                            );
+                          },
+                        ),
+                      ),
               ),
             ),
           ],
@@ -518,6 +502,5 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
         backgroundColor: Colors.blue,
       ),
     );
-
   }
 }
