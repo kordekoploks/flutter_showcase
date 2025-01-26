@@ -85,6 +85,8 @@ class VwButton extends StatelessWidget {
     switch (buttonType) {
       case ButtonType.secondary:
         return vWButtonSecondaryColor;
+      case ButtonType.border:
+        return vWButtonBorderColor;
       case ButtonType.link:
         return vWButtonPrimaryColor;
       case ButtonType.primary:
@@ -110,6 +112,7 @@ class DottedBorderPainter extends CustomPainter {
       ..color = borderColor
       ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke;
+
 
     final dashWidth = 5.0;
     final dashSpace = 3.0;
