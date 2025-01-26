@@ -1,4 +1,5 @@
 import 'package:eshop/domain/entities/account/account_bottom_sheet/spinner_choose_group.dart';
+import 'package:eshop/domain/entities/account/account_bottom_sheet/vw_spinner.dart';
 import 'package:eshop/presentation/widgets/vw_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,10 +38,10 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
       content: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
-          key:_formKey,
-          child:Column(
+          key: _formKey,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.min, // Ensure content doesn't overflow
             children: [
               GestureDetector(
                 onTap: () {
@@ -75,21 +76,8 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
                     ),
                   );
                 },
-                child: Container(
-                  height: 60,
-                  width: double.infinity, // Use responsive width
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                    child: Text(
-                      selectedGroup,
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    ),
-                  ),
+                child: VwSpinner(
+                  text: selectedGroup,
                 ),
               ),
               SizedBox(height: 16),
@@ -118,25 +106,24 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
               VwButton(
                 onClick: () {
                   if (_formKey.currentState!.validate()) {
-                  // Parse initialAmountController text to double
-                  final double? initialAmount = double.tryParse(
-                      initialAmountController.text);
-                  if (initialAmount == null) {
-                    // Show an error message if the value is not valid
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(
-                          "Please enter a valid initial amount.")),
+                    // Parse initialAmountController text to double
+                    final double? initialAmount =
+                    double.tryParse(initialAmountController.text);
+                    if (initialAmount == null) {
+                      // Show an error message if the value is not valid
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("Please enter a valid initial amount.")),
+                      );
+                      return;
+                    }
+                    widget.onSave(
+                      nameController.text,
+                      initialAmount,
+                      descriptionController.text,
+                      selectedGroup,
                     );
-                    return;
+                    Navigator.pop(context);
                   }
-                  widget.onSave(
-                    nameController.text,
-                    initialAmount,
-                    descriptionController.text,
-                    selectedGroup,
-                  );
-                  Navigator.pop(context);
-                }
                 },
                 titleText: 'Save',
               ),
