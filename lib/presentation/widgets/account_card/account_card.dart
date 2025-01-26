@@ -11,7 +11,6 @@ import '../../../data/models/account/account_model.dart';
 import '../../../domain/entities/category/outcome_category.dart';
 import '../../blocs/account/account_bloc.dart';
 
-
 class AccountCard extends StatefulWidget {
   final Account? account;
   final int index;
@@ -21,17 +20,16 @@ class AccountCard extends StatefulWidget {
   final bool isUpdated;
   final VoidCallback onAnimationEnd;
 
-
-  const AccountCard({
-    Key? key,
-    this.account,
-    required this.index,
-    this.onClick,
-    this.onClickMoreAction,
-    this.onUpdate,
-    required this.isUpdated,
-    required this.onAnimationEnd
-  }) : super(key: key);
+  const AccountCard(
+      {Key? key,
+      this.account,
+      required this.index,
+      this.onClick,
+      this.onClickMoreAction,
+      this.onUpdate,
+      required this.isUpdated,
+      required this.onAnimationEnd})
+      : super(key: key);
 
   @override
   _AccountCardState createState() => _AccountCardState();
@@ -47,7 +45,7 @@ class _AccountCardState extends State<AccountCard> {
     return Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child:
-        BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
+            BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
           return _buildAccountContent(context);
         }));
   }
@@ -66,109 +64,175 @@ class _AccountCardState extends State<AccountCard> {
         // Handle category click
       },
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Column(
             children: [
               _buildAccountHeader(),
             ],
           ),
-          Container(
-            child: LayoutBuilder(
-              builder: (context, constraint) {
-                return Container(
-                  width: constraint.maxWidth * 0.95,
-                  height: 1,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.5),
-                    borderRadius: const BorderRadius.all(Radius.circular(60)),
-                  ), //todo container base
-                );
-              },
-            ),
-          ),
+          // Container(
+          //   child: LayoutBuilder(
+          //     builder: (context, constraint) {
+          //       return Container(
+          //         width: constraint.maxWidth * 0.95,
+          //         height: 50,
+          //         decoration: BoxDecoration(
+          //           color: Colors.grey.withOpacity(0.5),
+          //           borderRadius: const BorderRadius.all(Radius.circular(60)),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );
   }
 
   Widget _buildAccountHeader() {
-    return AnimatedContainer(
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInOut,
-      decoration: BoxDecoration(
-        color: widget.isUpdated ? vWPrimaryColor : Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      onEnd: widget.onAnimationEnd,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            // _buildAccountImage(),
-            _buildAccountDetails(),
-            // _buildExpandIcon(),
-            _buildMoreActionsIcon(),
-          ],
-        ),
-      ),
-    );
-  }   //todo animasi saat mendi kuning
-
-
-  Widget _buildPlaceholderImage() {
-    return Container(
-      width: 60,
-      height: 60,
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.circular(35),
-      ),
-    );
-  }
-
-  Widget _buildAccountDetails() {
-    return Expanded(
-      flex: 7,
-      child: SizedBox(
-        height: 60,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 4, 0),
-              child: widget.account == null
-                  ? _buildPlaceholderText(width: 120)
-                  : Text(
-                widget.account!.name,
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .bodyLarge,
-                overflow: TextOverflow.ellipsis,
-              ),
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          if (widget.onClickMoreAction != null && widget.account != null) {
+            widget.onClickMoreAction!(
+                widget.account!); // Trigger the onClick function
+          }
+        },
+        child: AnimatedContainer(
+          width: 340,
+          height: 160,
+          duration: const Duration(seconds: 1),
+          curve: Curves.easeInOut,
+          decoration: BoxDecoration(
+            color: widget.isUpdated ? vWPrimaryColor : Colors.white,
+            borderRadius: BorderRadius.circular(18.0),
+            border: Border.all(
+              color: Colors.white, // Border color
+              width: 2.0, // Border thickness
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 4, 0),
-              child: Row(
-                children: [
-                  SizedBox(
-                    height: 18,
-                    child: widget.account == null
-                        ? _buildPlaceholderText(width: 100)
-                        : Text(
-                      widget.account!.desc,
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .labelMedium,
-                      overflow: TextOverflow.ellipsis,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5), // Shadow color with transparency
+                spreadRadius: 2, // How much the shadow spreads
+                blurRadius: 8, // How blurry the shadow is
+                offset: Offset(4, 4), // Horizontal and vertical shadow offset
+              ),
+            ],
+          ),
+
+        onEnd: widget.onAnimationEnd,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            // Increased padding for a larger container
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Group",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                    Padding(
+                      padding: const EdgeInsets.all(1),
+                      child: widget.account == null
+                          ? _buildPlaceholderText(width: 120)
+                          : Text(
+                              widget.account!.accountGroup,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Name",
+                      style: TextStyle(
+                        fontSize: 14,color: Colors.black45,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(1),
+                      child: widget.account == null
+                          ? _buildPlaceholderText(width: 120)
+                          : Text(
+                              widget.account!.name,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: vWPrimaryColor,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Initial Amt",
+                      style: TextStyle(
+                        fontSize: 14,color: Colors.black45,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(1),
+                      child: widget.account == null
+                          ? _buildPlaceholderText(width: 120)
+                          : Text(
+                              widget.account!.initialAmt.toString(),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: vWPrimaryColor),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Description",
+                      style: TextStyle(color: Colors.black45,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 4, 4, 0),
+                      child: widget.account == null
+                          ? _buildPlaceholderText(width: 100)
+                          : Text(
+                              widget.account!.desc,
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: vWPrimaryColor),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -185,23 +249,20 @@ class _AccountCardState extends State<AccountCard> {
     );
   }
 
-  Widget _buildMoreActionsIcon() {
-    return Expanded(
-      flex: 2,
-      child: GestureDetector(
-        onTap: () {
-          if (widget.onClickMoreAction != null && widget.account != null) {
-            widget.onClickMoreAction!(widget.account!);
-          }
-        },
-        child: const Icon(
-          Icons.more_vert,
-          color: Colors.grey,
-        ),
-      ),
-    );
-  }
-
-
-
+// Widget _buildMoreActionsIcon() {
+//   return Expanded(
+//     flex: 2,
+//     child: GestureDetector(
+//       onTap: () {
+//         if (widget.onClickMoreAction != null && widget.account != null) {
+//           widget.onClickMoreAction!(widget.account!);
+//         }
+//       },
+//       child: const Icon(
+//         Icons.more_vert,
+//         color: Colors.grey,
+//       ),
+//     ),
+//   );
+// }
 }

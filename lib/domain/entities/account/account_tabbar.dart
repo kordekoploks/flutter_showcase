@@ -47,7 +47,7 @@ class _AccountTabBarState extends State<AccountTabBar> with SingleTickerProvider
             child: Card(
               elevation: 3,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(16),
               ),
               color: _tabController.index == widget.tabs.indexOf(tab)
                   ? vWPrimaryColor // Active card background
