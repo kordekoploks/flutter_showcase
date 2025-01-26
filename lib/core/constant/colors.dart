@@ -6,6 +6,7 @@ Color vWPrimaryColor = const Color(0xffffba24);
 Color vWSecondaryColor = const Color(0xff040415);
 Color vWButtonPrimaryColor = const Color(0xffffba24);
 Color vWButtonSecondaryColor = Colors.white10;
+Color vWButtonBorderColor = Colors.transparent;
 Color vWInputBackgroundColor = const Color(0xFFEAEAEA);
 Color vWInputLabelColor = const Color(0xFF848484);
 Color vWTextColor = const Color(0xff040415);
