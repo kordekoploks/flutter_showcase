@@ -101,7 +101,7 @@ class _AccountCardState extends State<AccountCard> {
         },
         child: AnimatedContainer(
           width: 340,
-          height: 160,
+          height: 140,
           duration: const Duration(seconds: 1),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
@@ -131,11 +131,17 @@ class _AccountCardState extends State<AccountCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Group",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.all(1),
+                      child: widget.account == null
+                          ? _buildPlaceholderText(width: 120)
+                          : Text(
+                        widget.account!.name,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     Padding(
@@ -154,32 +160,6 @@ class _AccountCardState extends State<AccountCard> {
                   ],
                 ),
                 SizedBox(height: 8,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Name",
-                      style: TextStyle(
-                        fontSize: 14,color: Colors.black45,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(1),
-                      child: widget.account == null
-                          ? _buildPlaceholderText(width: 120)
-                          : Text(
-                              widget.account!.name,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: vWPrimaryColor,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                    ),
-                  ],
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

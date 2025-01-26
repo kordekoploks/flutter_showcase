@@ -1,4 +1,3 @@
-
 import 'package:eshop/domain/entities/account/account.dart';
 import 'package:eshop/domain/entities/account/account_tabbar.dart';
 import 'package:eshop/presentation/views/main/other/income_ui/tabbar.dart';
@@ -384,12 +383,13 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                       expandedHeight: 200.0,
                       floating: false,
                       actions: [],
-                      collapsedHeight: 70,
+                      collapsedHeight: 80,
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
                         centerTitle: true,
                         title: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 18, vertical: 10),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -473,24 +473,32 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                     ? Center(
                         child: Text("No accounts available. Pull to refresh."),
                       )
-                    : RefreshIndicator(
-                        onRefresh: () async {
-                          _fetchData();
-                        },
-                        child: AnimatedList(
-                          key: _listKey,
-                          initialItemCount: _data.length,
-                          itemBuilder: (context, index, animation) {
-                            return _buildAccountItem(
-                              context,
-                              _data[index],
-                              animation,
-                              index,
-                            );
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 40.0),
+                        child: RefreshIndicator(
+                          onRefresh: () async {
+                            _fetchData();
                           },
+                          child: AnimatedList(
+                            key: _listKey,
+                            initialItemCount: _data.length,
+                            itemBuilder: (context, index, animation) {
+                              return _buildAccountItem(
+                                context,
+                                _data[index],
+                                animation,
+                                index,
+                              );
+                            },
+                          ),
                         ),
                       ),
               ),
+            ),
+            VwButton(
+              onClick: () {},
+              titleText: "Change Password",
+              buttonType: ButtonType.border,
             ),
           ],
         ),
