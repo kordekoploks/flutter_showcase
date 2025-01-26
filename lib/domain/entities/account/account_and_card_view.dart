@@ -2,10 +2,13 @@ import 'dart:ffi';
 
 import 'package:eshop/domain/entities/account/account.dart';
 import 'package:eshop/domain/entities/account/account_tabbar.dart';
+import 'package:eshop/presentation/views/main/other/income_ui/tabbar.dart';
+import 'package:eshop/presentation/views/main/other/settings/settings_view.dart';
 import 'package:eshop/presentation/widgets/vw_appbar.dart';
 import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stretchy_header/stretchy_header.dart';
 
 import '../../../../../core/constant/colors.dart';
 
@@ -16,6 +19,9 @@ import '../../../data/models/account/account_model.dart';
 import '../../../presentation/blocs/account/account_bloc.dart';
 import '../../../presentation/blocs/category/category_bloc.dart';
 import '../../../presentation/blocs/user/user_bloc.dart';
+import '../../../presentation/views/main/outcome_category/confirmation_bottom_sheet.dart';
+import '../../../presentation/widgets/account_card/account_bottom_sheet/account_action_bottom_sheet.dart';
+import '../../../presentation/widgets/account_card/account_bottom_sheet/account_edit_bottom_sheet.dart';
 import '../../../presentation/widgets/account_card/account_card.dart';
 import 'account_bottom_sheet/account_add_bottom_sheet.dart';
 import 'account_bottom_sheet/spinner_choose_group.dart';
@@ -43,6 +49,8 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<Account> _data = [];
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
 
   @override
   void initState() {
@@ -160,12 +168,13 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
 
   void _removeSubAccount(AccountDeleted state) {
     final index = _data.indexOf(state.dataDeleted);
-    // if (index >= 0) {
-    //   _listKey.currentState?.removeItem(
-    //     index,
-    //         (context, animation) =>
-    //         _buildAccountItem(context, state.dataDeleted, animation, index),
-    //   );
+    if (index >= 0) {
+      _listKey.currentState?.removeItem(
+        index,
+        (context, animation) =>
+            _buildAccountItem(context, state.dataDeleted, animation, index),
+      );
+    }
     _data.removeAt(index);
   }
 
@@ -202,7 +211,6 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     );
   }
 
-
   Widget _buildAccountList(BuildContext context) {
     return Column(
       children: [
@@ -220,10 +228,8 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
       return _buildEmptyState();
     } else {
       return RefreshIndicator(
-        onRefresh: () async{
-          context
-              .read<AccountBloc>()
-              .add(const GetAccount());
+        onRefresh: () async {
+          context.read<AccountBloc>().add(const GetAccount());
         },
         child: FutureBuilder(
           future: Future.delayed(Duration.zero),
@@ -235,13 +241,11 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
 
             return AnimatedList(
               key: _listKey,
-              initialItemCount: _data.length, // Ensure this matches _data's length
+              initialItemCount: _data.length,
+              // Ensure this matches _data's length
               padding: EdgeInsets.only(
                 top: 28,
-                bottom: 80 + MediaQuery
-                    .of(context)
-                    .padding
-                    .bottom,
+                bottom: 80 + MediaQuery.of(context).padding.bottom,
               ),
               itemBuilder: (context, index, animation) {
                 if (index >= _data.length) {
@@ -249,9 +253,9 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                   return const SizedBox.shrink();
                 }
 
-                final categoryModel = _data[index];
+                final accountModel = _data[index];
                 return _buildAccountItem(
-                    context, categoryModel, animation, index);
+                    context, accountModel, animation, index);
               },
             );
           },
@@ -260,104 +264,260 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     }
   }
 
-
   Widget _buildAccountItem(BuildContext context, Account accountModel,
       Animation<double> animation, int index) {
     return SizeTransition(
       sizeFactor: animation,
-      child: AccountCard(
-        account: accountModel,
-        onClickMoreAction: (category) => {
-          // _showAccountActionBottomSheet(context, accountModel, index),
-        },
-        onUpdate: (editedAccount) {
-          // context
-          //     .read<AccountBloc>()
-          //     .add(UpdateAccount(editedAccount));
-        },
-        onAnimationEnd: () {
-          setState(() {
-            _data[index] = _data[index].copyWith(isUpdated: false);
-          });
-        },
-        index: index,
-        isUpdated: accountModel.isUpdated,
+      child: GestureDetector(
+        child: AccountCard(
+          account: accountModel,
+          onClickMoreAction: (account) =>
+              _showAccountActionBottomSheet(context, accountModel, index),
+          onUpdate: (editedAccount) {
+            context.read<AccountBloc>().add(UpdateAccount(editedAccount));
+          },
+          onAnimationEnd: () {
+            setState(() {
+              _data[index] = _data[index].copyWith(isUpdated: false);
+            });
+          },
+          index: index,
+          isUpdated: accountModel.isUpdated,
+        ),
       ),
     );
   }
 
-  // void _showAccountActionBottomSheet(BuildContext context,
-  //     Account accountModel, int index) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) {
-  //       return AccountActionBottomSheet(
-  //         category: accountModel,
-  //         onEdit: (account) =>
-  //             _showEditAccountBottomSheet(context, accountModel, index),
-  //         onDelete: (account) =>
-  //             _showDeleteConfirmationBottomSheet(context, accountModel, index),
-  //                );
-  //     },
-  //   );
-  //
+  void _showAccountActionBottomSheet(
+      BuildContext context, Account accountModel, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return AccountActionBottomSheet(
+            account: accountModel,
+            onEdit: (account) =>
+                _showEditAccountBottomSheet(context, accountModel, index),
+            onDelete: (account) => _showDeleteConfirmationBottomSheet(
+                context, accountModel, index));
+      },
+    );
+  }
 
-  // Widget _buildErrorState(BuildContext context, AccountError state) {
-  //   final imagePath = state.failure is NetworkFailure
-  //       ? 'assets/status_image/no-connection.png'
-  //       : 'assets/status_image/internal-server-error.png';
-  //   final message = state.failure is NetworkFailure
-  //       ? "Network failure\nTry again!"
-  //       : "Categories not found!";
-  // }
+  void _showEditAccountBottomSheet(
+      BuildContext context, Account accountModel, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return AccountEditBottomSheet(
+          account: accountModel,
+          onSave: (editedAccount) {
+            context.read<AccountBloc>().add(UpdateAccount(editedAccount));
+          },
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmationBottomSheet(
+      BuildContext context, Account accountModel, int index) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ConfirmationBottomSheet(
+          title: "Hapus Kategori",
+          desc: Text.rich(
+            TextSpan(
+              style: Theme.of(context).textTheme.bodyMedium,
+              children: [
+                const TextSpan(
+                    text: "Apakah kamu yakin akan menghapus kategori "),
+                TextSpan(
+                  text: accountModel.name,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const TextSpan(text: "?"),
+              ],
+            ),
+          ),
+          positiveLabel: "Hapus",
+          negativeLabel: "Tidak",
+          onPositiveClick: () {
+            context.read<AccountBloc>().add(DeleteAccount(accountModel));
+          },
+        );
+      },
+    );
+  }
+
+//
+// Widget _buildErrorState(BuildContext context, AccountError state) {
+//   final imagePath = state.failure is NetworkFailure
+//       ? 'assets/status_image/no-connection.png'
+//       : 'assets/status_image/internal-server-error.png';
+//   final message = state.failure is NetworkFailure
+//       ? "Network failure\nTry again!"
+//       : "Categories not found!";
+// }
   @override
   Widget buildContent(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: VwAppBar(
-        title: "Account And Card",
-        transparantMode: false,
+      appBar: AppBar(
+        title: Text(
+          "Accounts",
+          style: TextStyle(color: Colors.white, fontSize: 18.0),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings, size: 26, color: Colors.white),
+            onPressed: () {
+              // Add your action for the settings icon here
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-
-            SizedBox(
-              height: 20,
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 6),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: BlocBuilder<UserBloc, UserState>(
+                              builder: (context, state) {
+                                if (state is UserLogged) {
+                                  return Text(
+                                    '${state.user.firstName} ${state.user.lastName}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                } else {
+                                  return SizedBox();
+                                }
+                              },
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              Icons.keyboard_arrow_down,
+                              size: 24,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                      Text(
+                        "Personal Account",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black45,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-            Stack(
-              children: [
-                Container(
-                  height: 400,
-                  color: vWPrimaryColor,
-                  child: Align(
-                      alignment: Alignment.center,
-                      child: BlocBuilder<UserBloc, UserState>(
-                          builder: (context, state) {
-                        if (state is UserLogged) {
-                          return Text(
-                            getInitials(state.user.firstName +
-                                " " +
-                                state.user.lastName),
-                            style: TextStyle(
-                                fontSize: 60,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          );
-                        } else {
-                          return SizedBox();
-                        }
-                      })),
+            SizedBox(height: 8),
+            Expanded(
+              child: NestedScrollView(
+                headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+                  return <Widget>[
+                    SliverAppBar(
+                      expandedHeight: 200.0,
+                      floating: false,
+                      pinned: true,
+                      flexibleSpace: FlexibleSpaceBar(
+                        centerTitle: true,
+                        title: Text(
+                          "Accounts",
+                          style: TextStyle(color: Colors.white, fontSize: 16.0),
+                        ),
+                        background: Container(
+                          height: 380,
+                          child: Stack(
+                            children: [
+                              Image.asset(
+                                'assets/images/account_bg.png',
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: double.infinity,
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: BlocBuilder<UserBloc, UserState>(
+                                  builder: (context, state) {
+                                    if (state is UserLogged) {
+                                      return Text(
+                                        getInitials(
+                                          '${state.user.firstName} ${state.user.lastName}',
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: 60,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      );
+                                    } else {
+                                      return SizedBox();
+                                    }
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ];
+                },
+                body: _data.isEmpty
+                    ? Center(
+                  child: Text("No accounts available. Pull to refresh."),
+                )
+                    : RefreshIndicator(
+                  onRefresh: () async {
+                    _fetchData();
+                  },
+                  child: AnimatedList(
+                    key: _listKey,
+                    initialItemCount: _data.length,
+                    itemBuilder: (context, index, animation) {
+                      return _buildAccountItem(
+                        context,
+                        _data[index],
+                        animation,
+                        index,
+                      );
+                    },
+                  ),
                 ),
-                // Image.asset("account_bg.png"),
-
-              ],
+              ),
             ),
-            Expanded(child: _buildAccountList(context)),
           ],
-
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showAddAccountBottomSheet(context),
+        label: Text('Add'),
+        icon: Icon(Icons.add),
+        backgroundColor: Colors.blue,
+      ),
     );
+
   }
 }

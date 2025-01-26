@@ -1,26 +1,43 @@
-import 'package:eshop/domain/entities/account/account_bottom_sheet/spinner_choose_group.dart';
-import 'package:eshop/presentation/widgets/vw_bottom_sheet.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../presentation/widgets/input_text_form_field.dart';
-import '../../../../presentation/widgets/vw_button.dart';
+import '../../../../data/models/account/account_model.dart';
+import '../../../../domain/entities/account/account.dart';
+import '../../../../domain/entities/account/account_bottom_sheet/spinner_choose_group.dart';
+import '../../input_text_form_field.dart';
+import '../../vw_bottom_sheet.dart';
+import '../../vw_button.dart';
 
-class AccountAddBottomSheet extends StatefulWidget {
-  final Function(String, double, String, String) onSave;
+class AccountEditBottomSheet extends StatefulWidget {
+  final Function(AccountModel) onSave; // Adjusted function signature
+  final Account account;
 
-  AccountAddBottomSheet({super.key, required this.onSave});
+  const AccountEditBottomSheet({
+    Key? key,
+    required this.account,
+    required this.onSave,
+  }) : super(key: key);
 
   @override
-  _AccountAddBottomSheetState createState() => _AccountAddBottomSheetState();
+  _AccountEditBottomSheetState createState() => _AccountEditBottomSheetState();
 }
 
-class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController initialAmountController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+class _AccountEditBottomSheetState extends State<AccountEditBottomSheet> {
+  late TextEditingController nameController;
+  late TextEditingController initialAmountController;
+  late TextEditingController descriptionController;
   String selectedGroup = "Choose Group";
   final _formKey = GlobalKey<FormState>();
+
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController(text: widget.account.name);
+    initialAmountController =
+        TextEditingController(text: widget.account.initialAmt.toString());
+    descriptionController = TextEditingController(text: widget.account.desc);
+    selectedGroup = widget.account.accountGroup;
+  }
 
   @override
   void dispose() {
@@ -33,12 +50,12 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return VWBottomSheet(
-      title: "Add Account",
+      title: "Edit Account",
       content: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
-          key:_formKey,
-          child:Column(
+          key: _formKey,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -84,7 +101,8 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
                     border: Border.all(color: Colors.grey),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 16.0),
                     child: Text(
                       selectedGroup,
                       style: TextStyle(color: Colors.grey, fontSize: 16),
@@ -92,51 +110,44 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              SizedBox(
+                height: 16,
+              ),
               InputTextFormField(
-                hint: "Name",
+                label: "Account Name",
                 controller: nameController,
                 textInputAction: TextInputAction.next,
                 isMandatory: true,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               InputTextFormField(
-                hint: "Initial Amount",
+                label: "Initial Amount",
                 controller: initialAmountController,
                 textInputAction: TextInputAction.next,
                 isMandatory: true,
-                isNumericInput: true,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               InputTextFormField(
-                hint: "Description",
+                label: "Description",
                 controller: descriptionController,
-                textInputAction: TextInputAction.next,
-                isMandatory: true,
+                textInputAction: TextInputAction.done,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               VwButton(
                 onClick: () {
                   if (_formKey.currentState!.validate()) {
-                  // Parse initialAmountController text to double
-                  final double? initialAmount = double.tryParse(
-                      initialAmountController.text);
-                  if (initialAmount == null) {
-                    // Show an error message if the value is not valid
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(
-                          "Please enter a valid initial amount.")),
+                    widget.onSave(
+                      AccountModel(
+                        id: widget.account.id,
+                        name: nameController.text,
+                        desc: descriptionController.text,
+                        initialAmt:
+                        double.tryParse(initialAmountController.text) ?? 0.0,
+                        accountGroup: selectedGroup,
+                      ),
                     );
-                    return;
+                    Navigator.pop(context);
                   }
-                  widget.onSave(
-                    nameController.text,
-                    initialAmount,
-                    descriptionController.text,
-                    selectedGroup,
-                  );
-                  Navigator.pop(context);
-                }
                 },
                 titleText: 'Save',
               ),

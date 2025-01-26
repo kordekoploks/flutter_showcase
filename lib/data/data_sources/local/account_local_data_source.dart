@@ -11,8 +11,6 @@ abstract class AccountLocalDataSource {
 
   Future<void> saveAccount(AccountModel accountModel);
 
-  Future<void> saveAccounts(List<AccountModel> accountModels);
-
   Future<void> deleteAccount(Account accountModel);
 
   Future<void> generateAccount();
