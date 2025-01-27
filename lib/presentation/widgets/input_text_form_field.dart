@@ -54,19 +54,24 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
         _isFocused = _focusNode.hasFocus;
       });
     });
+    widget.controller.addListener(_onTextChanged);
   }
 
   @override
   void dispose() {
     _focusNode.dispose();
+    widget.controller.removeListener(_onTextChanged);
     super.dispose();
+  }
+
+  void _onTextChanged() {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     final bool isFilled = widget.controller.text.isNotEmpty;
 
-    // Choose between full border or bottom border only
     InputBorder borderStyle = widget.isBottomBorderOnly
         ? UnderlineInputBorder(
       borderSide: const BorderSide(color: Colors.grey, width: 1),
@@ -109,7 +114,7 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
             labelStyle: TextStyle(
               color: _isFocused || isFilled ? Colors.black : Colors.grey,
               fontSize: 16,
-              height: 1.5, // Adjust label height for better positioning
+              height: 1.5,
             ),
             floatingLabelBehavior: FloatingLabelBehavior.auto,
             hintText: !_isFocused && !isFilled ? widget.hint : null,
@@ -124,12 +129,10 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
             prefixIcon: widget.prefixIcon != null
                 ? Icon(widget.prefixIcon, color: Colors.black87)
                 : null,
-            suffixIcon: widget.isSecureField
+            suffixIcon: widget.isNumericInput && isFilled
                 ? IconButton(
-              icon: Icon(
-                _isFocused
-                    ? Icons.visibility
-                    : Icons.visibility_off,
+              icon: const Icon(
+                Icons.clear,
                 color: Colors.black87,
               ),
               onPressed: () {
@@ -143,11 +146,13 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
             enabledBorder: borderStyle,
             focusedBorder: widget.isBottomBorderOnly
                 ? UnderlineInputBorder(
-              borderSide: const BorderSide(color: Colors.black87, width: 2),
+              borderSide:
+              const BorderSide(color: Colors.black87, width: 2),
             )
                 : OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
-              borderSide: const BorderSide(color: Colors.black87, width: 2),
+              borderSide:
+              const BorderSide(color: Colors.black87, width: 2),
             ),
           ),
         ),
@@ -155,3 +160,4 @@ class _InputTextFormFieldState extends State<InputTextFormField> {
     );
   }
 }
+
