@@ -10,6 +10,8 @@ class VwSpinner extends StatelessWidget {
   final TextStyle textStyle;
   final EdgeInsetsGeometry padding;
   final Icon arrowIcon;
+  final bool isValid; // Validation flag
+  final String validationMessage; // Validation message
 
   const VwSpinner({
     Key? key,
@@ -22,31 +24,50 @@ class VwSpinner extends StatelessWidget {
     this.textStyle = const TextStyle(color: Colors.grey, fontSize: 16),
     this.padding = const EdgeInsets.symmetric(horizontal: 16.0),
     this.arrowIcon = const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+    this.isValid = true,
+    this.validationMessage = "Please select an item.",
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: height,
-      width: width,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(borderRadius),
-        border: Border.all(color: borderColor),
-      ),
-      child: Padding(
-        padding: padding,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              text,
-              style: textStyle,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(borderRadius),
+            border: Border.all(
+              color: isValid ? borderColor : Colors.red, // Highlight border if invalid
             ),
-            arrowIcon, // Add the arrow icon
-          ],
+          ),
+          child: Padding(
+            padding: padding,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  text,
+                  style: textStyle.copyWith(
+                    color: isValid ? textStyle.color : Colors.red, // Change text color if invalid
+                  ),
+                ),
+                arrowIcon,
+              ],
+            ),
+          ),
         ),
-      ),
+        if (!isValid) // Show validation message if not valid
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Text(
+              validationMessage,
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
+      ],
     );
   }
 }
