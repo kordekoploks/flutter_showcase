@@ -207,6 +207,13 @@ class OtherView extends StatelessWidget {
                                   },
                                   title: "About",
                                 ),
+                                MenuItemCard(
+                                  onClick: () {
+                                    Navigator.of(context)
+                                        .pushNamed(AppRouter.helpView);
+                                  },
+                                  title: "Help",
+                                ),
                                 const SizedBox(height: 6),
                                 BlocBuilder<UserBloc, UserState>(
                                   builder: (context, state) {
