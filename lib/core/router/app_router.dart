@@ -17,6 +17,7 @@ import '../../presentation/views/authentication/signup_view.dart';
 import '../../presentation/views/main/main_view.dart';
 import '../../presentation/views/main/other/about/about_view.dart';
 import '../../presentation/views/main/other/delivery_info/delivery_info.dart';
+import '../../presentation/views/main/other/help/help_view.dart';
 import '../../presentation/views/main/other/notification/notification_view.dart';
 import '../../presentation/views/main/other/orders/order_view.dart';
 import '../../presentation/views/main/other/profile/profile_screen.dart';
@@ -40,7 +41,7 @@ class AppRouter {
   static const String profileEditView = '/profile-edit-view';
   static const String income1 = '/income-1';
   static const String accountAndCardView = '/account_card-and-card-view';
-
+  static const String helpView = '/help-view';
 
   //products
   static const String productDetails = '/product-details';
@@ -78,6 +79,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ProfilePengguna());
       case accountAndCardView:
         return MaterialPageRoute(builder: (_) =>  AccountAndCardView());
+      case helpView:
+        return MaterialPageRoute(builder: (_) =>  HelpView());
       case productDetails:
         Product product = routeSettings.arguments as Product;
         return MaterialPageRoute(
