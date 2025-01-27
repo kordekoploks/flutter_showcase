@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../data/models/account/account_model.dart';
 import '../../../../domain/entities/account/account.dart';
 import '../../../../domain/entities/account/account_bottom_sheet/spinner_choose_group.dart';
+import '../../../../domain/entities/account/account_bottom_sheet/vw_spinner.dart';
 import '../../input_text_form_field.dart';
 import '../../vw_bottom_sheet.dart';
 import '../../vw_button.dart';
@@ -92,45 +93,50 @@ class _AccountEditBottomSheetState extends State<AccountEditBottomSheet> {
                     ),
                   );
                 },
-                child: Container(
-                  height: 60,
-                  width: double.infinity, // Use responsive width
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 16.0),
-                    child: Text(
-                      selectedGroup,
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    ),
-                  ),
-                ),
-              ),
+          child: VwSpinner(
+            text: selectedGroup,
+          ),
+        ),
+              //   child: Container(
+              //     height: 60,
+              //     width: double.infinity, // Use responsive width
+              //     decoration: BoxDecoration(
+              //       color: Colors.white,
+              //       borderRadius: BorderRadius.circular(20),
+              //       border: Border.all(color: Colors.grey),
+              //     ),
+              //     child: Padding(
+              //       padding: const EdgeInsets.symmetric(
+              //           horizontal: 16.0, vertical: 16.0),
+              //       child: Text(
+              //         selectedGroup,
+              //         style: TextStyle(color: Colors.grey, fontSize: 16),
+              //       ),
+              //     ),
+              // ),
               SizedBox(
                 height: 16,
               ),
               InputTextFormField(
-                label: "Account Name",
+                hint: "Account Name",
                 controller: nameController,
                 textInputAction: TextInputAction.next,
                 isMandatory: true,
               ),
               const SizedBox(height: 16),
               InputTextFormField(
-                label: "Initial Amount",
+                hint: "Initial Amount",
                 controller: initialAmountController,
                 textInputAction: TextInputAction.next,
                 isMandatory: true,
+                isNumericInput: true,
               ),
               const SizedBox(height: 16),
               InputTextFormField(
-                label: "Description",
+                hint: "Description",
                 controller: descriptionController,
                 textInputAction: TextInputAction.done,
+                isMandatory: true,
               ),
               const SizedBox(height: 16),
               VwButton(
