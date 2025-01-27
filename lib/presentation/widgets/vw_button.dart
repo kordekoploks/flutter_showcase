@@ -74,7 +74,7 @@ class VwButton extends StatelessWidget {
     return Positioned.fill(
       child: CustomPaint(
         painter: DottedBorderPainter(
-          borderColor: Colors.black, // Set this to a visible color for testing
+          borderColor: Colors.grey, // Set this to a visible color for testing
           borderRadius: 12.0,
         ),
       ),
@@ -114,8 +114,8 @@ class DottedBorderPainter extends CustomPainter {
       ..style = PaintingStyle.stroke;
 
 
-    final dashWidth = 5.0;
-    final dashSpace = 3.0;
+    final dashWidth = 14.0;
+    final dashSpace = 10.0;
     final rect = RRect.fromRectAndRadius(
       Rect.fromLTWH(0, 0, size.width, size.height),
       Radius.circular(borderRadius),
