@@ -62,7 +62,6 @@ class CategoryLocalDataSourceImpl implements OutcomeCategoryLocalDataSource {
   }
 
 
-
   @override
   Future<void> deleteCategory(OutcomeCategory categoryModel) {
     return outcomeCategoryBox.removeAsync(int.parse(categoryModel.id));
