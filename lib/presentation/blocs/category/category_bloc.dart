@@ -107,7 +107,8 @@ class OutcomeCategoryBloc
         (failure) => emit(OutcomeCateogryError(
           data: state.data,
           failure: failure,
-        )),
+        )
+        ),
         (newData) {
           // Add the newly created subcategory to the existing list
           final updatedData = List<OutcomeCategory>.from(state.data)
@@ -120,7 +121,8 @@ class OutcomeCategoryBloc
       emit(OutcomeCateogryError(
         data: state.data,
         failure: ExceptionFailure(),
-      ));
+      )
+      );
     }
   }
 
@@ -196,4 +198,5 @@ class OutcomeCategoryBloc
       ));
     }
   }
+
 }
