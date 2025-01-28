@@ -1,3 +1,4 @@
+import 'package:eshop/core/constant/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class VwTabBar extends StatelessWidget {
         Container(
           height: 1,
           color: Colors.grey,
-          margin: EdgeInsets.only(top: 48), // Positioning the line below the text
+          margin: EdgeInsets.only(top: 50), // Positioning the line below the text
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -77,8 +78,8 @@ class VwTabBar extends StatelessWidget {
   double _calculateLinePosition(BuildContext context, int selectedIndex) {
     double position = 0.0;
     for (int i = 0; i < selectedIndex; i++) {
-      position += _calculateTextWidth(context, titles[i]) + 32.0; // 32.0 is the assumed padding between items
+      position += _calculateTextWidth(context, titles[i]) + 50.0; // 32.0 is the assumed padding between items
     }
-    return position + (32.0 / 2); // Adjusted position to center the line below the text
+    return position + (50.0 / 2); // Adjusted position to center the line below the text
   }
 }

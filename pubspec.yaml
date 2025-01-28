@@ -33,6 +33,7 @@ dependencies:
   flutter_localizations:
       sdk: flutter
   intl: any
+  stretchy_header: "^2.0.0"
 
 
   # The following adds the Cupertino Icons fonts to your application.
@@ -99,6 +100,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/images/
     - assets/navbar_icons/
     - assets/status_image/
     - assets/dev/

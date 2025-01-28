@@ -1223,6 +1223,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  stretchy_header:
+    dependency: "direct main"
+    description:
+      name: stretchy_header
+      sha256: "4073e0a7c3aa41aa6ae57185c2fae00c2cd66adc536593de8742d86979a56d35"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   string_scanner:
     dependency: transitive
     description:
