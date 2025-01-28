@@ -21,6 +21,7 @@ import '../../../presentation/views/main/outcome_category/confirmation_bottom_sh
 import '../../../presentation/widgets/account_card/account_bottom_sheet/account_action_bottom_sheet.dart';
 import '../../../presentation/widgets/account_card/account_bottom_sheet/account_edit_bottom_sheet.dart';
 import '../../../presentation/widgets/account_card/account_card.dart';
+import '../../../presentation/widgets/vw_tab_bar.dart';
 import 'account_bottom_sheet/account_add_bottom_sheet.dart';
 import 'account_bottom_sheet/spinner_choose_group.dart';
 
@@ -47,6 +48,8 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<Account> _data = [];
+  final List<String> _titles = ['Account', 'Card'];
+  int _selectedIndex = 0;
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
 
@@ -102,19 +105,6 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
           } else if (state is AccountEmpty) _emptyData(state);
         },
         child: Scaffold(
-          // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          // floatingActionButton: FloatingActionButton.extended(
-          //   onPressed: () => _showAddAccountBottomSheet(context),
-          //   label: Text(
-          //     'Add',
-          //     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-          //           fontWeight: FontWeight.bold,
-          //           color: Colors.white,
-          //         ),
-          //   ),
-          //   icon: const Icon(Icons.add, color: Colors.white),
-          //   backgroundColor: vWPrimaryColor,
-          // ),
           body: buildContent(context),
         )
     );
@@ -191,6 +181,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
   void _showAddAccountBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
         return AccountAddBottomSheet(onSave: (name, initialAmt, desc, group) {
           final currentState = context.read<AccountBloc>().state;
@@ -268,20 +259,23 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     return SizeTransition(
       sizeFactor: animation,
       child: GestureDetector(
-        child: AccountCard(
-          account: accountModel,
-          onClickMoreAction: (account) =>
-              _showAccountActionBottomSheet(context, accountModel, index),
-          onUpdate: (editedAccount) {
-            context.read<AccountBloc>().add(UpdateAccount(editedAccount));
-          },
-          onAnimationEnd: () {
-            setState(() {
-              _data[index] = _data[index].copyWith(isUpdated: false);
-            });
-          },
-          index: index,
-          isUpdated: accountModel.isUpdated,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: AccountCard(
+            account: accountModel,
+            onClickMoreAction: (account) =>
+                _showAccountActionBottomSheet(context, accountModel, index),
+            onUpdate: (editedAccount) {
+              context.read<AccountBloc>().add(UpdateAccount(editedAccount));
+            },
+            onAnimationEnd: () {
+              setState(() {
+                _data[index] = _data[index].copyWith(isUpdated: false);
+              });
+            },
+            index: index,
+            isUpdated: accountModel.isUpdated,
+          ),
         ),
       ),
     );
@@ -351,19 +345,12 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
     );
   }
 
-//
-// Widget _buildErrorState(BuildContext context, AccountError state) {
-//   final imagePath = state.failure is NetworkFailure
-//       ? 'assets/status_image/no-connection.png'
-//       : 'assets/status_image/internal-server-error.png';
-//   final message = state.failure is NetworkFailure
-//       ? "Network failure\nTry again!"
-//       : "Categories not found!";
-// }
+
   @override
   Widget buildContent(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      appBar: VwAppBar(title: "Account Settings"),
       body: SafeArea(
         child: Column(
           children: [
@@ -381,13 +368,16 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                     (BuildContext context, bool innerBoxIsScrolled) {
                   return <Widget>[
                     SliverAppBar(
+                      forceElevated: true,
+                      elevation: 40,
+                      scrolledUnderElevation: 0,
+                      backgroundColor: Colors.grey.shade50,
                       automaticallyImplyLeading: false,
-                      expandedHeight: 300.0,
+                      expandedHeight: 270.0,
                       floating: false,
                       actions: [],
-                      collapsedHeight: 82,
+                      collapsedHeight: 90,
                       pinned: true,
-                      backgroundColor: Colors.white, // Sets the collapsed background color
                       flexibleSpace: FlexibleSpaceBar(
                         collapseMode: CollapseMode.parallax,
                         centerTitle: true,
@@ -397,18 +387,55 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
+                              VwTabBar(
+                                titles: _titles,
+                                selectedIndex: _selectedIndex,
+                                onTabTapped: (index) {
+                                  setState(() {
+                                    _selectedIndex = index;
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        background:
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: VwTabBar(
+                                titles: _titles,
+                                selectedIndex: _selectedIndex,
+                                onTabTapped: (index) {
+                                  setState(() {
+                                    _selectedIndex = index;
+                                  });
+                                },
+                              ),
+                            ),
+                            Container(
+                              height: 200,
+                              child: Stack(
                                 children: [
+                                  Image.asset(
+                                    'assets/images/account_bg.png',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
                                   Align(
-                                    alignment: Alignment.topLeft,
+                                    alignment: Alignment.center,
                                     child: BlocBuilder<UserBloc, UserState>(
                                       builder: (context, state) {
                                         if (state is UserLogged) {
                                           return Text(
-                                            '${state.user.firstName} ${state.user.lastName}',
+                                            getInitials(
+                                              '${state.user.firstName} ${state.user.lastName}',
+                                            ),
                                             style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black,
+                                              fontSize: 60,
+                                              color: Colors.white,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           );
@@ -418,56 +445,10 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                                       },
                                     ),
                                   ),
-                                  Icon(
-                                    Icons.keyboard_arrow_down,
-                                    size: 24,
-                                    color: Colors.black,
-                                  ),
                                 ],
                               ),
-                              Text(
-                                "Personal Account",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black45,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        background: Container(
-                          height: 380,
-                          child: Stack(
-                            children: [
-                              Image.asset(
-                                'assets/images/account_bg.png',
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: double.infinity,
-                              ),
-                              Align(
-                                alignment: Alignment.center,
-                                child: BlocBuilder<UserBloc, UserState>(
-                                  builder: (context, state) {
-                                    if (state is UserLogged) {
-                                      return Text(
-                                        getInitials(
-                                          '${state.user.firstName} ${state.user.lastName}',
-                                        ),
-                                        style: TextStyle(
-                                          fontSize: 60,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      );
-                                    } else {
-                                      return SizedBox();
-                                    }
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),

@@ -1,5 +1,7 @@
+import 'package:eshop/core/util/money_text_controller.dart';
 import 'package:eshop/domain/entities/account/account_bottom_sheet/spinner_choose_group.dart';
 import 'package:eshop/domain/entities/account/account_bottom_sheet/vw_spinner.dart';
+import 'package:eshop/presentation/widgets/input_money_form_field.dart';
 import 'package:eshop/presentation/widgets/vw_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,9 +20,11 @@ class AccountAddBottomSheet extends StatefulWidget {
 
 class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController initialAmountController = TextEditingController();
+  final MoneyTextController initialAmountController = MoneyTextController();
   final TextEditingController descriptionController = TextEditingController();
   String selectedGroup = "Choose Group";
+  bool isValid = true;
+  bool isAmountValid = true;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -29,6 +33,14 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
     initialAmountController.dispose();
     descriptionController.dispose();
     super.dispose();
+  }
+
+  bool validate() {
+    setState(() {
+      isValid = selectedGroup != "Choose Group";
+      isAmountValid = initialAmountController.parsedValue != null;
+    });
+    return isValid && isAmountValid;
   }
 
   @override
@@ -41,7 +53,7 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min, // Ensure content doesn't overflow
+            mainAxisSize: MainAxisSize.min,
             children: [
               GestureDetector(
                 onTap: () {
@@ -67,6 +79,7 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
                           onClickGroup: (String accountGroup) {
                             setState(() {
                               selectedGroup = accountGroup;
+                              isValid = true;
                             });
                             Navigator.of(context).pop();
                           },
@@ -78,6 +91,10 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
                 },
                 child: VwSpinner(
                   text: selectedGroup,
+                  isValid: isValid,
+                  placeholder: "Choose Group",
+                  label: "Group",
+                  validationMessage: "Please choose a group",
                 ),
               ),
               SizedBox(height: 16),
@@ -88,12 +105,10 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
                 isMandatory: true,
               ),
               SizedBox(height: 16),
-              InputTextFormField(
+              InputMoneyFormField(
                 hint: "Initial Amount",
                 controller: initialAmountController,
-                textInputAction: TextInputAction.next,
                 isMandatory: true,
-                isNumericInput: true,
               ),
               SizedBox(height: 16),
               InputTextFormField(
@@ -105,17 +120,9 @@ class _AccountAddBottomSheetState extends State<AccountAddBottomSheet> {
               SizedBox(height: 16),
               VwButton(
                 onClick: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Parse initialAmountController text to double
-                    final double? initialAmount =
-                    double.tryParse(initialAmountController.text);
-                    if (initialAmount == null) {
-                      // Show an error message if the value is not valid
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("Please enter a valid initial amount.")),
-                      );
-                      return;
-                    }
+                  validate();
+                  if (_formKey.currentState!.validate() && validate()) {
+                    final double initialAmount = initialAmountController.parsedValue;
                     widget.onSave(
                       nameController.text,
                       initialAmount,
