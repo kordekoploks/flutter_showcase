@@ -98,7 +98,7 @@ class OtherView extends StatelessWidget {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "Login in your account",
+                                                    "Login in your account_card",
                                                     style: Theme.of(context).textTheme.titleLarge,
                                                   ),
                                                   const Text("")
@@ -195,9 +195,24 @@ class OtherView extends StatelessWidget {
                                 MenuItemCard(
                                   onClick: () {
                                     Navigator.of(context)
+                                        .pushNamed(AppRouter.accountAndCardView);
+                                  },
+                                  title: "Account And Card",
+                                ),
+                                const SizedBox(height: 6),
+                                MenuItemCard(
+                                  onClick: () {
+                                    Navigator.of(context)
                                         .pushNamed(AppRouter.about);
                                   },
                                   title: "About",
+                                ),
+                                MenuItemCard(
+                                  onClick: () {
+                                    Navigator.of(context)
+                                        .pushNamed(AppRouter.helpView);
+                                  },
+                                  title: "Help",
                                 ),
                                 const SizedBox(height: 6),
                                 BlocBuilder<UserBloc, UserState>(

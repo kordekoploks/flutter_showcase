@@ -1,0 +1,60 @@
+import 'package:dartz/dartz.dart';
+import 'package:eshop/domain/entities/account/account.dart';
+
+import '../../../core/error/failures.dart';
+import '../../../core/network/network_info.dart';
+import '../../../data/data_sources/local/account_local_data_source.dart';
+import '../../../data/models/account/account_model.dart';
+import '../data_sources/remote/account_remote_data_source.dart';
+import '../../domain/repositories/account_repository.dart';
+
+class AccountRepositoryImpl implements AccountRepository {
+  final AccountLocalDataSource localDataSource;
+
+  AccountRepositoryImpl({
+    required this.localDataSource,
+  });
+
+  @override
+  Future<Either<Failure, List<Account>>> getCachedAccount() async {
+    try {
+      final cachedAccount = await localDataSource.getAccounts();
+      // if (cachedAccount.isEmpty) await localDataSource.generateAccount();
+      final finalData = await localDataSource.getAccounts();
+
+      return Right(finalData);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Account>> addAccount(AccountModel params) async {
+    try {
+      await localDataSource.saveAccount(params);
+      return Right(params);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Account>> updateAccount(AccountModel keyword) async {
+    try {
+      await localDataSource.saveAccount(keyword);
+      return Right(keyword);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, Account>> deleteAccount(Account data) async {
+    try {
+      await localDataSource.deleteAccount(data);
+      return Right(data);
+    } on Failure catch (failure) {
+      return Left(failure);
+    }
+  }
+}

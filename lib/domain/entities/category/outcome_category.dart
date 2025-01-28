@@ -30,6 +30,7 @@ class OutcomeCategory extends Equatable {
       image: image,
       outcomeSubCategory: outcomeSubCategory,
       isUpdated: isUpdated ?? this.isUpdated,
+    //   otomatis terudate saat memasukan yang dibutuhkan
     );
   }
 

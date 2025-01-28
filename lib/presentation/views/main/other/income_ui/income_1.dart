@@ -54,7 +54,7 @@ class _Income1State extends State<Income1> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Chose account/ card",
+                "Chose account_card/ card",
                 style: TextStyle(color: Colors.grey),
               ),
               const SizedBox(height: 5),
@@ -258,7 +258,12 @@ class _Income1State extends State<Income1> {
                     ),
                     SizedBox(height: 20),
                     VwButton(
-                      onClick: () {},
+                      onClick: () {
+
+                        Navigator.of(context).pushNamed(
+                          AppRouter.accountAndCardView,
+                        );
+                      },
                       titleText: "Confirm",
                       buttonType: ButtonType.primary,
                     ),
