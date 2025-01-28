@@ -68,9 +68,43 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:7600219410570097336",
+      "lastPropertyId": "5:3733780343171772778",
+      "name": "AccountEntity",
+      "properties": [
+        {
+          "id": "1:5654376858132276058",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:221469678137847452",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:2045616521691828464",
+          "name": "initialAmt",
+          "type": 8
+        },
+        {
+          "id": "4:4666283972967581651",
+          "name": "desc",
+          "type": 9
+        },
+        {
+          "id": "5:3733780343171772778",
+          "name": "accountGroup",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:4764500871628775411",
+  "lastEntityId": "3:7600219410570097336",
   "lastIndexId": "1:666203549246372151",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
