@@ -43,7 +43,7 @@ class _AccountCardState extends State<AccountCard> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child:
             BlocBuilder<AccountBloc, AccountState>(builder: (context, state) {
           return _buildAccountContent(context);
@@ -71,20 +71,6 @@ class _AccountCardState extends State<AccountCard> {
               _buildAccountHeader(),
             ],
           ),
-          // Container(
-          //   child: LayoutBuilder(
-          //     builder: (context, constraint) {
-          //       return Container(
-          //         width: constraint.maxWidth * 0.95,
-          //         height: 50,
-          //         decoration: BoxDecoration(
-          //           color: Colors.grey.withOpacity(0.5),
-          //           borderRadius: const BorderRadius.all(Radius.circular(60)),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // ),
         ],
       ),
     );
@@ -100,8 +86,7 @@ class _AccountCardState extends State<AccountCard> {
           }
         },
         child: AnimatedContainer(
-          width: 340,
-          height: 140,
+          height: 120,
           duration: const Duration(seconds: 1),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
@@ -114,9 +99,9 @@ class _AccountCardState extends State<AccountCard> {
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5), // Shadow color with transparency
-                spreadRadius: 2, // How much the shadow spreads
-                blurRadius: 8, // How blurry the shadow is
-                offset: Offset(4, 4), // Horizontal and vertical shadow offset
+                spreadRadius: 1, // How much the shadow spreads
+                blurRadius: 4, // How blurry the shadow is
+                offset: Offset(2, 2), // Horizontal and vertical shadow offset
               ),
             ],
           ),
