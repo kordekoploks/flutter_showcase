@@ -2,20 +2,20 @@ import 'package:eshop/presentation/widgets/vw_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../widgets/input_text_form_field.dart';
-import '../../../../widgets/vw_button.dart';
+import '../../../../presentation/widgets/input_text_form_field.dart';
+import '../../../../presentation/widgets/vw_button.dart';
 
 
-class CategoryAddBottomSheet extends StatefulWidget {
+class GroupBottomSheet extends StatefulWidget {
   final Function(String) onSave;
 
-  CategoryAddBottomSheet({super.key, required this.onSave});
+  GroupBottomSheet({super.key, required this.onSave});
 
   @override
-  _CategoryAddBottomSheetState createState() => _CategoryAddBottomSheetState();
+  _GroupBottomSheetState createState() => _GroupBottomSheetState();
 }
 
-class _CategoryAddBottomSheetState extends State<CategoryAddBottomSheet> {
+class _GroupBottomSheetState extends State<GroupBottomSheet> {
   final TextEditingController nameController = TextEditingController();
 
   @override
@@ -27,7 +27,7 @@ class _CategoryAddBottomSheetState extends State<CategoryAddBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return VWBottomSheet(
-      title: "Tambah Category",
+      title: "Tambah Akun",
       content: Padding(
         padding: const EdgeInsets.all(0),
         child: Column(
@@ -36,7 +36,7 @@ class _CategoryAddBottomSheetState extends State<CategoryAddBottomSheet> {
           children: [
             SizedBox(height: 16),
             InputTextFormField(
-              label: "Nama Kategori",
+              label: "Nama akun",
               controller: nameController,
               textInputAction: TextInputAction.next,
               isMandatory: true,

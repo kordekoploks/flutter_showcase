@@ -2,12 +2,12 @@ import 'package:eshop/core/constant/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class VwTabBar extends StatelessWidget {
+class IncomeTabBar extends StatelessWidget {
   final List<String> titles;
   final int selectedIndex;
   final Function(int) onTabTapped;
 
-  VwTabBar({
+  IncomeTabBar({
     required this.titles,
     required this.selectedIndex,
     required this.onTabTapped,
@@ -17,11 +17,12 @@ class VwTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          height: 1,
-          color: Colors.grey,
-          margin: EdgeInsets.only(top: 50), // Positioning the line below the text
-        ),
+        // Container(
+        //   height: 1,
+        //   width: 15,
+        //   color: Colors.grey,
+        //   margin: EdgeInsets.only(top: 50), // Positioning the line below the text
+        // ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: List.generate(titles.length, (index) {
@@ -31,14 +32,13 @@ class VwTabBar extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 14.0),
+                    padding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 46.0),
                     child: Text(
                       titles[index],
                       style: TextStyle(
-
                         fontSize: 16,
                         color: selectedIndex == index
-                            ? Theme.of(context).primaryColor
+                            ? vWPrimaryColor
                             : Colors.black,
                       ),
                     ),
@@ -54,9 +54,9 @@ class VwTabBar extends StatelessWidget {
           left: _calculateLinePosition(context, selectedIndex),
           width: _calculateTextWidth(context, titles[selectedIndex]),
           child: Container(
-            height: 2,
-            color: Theme.of(context).primaryColor,
-            margin: EdgeInsets.only(top: 48), // Positioning the line below the text
+            height: 5,
+            color: vWPrimaryColor,
+            margin: EdgeInsets.only(top: 38), // Positioning the line below the text
           ),
         ),
       ],
@@ -67,9 +67,9 @@ class VwTabBar extends StatelessWidget {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text,
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 40),
       ),
-      maxLines: 1,
+      maxLines: 4,
       textDirection: TextDirection.ltr,
     )..layout();
     return textPainter.size.width;
@@ -78,8 +78,8 @@ class VwTabBar extends StatelessWidget {
   double _calculateLinePosition(BuildContext context, int selectedIndex) {
     double position = 0.0;
     for (int i = 0; i < selectedIndex; i++) {
-      position += _calculateTextWidth(context, titles[i]) + 50.0; // 32.0 is the assumed padding between items
+      position += _calculateTextWidth(context, titles[i]) + 40.0; // 32.0 is the assumed padding between items
     }
-    return position + (50.0 / 2); // Adjusted position to center the line below the text
+    return position + (40.0 / 2); // Adjusted position to center the line below the text
   }
 }

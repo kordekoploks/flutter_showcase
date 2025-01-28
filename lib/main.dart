@@ -1,5 +1,8 @@
 import 'package:eshop/core/usecases/usecase.dart';
+import 'package:eshop/data/data_sources/local/entity/account_entity.dart';
+import 'package:eshop/domain/entities/account/account.dart';
 import 'package:eshop/objectbox.g.dart';
+import 'package:eshop/presentation/blocs/account/account_bloc.dart';
 import 'package:eshop/presentation/blocs/outcome_sub_category/outcome_sub_category_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -46,8 +49,8 @@ Future<void> main() async {
   }
   sl.registerLazySingleton(() => objectBoxStore);
   sl.registerLazySingleton(() => objectBoxStore.box<OutcomeCategoryEntity>());
-  sl.registerLazySingleton(
-      () => objectBoxStore.box<OutcomeSubCategoryEntity>());
+  sl.registerLazySingleton(() => objectBoxStore.box<OutcomeSubCategoryEntity>());
+  sl.registerLazySingleton(() => objectBoxStore.box<AccountEntity>());
 
   runApp(const MyApp());
   configLoading();
@@ -97,6 +100,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => di.sl<SettingBloc>()..add(CheckSetting()),
+        ),
+        BlocProvider(
+          create: (context) => di.sl<AccountBloc>()..add(const GetAccount()),
         ),
       ],
       child: BlocBuilder<SettingBloc, SettingState>(
