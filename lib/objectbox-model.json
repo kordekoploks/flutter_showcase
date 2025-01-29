@@ -102,9 +102,53 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "4:2886093891279533130",
+      "lastPropertyId": "7:2209880324749896458",
+      "name": "IncomeEntity",
+      "properties": [
+        {
+          "id": "1:8515979234875493627",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:5019048194379505791",
+          "name": "idAccount",
+          "type": 9
+        },
+        {
+          "id": "3:3505473539109248109",
+          "name": "date",
+          "type": 9
+        },
+        {
+          "id": "4:5291430487061544644",
+          "name": "amount",
+          "type": 8
+        },
+        {
+          "id": "5:3549898390094250503",
+          "name": "category",
+          "type": 9
+        },
+        {
+          "id": "6:4803267927051456456",
+          "name": "note",
+          "type": 9
+        },
+        {
+          "id": "7:2209880324749896458",
+          "name": "isRepeat",
+          "type": 1
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "3:7600219410570097336",
+  "lastEntityId": "4:2886093891279533130",
   "lastIndexId": "1:666203549246372151",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
