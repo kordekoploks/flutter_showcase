@@ -1,5 +1,4 @@
 import 'package:eshop/core/constant/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class VwTabBar extends StatelessWidget {
@@ -17,11 +16,6 @@ class VwTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          height: 1,
-          color: Colors.grey,
-          margin: EdgeInsets.only(top: 50), // Positioning the line below the text
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: List.generate(titles.length, (index) {
@@ -31,15 +25,13 @@ class VwTabBar extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0,horizontal: 14.0),
+                    padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 14.0),
                     child: Text(
                       titles[index],
                       style: TextStyle(
-
                         fontSize: 16,
-                        color: selectedIndex == index
-                            ? Theme.of(context).primaryColor
-                            : Colors.black,
+                        fontWeight: selectedIndex == index ? FontWeight.bold : FontWeight.normal,
+                        color: selectedIndex == index ? vWPrimaryColor : Colors.black,
                       ),
                     ),
                   ),
@@ -52,10 +44,10 @@ class VwTabBar extends StatelessWidget {
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
           left: _calculateLinePosition(context, selectedIndex),
-          width: _calculateTextWidth(context, titles[selectedIndex]),
+          width: _calculateTextWidth(context, titles[selectedIndex]) * 1.3, // Add 30% to the line width
           child: Container(
-            height: 2,
-            color: Theme.of(context).primaryColor,
+            height: 3,
+            color: vWPrimaryColor,
             margin: EdgeInsets.only(top: 48), // Positioning the line below the text
           ),
         ),
@@ -67,7 +59,7 @@ class VwTabBar extends StatelessWidget {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text,
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold), // Bold for consistent measurement
       ),
       maxLines: 1,
       textDirection: TextDirection.ltr,
@@ -77,9 +69,13 @@ class VwTabBar extends StatelessWidget {
 
   double _calculateLinePosition(BuildContext context, int selectedIndex) {
     double position = 0.0;
+
+    // Accumulate the widths and paddings of all previous titles
     for (int i = 0; i < selectedIndex; i++) {
-      position += _calculateTextWidth(context, titles[i]) + 50.0; // 32.0 is the assumed padding between items
+      position += _calculateTextWidth(context, titles[i]) + 28.0; // Adjusted padding (horizontal 14.0 x 2)
     }
-    return position + (50.0 / 2); // Adjusted position to center the line below the text
+
+    // Add the left padding for the current title to center the line
+    return position + 14.0; // Half of horizontal padding
   }
 }
