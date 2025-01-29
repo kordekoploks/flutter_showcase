@@ -1,20 +1,14 @@
 import 'package:eshop/domain/entities/account/account.dart';
-import 'package:eshop/domain/entities/account/account_tabbar.dart';
-import 'package:eshop/presentation/views/main/other/income_ui/tabbar.dart';
-import 'package:eshop/presentation/views/main/other/settings/settings_view.dart';
 import 'package:eshop/presentation/widgets/vw_appbar.dart';
 import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../core/constant/colors.dart';
 
 import '../../../core/constant/images.dart';
-import '../../../core/error/failures.dart';
 import '../../../core/util/UuidHelper.dart';
 import '../../../data/models/account/account_model.dart';
 import '../../../presentation/blocs/account/account_bloc.dart';
-import '../../../presentation/blocs/category/category_bloc.dart';
 import '../../../presentation/blocs/user/user_bloc.dart';
 import '../../../presentation/views/main/outcome_category/confirmation_bottom_sheet.dart';
 import '../../../presentation/widgets/account_card/account_bottom_sheet/account_action_bottom_sheet.dart';
@@ -22,7 +16,6 @@ import '../../../presentation/widgets/account_card/account_bottom_sheet/account_
 import '../../../presentation/widgets/account_card/account_card.dart';
 import '../../../presentation/widgets/vw_tab_bar.dart';
 import 'account_bottom_sheet/account_add_bottom_sheet.dart';
-import 'account_bottom_sheet/spinner_choose_group.dart';
 
 class AccountAndCardView extends StatefulWidget {
   AccountAndCardView({Key? key}) : super(key: key);

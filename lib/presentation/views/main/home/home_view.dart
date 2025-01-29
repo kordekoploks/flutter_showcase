@@ -277,7 +277,7 @@ class _HomeViewState extends State<HomeView> {
                         //   height: MediaQuery.of(context).size.height * 0.1,
                         // ),
                         FloatingActionButton(onPressed: () {
-                          Navigator.of(context).pushNamed(AppRouter.income1);
+                          Navigator.of(context).pushNamed(AppRouter.incomeAdd);
                         }
                         )
                       ],

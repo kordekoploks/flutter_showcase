@@ -1,6 +1,5 @@
 import 'package:eshop/domain/entities/account/account_and_card_view.dart';
 import 'package:eshop/presentation/views/main/home/filter/filter_view.dart';
-import 'package:eshop/presentation/views/main/other/income_ui/income_1.dart';
 import 'package:eshop/presentation/views/main/other/profile/forget_password/change_password.dart';
 import 'package:eshop/presentation/views/main/other/profile/forget_password/change_password2.dart';
 import 'package:eshop/presentation/views/main/other/profile/forget_password/forgot_password1.dart';
@@ -14,6 +13,7 @@ import '../../domain/entities/product/product.dart';
 import '../../domain/entities/user/user.dart';
 import '../../presentation/views/authentication/signin_view.dart';
 import '../../presentation/views/authentication/signup_view.dart';
+import '../../presentation/views/main/income/income_add_view.dart';
 import '../../presentation/views/main/main_view.dart';
 import '../../presentation/views/main/other/about/about_view.dart';
 import '../../presentation/views/main/other/delivery_info/delivery_info.dart';
@@ -39,7 +39,7 @@ class AppRouter {
   static const String signUp = '/sign-up';
   static const String profilePengguna = '/profile-pengguna';
   static const String profileEditView = '/profile-edit-view';
-  static const String income1 = '/income-1';
+  static const String incomeAdd = '/income-add';
   static const String accountAndCardView = '/account_card-and-card-view';
   static const String helpView = '/help-view';
 
@@ -73,8 +73,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ChangePassword2());
       case signUp:
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
-      case income1:
-        return MaterialPageRoute(builder: (_) => const Income1());
+      case incomeAdd:
+        return MaterialPageRoute(builder: (_) => const IncomeAddView());
       case profilePengguna:
         return MaterialPageRoute(builder: (_) => const ProfilePengguna());
       case accountAndCardView:

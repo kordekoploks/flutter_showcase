@@ -15,6 +15,7 @@ import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'data/data_sources/local/entity/account_entity.dart';
+import 'data/data_sources/local/entity/income_entity.dart';
 import 'data/data_sources/local/entity/outcome_category_entity.dart';
 import 'data/data_sources/local/entity/outcome_sub_category_entity.dart';
 
@@ -124,6 +125,50 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(4, 2886093891279533130),
+      name: 'IncomeEntity',
+      lastPropertyId: const obx_int.IdUid(7, 2209880324749896458),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 8515979234875493627),
+            name: 'id',
+            type: 6,
+            flags: 129),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 5019048194379505791),
+            name: 'idAccount',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 3505473539109248109),
+            name: 'date',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 5291430487061544644),
+            name: 'amount',
+            type: 8,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 3549898390094250503),
+            name: 'category',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(6, 4803267927051456456),
+            name: 'note',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(7, 2209880324749896458),
+            name: 'isRepeat',
+            type: 1,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -162,7 +207,7 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(3, 7600219410570097336),
+      lastEntityId: const obx_int.IdUid(4, 2886093891279533130),
       lastIndexId: const obx_int.IdUid(1, 666203549246372151),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
@@ -310,6 +355,52 @@ obx_int.ModelDefinition getObjectBoxModel() {
               descParam, accountGroupParam);
 
           return object;
+        }),
+    IncomeEntity: obx_int.EntityDefinition<IncomeEntity>(
+        model: _entities[3],
+        toOneRelations: (IncomeEntity object) => [],
+        toManyRelations: (IncomeEntity object) => {},
+        getId: (IncomeEntity object) => object.id,
+        setId: (IncomeEntity object, int id) {
+          object.id = id;
+        },
+        objectToFB: (IncomeEntity object, fb.Builder fbb) {
+          final idAccountOffset = fbb.writeString(object.idAccount);
+          final dateOffset = fbb.writeString(object.date);
+          final categoryOffset = fbb.writeString(object.category);
+          final noteOffset = fbb.writeString(object.note);
+          fbb.startTable(8);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, idAccountOffset);
+          fbb.addOffset(2, dateOffset);
+          fbb.addFloat64(3, object.amount);
+          fbb.addOffset(4, categoryOffset);
+          fbb.addOffset(5, noteOffset);
+          fbb.addBool(6, object.isRepeat);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final idAccountParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 6, '');
+          final dateParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 8, '');
+          final amountParam =
+              const fb.Float64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          final categoryParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 12, '');
+          final noteParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGet(buffer, rootOffset, 14, '');
+          final isRepeatParam =
+              const fb.BoolReader().vTableGet(buffer, rootOffset, 16, false);
+          final object = IncomeEntity(idParam, idAccountParam, dateParam,
+              amountParam, categoryParam, noteParam, isRepeatParam);
+
+          return object;
         })
   };
 
@@ -385,4 +476,35 @@ class AccountEntity_ {
   /// See [AccountEntity.accountGroup].
   static final accountGroup =
       obx.QueryStringProperty<AccountEntity>(_entities[2].properties[4]);
+}
+
+/// [IncomeEntity] entity fields to define ObjectBox queries.
+class IncomeEntity_ {
+  /// See [IncomeEntity.id].
+  static final id =
+      obx.QueryIntegerProperty<IncomeEntity>(_entities[3].properties[0]);
+
+  /// See [IncomeEntity.idAccount].
+  static final idAccount =
+      obx.QueryStringProperty<IncomeEntity>(_entities[3].properties[1]);
+
+  /// See [IncomeEntity.date].
+  static final date =
+      obx.QueryStringProperty<IncomeEntity>(_entities[3].properties[2]);
+
+  /// See [IncomeEntity.amount].
+  static final amount =
+      obx.QueryDoubleProperty<IncomeEntity>(_entities[3].properties[3]);
+
+  /// See [IncomeEntity.category].
+  static final category =
+      obx.QueryStringProperty<IncomeEntity>(_entities[3].properties[4]);
+
+  /// See [IncomeEntity.note].
+  static final note =
+      obx.QueryStringProperty<IncomeEntity>(_entities[3].properties[5]);
+
+  /// See [IncomeEntity.isRepeat].
+  static final isRepeat =
+      obx.QueryBooleanProperty<IncomeEntity>(_entities[3].properties[6]);
 }
