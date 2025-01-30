@@ -5,7 +5,7 @@ import '../../../core/usecases/usecase.dart';
 import '../../entities/account/account.dart';
 import '../../entities/category/outcome_category.dart';
 import '../../repositories/account_repository.dart';
-import '../../repositories/category_repository.dart';
+import '../../repositories/outcome_category_repository.dart';
 
 class DeleteAccountUseCase implements UseCase<Account, Account> {
   final AccountRepository repository;

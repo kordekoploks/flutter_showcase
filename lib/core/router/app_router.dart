@@ -22,7 +22,7 @@ import '../../presentation/views/main/other/notification/notification_view.dart'
 import '../../presentation/views/main/other/orders/order_view.dart';
 import '../../presentation/views/main/other/profile/profile_screen.dart';
 import '../../presentation/views/main/other/settings/settings_view.dart';
-import '../../presentation/views/main/outcome_category/category_view.dart';
+import '../../presentation/views/main/outcome_category/outcome_category_view.dart';
 import '../../presentation/views/order_chekout/order_checkout_view.dart';
 import '../../presentation/views/product/product_details_view.dart';
 import '../error/exceptions.dart';
@@ -104,7 +104,7 @@ class AppRouter {
       case settings:
         return MaterialPageRoute(builder: (_) => const SettingsView());
       case category:
-        return MaterialPageRoute(builder: (_) => const CategoryView());
+        return MaterialPageRoute(builder: (_) => const OutcomeCategoryView());
       case notifications:
         return MaterialPageRoute(builder: (_) => const NotificationView());
       case about:

@@ -5,11 +5,11 @@ import 'package:eshop/domain/entities/category/outcome_category.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../core/network/network_info.dart';
-import '../../domain/repositories/category_repository.dart';
+import '../../domain/repositories/outcome_category_repository.dart';
 import '../data_sources/local/outcome_category_local_data_source.dart';
 import '../data_sources/remote/category_remote_data_source.dart';
 
-class OutcomeCategoryRepositoryImpl implements CategoryRepository {
+class OutcomeCategoryRepositoryImpl implements OutcomeCategoryRepository {
   final CategoryRemoteDataSource remoteDataSource;
   final OutcomeCategoryLocalDataSource localDataSource;
   final NetworkInfo networkInfo;

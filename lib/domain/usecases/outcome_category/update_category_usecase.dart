@@ -6,11 +6,11 @@ import '../../../data/models/category/outcome_category_model.dart';
 import '../../../data/models/user/delivery_info_model.dart';
 import '../../entities/category/outcome_category.dart';
 import '../../entities/user/delivery_info.dart';
-import '../../repositories/category_repository.dart';
+import '../../repositories/outcome_category_repository.dart';
 import '../../repositories/delivery_info_repository.dart';
 
 class UpdateCategoryUseCase implements UseCase<OutcomeCategory, OutcomeCategoryModel> {
-  final CategoryRepository repository;
+  final OutcomeCategoryRepository repository;
   UpdateCategoryUseCase(this.repository);
 
   @override

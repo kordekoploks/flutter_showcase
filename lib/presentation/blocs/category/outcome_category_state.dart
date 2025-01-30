@@ -1,4 +1,4 @@
-part of 'category_bloc.dart';
+part of 'outcome_category_bloc.dart';
 
 abstract class OutcomeCategoryState extends Equatable {
   final List<OutcomeCategory> data;

@@ -9,7 +9,7 @@ import '../../../data/models/user/delivery_info_model.dart';
 import '../../entities/category/outcome_category.dart';
 import '../../entities/category/outcome_sub_category.dart';
 import '../../entities/user/delivery_info.dart';
-import '../../repositories/category_repository.dart';
+import '../../repositories/outcome_category_repository.dart';
 import '../../repositories/delivery_info_repository.dart';
 import '../../repositories/outcome_sub_category_repository.dart';
 

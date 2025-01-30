@@ -11,7 +11,7 @@ import 'package:eshop/core/constant/images.dart';
 import 'package:eshop/core/error/failures.dart';
 import 'package:eshop/core/util/UuidHelper.dart';
 import 'package:eshop/domain/entities/category/outcome_category.dart';
-import 'package:eshop/presentation/blocs/category/category_bloc.dart';
+import 'package:eshop/presentation/blocs/category/outcome_category_bloc.dart';
 import 'package:eshop/presentation/widgets/alert_card.dart';
 
 import '../../../../core/constant/colors.dart';
@@ -21,14 +21,14 @@ import 'bottom_sheet/outcome_category_edit_bottom_sheet.dart';
 import 'bottom_sheet/outcome_sub_category_bottom_sheet.dart';
 import 'confirmation_bottom_sheet.dart';
 
-class CategoryView extends StatefulWidget {
-  const CategoryView({Key? key}) : super(key: key);
+class OutcomeCategoryView extends StatefulWidget {
+  const OutcomeCategoryView({Key? key}) : super(key: key);
 
   @override
-  _CategoryViewState createState() => _CategoryViewState();
+  _OutcomeCategoryViewState createState() => _OutcomeCategoryViewState();
 }
 
-class _CategoryViewState extends State<CategoryView> {
+class _OutcomeCategoryViewState extends State<OutcomeCategoryView> {
   int _selectedIndex = 0;
   final List<String> _tabTitles = ['Pengeluaran', 'Pendapatan'];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();

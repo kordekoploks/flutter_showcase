@@ -8,17 +8,17 @@ import '../../../core/error/failures.dart';
 import '../../../core/usecases/usecase.dart';
 import '../../../domain/entities/category/outcome_category.dart';
 import '../../../domain/usecases/outcome_category/filter_category_usecase.dart';
-import '../../../domain/usecases/outcome_category/get_cached_category_usecase.dart';
+import '../../../domain/usecases/outcome_category/get_cached_outcome_category_usecase.dart';
 import '../../../domain/usecases/outcome_category/update_category_usecase.dart';
 import '../../../domain/usecases/outcome_category/delete_category_usecase.dart';
 
-part 'category_event.dart';
+part 'outcome_category_event.dart';
 
-part 'category_state.dart';
+part 'outcome_category_state.dart';
 
 class OutcomeCategoryBloc
     extends Bloc<OutcomeCategoryEvent, OutcomeCategoryState> {
-  final GetCachedCategoryUseCase _getCashedCategoryUseCase;
+  final GetCachedOutcomeCategoryUseCase _getCashedCategoryUseCase;
   final FilterCategoryUseCase _filterCategoryUseCase;
   final AddCategoryUseCase _addCategoryUseCase;
   final UpdateCategoryUseCase _updateCategoryUseCase;
