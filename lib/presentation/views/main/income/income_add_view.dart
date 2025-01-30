@@ -12,7 +12,10 @@ import '../../../../core/constant/colors.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/util/UuidHelper.dart';
 
+import '../../../../data/models/account/account_model.dart';
 import '../../../../data/models/income/income_model.dart';
+import '../../../../domain/entities/account/account.dart';
+import '../../../../domain/entities/income/income_bottom_sheet/account_spinner.dart';
 import '../../../blocs/cart/cart_bloc.dart';
 import '../../../blocs/income/income_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
@@ -22,7 +25,9 @@ import '../../../widgets/vw_checkbox.dart';
 import '../../../widgets/vw_text_link.dart';
 
 class IncomeAddView extends StatefulWidget {
-  const IncomeAddView({Key? key}) : super(key: key);
+  const IncomeAddView({
+    Key? key
+  }) : super(key: key);
 
   @override
   State<IncomeAddView> createState() => _IncomeAddViewState();
@@ -37,6 +42,15 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   final _formKey = GlobalKey<FormState>();
   final List<String> _tabTitles = ["INCOME", "EXPENSE"];
   int _selectedIndex = 0;
+  String selectedGroup = "Category";
+
+
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void main() {}
 
@@ -192,10 +206,49 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                           controller: amountController,
                         ),
                         const SizedBox(height: 20),
-                        InputTextFormField(
-                          hint: "category",
-                          controller: categoryController,
-
+                        GestureDetector(
+                          onTap: () {
+                            showDialog<void>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                insetPadding: EdgeInsets.all(8),
+                                backgroundColor: Colors.transparent,
+                                content: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black12.withOpacity(0.3),
+                                        blurRadius: 12,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: AccountSpinner(
+                                    onClickGroup: (String accountGroup) {
+                                      setState(() {
+                                        selectedGroup = accountGroup;
+                                      }
+                                      );
+                                      Navigator.of(context).pop();
+                                    },
+                                    selectedGroup: selectedGroup,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          child: AccountSpinner(
+                            selectedGroup: selectedGroup,
+                            onClickGroup: (String accountGroup) {
+                              setState(() {
+                                selectedGroup = accountGroup;
+                              });
+                              Navigator.of(context).pop();
+                            },
+                          ),
                         ),
                         const SizedBox(height: 20),
                         InputTextFormField(

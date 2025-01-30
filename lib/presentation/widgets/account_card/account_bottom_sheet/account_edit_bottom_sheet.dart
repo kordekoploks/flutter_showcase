@@ -93,10 +93,10 @@ class _AccountEditBottomSheetState extends State<AccountEditBottomSheet> {
                     ),
                   );
                 },
-          child: VwSpinner(
-            text: selectedGroup,
-          ),
-        ),
+                  child: VwSpinner(
+                    text: selectedGroup,
+                  ),
+                ),
               //   child: Container(
               //     height: 60,
               //     width: double.infinity, // Use responsive width

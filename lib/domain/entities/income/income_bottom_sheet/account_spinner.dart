@@ -1,11 +1,15 @@
 import 'package:eshop/core/constant/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SpinnerChooseGroup extends StatefulWidget {
+import '../../../../presentation/blocs/account/account_bloc.dart';
+import '../../account/account.dart';
+
+class AccountSpinner extends StatefulWidget {
   final Function(String) onClickGroup;
   final String selectedGroup;
 
-  const SpinnerChooseGroup({
+  const AccountSpinner({
     super.key,
     required this.onClickGroup,
     required this.selectedGroup,
@@ -13,14 +17,31 @@ class SpinnerChooseGroup extends StatefulWidget {
   );
 
   @override
-  _SpinnerChooseGroupState createState() => _SpinnerChooseGroupState();
+  _AccountSpinnerState createState() => _AccountSpinnerState();
 }
 
-class _SpinnerChooseGroupState extends State<SpinnerChooseGroup> {
-  final List<String> groups = ["Cash", "Account", "Loan"]; // Group options
+class _AccountSpinnerState extends State<AccountSpinner> {
+  late List<Account> _data;
 
   @override
   Widget build(BuildContext context) {
+    return BlocListener<AccountBloc, AccountState>(
+        listener: (context, state) {
+          if (state is AccountLoaded) {
+            setState(() {
+              _data.clear();
+              _data.addAll(state.data);
+            });
+          }
+        },
+        child: buildContent(
+            context
+        )
+    );
+  }
+
+
+  Widget buildContent(BuildContext context) {
     return Container(
       height: 280,
       width: 360,
@@ -31,8 +52,8 @@ class _SpinnerChooseGroupState extends State<SpinnerChooseGroup> {
       child: Column(
         children: [
           Text(
-            "Choose Group",
-            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),
+            "Category",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           SizedBox(height: 10,),
           Divider(
@@ -41,20 +62,23 @@ class _SpinnerChooseGroupState extends State<SpinnerChooseGroup> {
             color: Colors.black12,
           ),
           SizedBox(height: 20),
-          ...groups.map((group) {
+          ..._data.map((group) {
             bool isSelected = group ==
                 widget.selectedGroup; // Use widget.selectedGroup
             return GestureDetector(
               onTap: () {
-                widget.onClickGroup(group); // Notify the parent about the selection
+                widget.onClickGroup(
+                    group.name); // Notify the parent about the selection
               },
               child: Container(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  group,
+                  group.name,
                   style: TextStyle(
-                    color: isSelected ? vWPrimaryColor : Colors.black26, // Change text color
-                    fontWeight: FontWeight.bold,fontSize: 16
+                      color: isSelected ? vWPrimaryColor : Colors.black26,
+                      // Change text color
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16
                   ),
                 ),
               ),
