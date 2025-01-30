@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../domain/usecases/product/get_product_usecase.dart';
-import '../../../../blocs/category/category_bloc.dart';
+import '../../../../blocs/category/outcome_category_bloc.dart';
 import '../../../../blocs/filter/filter_cubit.dart';
 import '../../../../widgets/input_button.dart';
 import '../../../../widgets/input_range_slider.dart';

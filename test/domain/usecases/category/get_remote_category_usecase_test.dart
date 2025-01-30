@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:eshop/core/error/failures.dart';
 import 'package:eshop/core/usecases/usecase.dart';
-import 'package:eshop/domain/repositories/category_repository.dart';
+import 'package:eshop/domain/repositories/outcome_category_repository.dart';
 import 'package:eshop/domain/usecases/outcome_category/get_remote_category_usecase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../fixtures/constant_objects.dart';
 
-class MockCartRepository extends Mock implements CategoryRepository {}
+class MockCartRepository extends Mock implements OutcomeCategoryRepository {}
 
 void main() {
   late GetRemoteCategoryUseCase usecase;

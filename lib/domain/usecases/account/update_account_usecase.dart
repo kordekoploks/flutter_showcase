@@ -9,7 +9,7 @@ import '../../entities/account/account.dart';
 import '../../entities/category/outcome_category.dart';
 import '../../entities/user/delivery_info.dart';
 import '../../repositories/account_repository.dart';
-import '../../repositories/category_repository.dart';
+import '../../repositories/outcome_category_repository.dart';
 import '../../repositories/delivery_info_repository.dart';
 
 class UpdateAccountUseCase implements UseCase<Account, AccountModel> {

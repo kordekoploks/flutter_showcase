@@ -8,7 +8,7 @@ import 'package:eshop/domain/repositories/outcome_sub_category_repository.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../core/network/network_info.dart';
-import '../../domain/repositories/category_repository.dart';
+import '../../domain/repositories/outcome_category_repository.dart';
 import '../../domain/usecases/outcome_sub_category/update_outcome_sub_category_usecase.dart';
 import '../data_sources/local/outcome_category_local_data_source.dart';
 import '../data_sources/remote/category_remote_data_source.dart';

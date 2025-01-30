@@ -54,7 +54,7 @@ import '../../data/repositories/order_repository_impl.dart';
 import '../../data/repositories/product_repository_impl.dart';
 import '../../data/repositories/user_repository_impl.dart';
 import '../../domain/repositories/cart_repository.dart';
-import '../../domain/repositories/category_repository.dart';
+import '../../domain/repositories/outcome_category_repository.dart';
 import '../../domain/repositories/delivery_info_repository.dart';
 import '../../domain/repositories/income_repository.dart';
 import '../../domain/repositories/order_repository.dart';
@@ -69,7 +69,7 @@ import '../../domain/usecases/cart/sync_cart_usecase.dart';
 import '../../domain/usecases/income/save_income_usecase.dart';
 import '../../domain/usecases/outcome_category/delete_category_usecase.dart';
 import '../../domain/usecases/outcome_category/filter_category_usecase.dart';
-import '../../domain/usecases/outcome_category/get_cached_category_usecase.dart';
+import '../../domain/usecases/outcome_category/get_cached_outcome_category_usecase.dart';
 import '../../domain/usecases/outcome_category/get_remote_category_usecase.dart';
 import '../../domain/usecases/outcome_category/update_category_usecase.dart';
 import '../../domain/usecases/delivery_info/add_dilivey_info_usecase.dart';
@@ -84,7 +84,7 @@ import '../../domain/usecases/user/sign_in_usecase.dart';
 import '../../domain/usecases/user/sign_out_usecase.dart';
 import '../../domain/usecases/user/sign_up_usecase.dart';
 import '../../presentation/blocs/cart/cart_bloc.dart';
-import '../../presentation/blocs/category/category_bloc.dart';
+import '../../presentation/blocs/category/outcome_category_bloc.dart';
 import '../../presentation/blocs/delivery_info/delivery_info_action/delivery_info_action_cubit.dart';
 import '../../presentation/blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.dart';
 import '../../presentation/blocs/income/income_bloc.dart';
@@ -130,13 +130,13 @@ Future<void> init() async {
   );
   // Use cases
   sl.registerLazySingleton(() => GetRemoteCategoryUseCase(sl()));
-  sl.registerLazySingleton(() => GetCachedCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => GetCachedOutcomeCategoryUseCase(sl()));
   sl.registerLazySingleton(() => AddCategoryUseCase(sl()));
   sl.registerLazySingleton(() => UpdateCategoryUseCase(sl()));
   sl.registerLazySingleton(() => DeleteCategoryUseCase(sl()));
   sl.registerLazySingleton(() => FilterCategoryUseCase(sl()));
   // Repository
-  sl.registerLazySingleton<CategoryRepository>(
+  sl.registerLazySingleton<OutcomeCategoryRepository>(
     () => OutcomeCategoryRepositoryImpl(
       remoteDataSource: sl(),
       localDataSource: sl(),

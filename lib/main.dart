@@ -23,7 +23,7 @@ import 'data/data_sources/local/entity/outcome_category_entity.dart';
 import 'data/data_sources/local/entity/outcome_sub_category_entity.dart';
 import 'domain/usecases/product/get_product_usecase.dart';
 import 'presentation/blocs/cart/cart_bloc.dart';
-import 'presentation/blocs/category/category_bloc.dart';
+import 'presentation/blocs/category/outcome_category_bloc.dart';
 import 'presentation/blocs/delivery_info/delivery_info_action/delivery_info_action_cubit.dart';
 import 'presentation/blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.dart';
 import 'presentation/blocs/filter/filter_cubit.dart';
