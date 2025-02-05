@@ -368,7 +368,7 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
                       expandedHeight: 270.0,
                       floating: false,
                       actions: [],
-                      collapsedHeight: 90,
+                      collapsedHeight: 100,
                       pinned: true,
                       flexibleSpace: FlexibleSpaceBar(
                         collapseMode: CollapseMode.parallax,

@@ -3,6 +3,7 @@ import 'package:eshop/presentation/views/main/other/income_ui/tabbar.dart';
 import 'package:eshop/presentation/widgets/input_money_form_field.dart';
 import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:eshop/presentation/widgets/vw_tab_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -23,11 +24,10 @@ import '../../../widgets/input_text_form_field.dart';
 import '../../../widgets/outcome_category/income_tab_bar.dart';
 import '../../../widgets/vw_checkbox.dart';
 import '../../../widgets/vw_text_link.dart';
+import 'account_bottom_sheet.dart';
 
 class IncomeAddView extends StatefulWidget {
-  const IncomeAddView({
-    Key? key
-  }) : super(key: key);
+  const IncomeAddView({Key? key}) : super(key: key);
 
   @override
   State<IncomeAddView> createState() => _IncomeAddViewState();
@@ -36,16 +36,13 @@ class IncomeAddView extends StatefulWidget {
 class _IncomeAddViewState extends State<IncomeAddView> {
   final TextEditingController dateController = TextEditingController();
   final MoneyTextController amountController = MoneyTextController();
-  final TextEditingController categoryController =
-      TextEditingController();
+  final TextEditingController categoryController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final List<String> _tabTitles = ["INCOME", "EXPENSE"];
   int _selectedIndex = 0;
   String selectedGroup = "Category";
-
-
-
+  late DateTime _chosenDateTime;
 
   @override
   void initState() {
@@ -53,6 +50,39 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   }
 
   void main() {}
+
+  // Show the modal that contains the CupertinoDatePicker
+  void _showDateCoy(BuildContext ctx) {
+    showCupertinoModalPopup(
+      context: ctx,
+      builder: (_) => Container(
+        height: 300,
+        color: Colors.white,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 200,
+              child: CupertinoDatePicker(
+                initialDateTime: DateTime.now(),
+                mode: CupertinoDatePickerMode.date,
+                onDateTimeChanged: (DateTime val) {
+                  setState(() {
+                    _chosenDateTime = val;
+                    dateController.text =
+                        "${val.day}-${val.month}-${val.year}"; // Format Date
+                  });
+                },
+              ),
+            ),
+            CupertinoButton(
+              child: Text('OK'),
+              onPressed: () => Navigator.of(ctx).pop(),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,30 +128,35 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(right: 30.0, top: 4),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "CASH",
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 38,
-                          ),
-                          Icon(Icons.keyboard_arrow_down)
-                        ],
-                      ),
-                      Text(
-                        "Balance: 10.000",
-                        style: TextStyle(
-                            color: vWPrimaryColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold),
-                      )
-                    ],
+                  child: GestureDetector(
+                    onTap: () {
+                      _showAccountBottomSheet(context )
+                    },
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "CASH",
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 38,
+                            ),
+                            Icon(Icons.keyboard_arrow_down),
+                          ],
+                        ),
+                        Text(
+                          "Balance: 10.000",
+                          style: TextStyle(
+                              color: vWPrimaryColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
                   ),
                 )
               ],
@@ -163,9 +198,17 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                         Row(
                           children: [
                             Expanded(
-                              child: InputTextFormField(
-                                hint: "date",
-                                controller: dateController,
+                              child: GestureDetector(
+                                onTap: () {
+                                  _showDateCoy(context);
+                                },
+                                child: AbsorbPointer(
+                                  // Prevents the keyboard from showing up
+                                  child: InputTextFormField(
+                                    hint: "date",
+                                    controller: dateController,
+                                  ),
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -206,53 +249,56 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                           controller: amountController,
                         ),
                         const SizedBox(height: 20),
-                        GestureDetector(
-                          onTap: () {
-                            showDialog<void>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                insetPadding: EdgeInsets.all(8),
-                                backgroundColor: Colors.transparent,
-                                content: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black12.withOpacity(0.3),
-                                        blurRadius: 12,
-                                        spreadRadius: 2,
-                                        offset: Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  child: AccountSpinner(
-                                    onClickGroup: (String accountGroup) {
-                                      setState(() {
-                                        selectedGroup = accountGroup;
-                                      }
-                                      );
-                                      Navigator.of(context).pop();
-                                    },
-                                    selectedGroup: selectedGroup,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          child: AccountSpinner(
-                            selectedGroup: selectedGroup,
-                            onClickGroup: (String accountGroup) {
-                              setState(() {
-                                selectedGroup = accountGroup;
-                              });
-                              Navigator.of(context).pop();
-                            },
-                          ),
+                        InputTextFormField(
+                          hint: "Category",
+                          controller: categoryController,
                         ),
+                        // GestureDetector(
+                        //   onTap: () {
+                        //     showDialog<void>(
+                        //       context: context,
+                        //       builder: (context) => AlertDialog(
+                        //         insetPadding: EdgeInsets.all(8),
+                        //         backgroundColor: Colors.transparent,
+                        //         content: Container(
+                        //           decoration: BoxDecoration(
+                        //             color: Colors.white,
+                        //             borderRadius: BorderRadius.circular(16),
+                        //             boxShadow: [
+                        //               BoxShadow(
+                        //                 color: Colors.black12.withOpacity(0.3),
+                        //                 blurRadius: 12,
+                        //                 spreadRadius: 2,
+                        //                 offset: Offset(0, 4),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //           child: AccountSpinner(
+                        //             onClickGroup: (String accountGroup) {
+                        //               setState(() {
+                        //                 selectedGroup = accountGroup;
+                        //               });
+                        //               Navigator.of(context).pop();
+                        //             },
+                        //             selectedGroup: selectedGroup,
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: AccountSpinner(
+                        //     selectedGroup: selectedGroup,
+                        //     onClickGroup: (String accountGroup) {
+                        //       setState(() {
+                        //         selectedGroup = accountGroup;
+                        //       });
+                        //       Navigator.of(context).pop();
+                        //     },
+                        //   ),
+                        // ),
                         const SizedBox(height: 20),
                         InputTextFormField(
-                         hint: "note",
+                          hint: "note",
                           controller: noteController,
                         ),
                         SizedBox(
@@ -309,6 +355,17 @@ class _IncomeAddViewState extends State<IncomeAddView> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showAccountBottomSheet(BuildContext context, Account account) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return AccountBottomSheet(
+          account: account,
+        );
+      },
     );
   }
 }
