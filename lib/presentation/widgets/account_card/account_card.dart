@@ -86,7 +86,7 @@ class _AccountCardState extends State<AccountCard> {
           }
         },
         child: AnimatedContainer(
-          height: 120,
+          height: 140,
           duration: const Duration(seconds: 1),
           curve: Curves.easeInOut,
           decoration: BoxDecoration(
