@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constant/colors.dart';
 import '../../../../domain/entities/account/account.dart';
+import '../../../domain/entities/category/outcome_category.dart';
 
-class AccountItemCard extends StatefulWidget {
-  final Account subAccount;
+class OutcomeCategoryItemCard extends StatefulWidget {
+  final OutcomeCategory subCategory;
   final int index;
   final VoidCallback onAnimationEnd;
 
-  const AccountItemCard({
+  const OutcomeCategoryItemCard({
     Key? key,
-    required this.subAccount,
+    required this.subCategory,
     required this.index,
     required this.onAnimationEnd,
   }) : super(key: key);
 
   @override
-  _AccountItemCardState createState() => _AccountItemCardState();
+  _OutcomeCategoryItemCardState createState() => _OutcomeCategoryItemCardState();
 }
-
-class _AccountItemCardState extends State<AccountItemCard> {
+String? selectedCategoryName;
+class _OutcomeCategoryItemCardState extends State<OutcomeCategoryItemCard> {
   static int? _selectedIndex; // Track selected item
 
   @override
@@ -42,16 +43,10 @@ class _AccountItemCardState extends State<AccountItemCard> {
         onEnd: widget.onAnimationEnd,
         child: ListTile(
           title: Text(
-            widget.subAccount.name,
+            widget.subCategory.name,
             style: TextStyle(
               color: isSelected ? Colors.white : Colors.black, // Adjust text color
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-          subtitle: Text(
-            "Amount: ${widget.subAccount.initialAmt}", // Display initialAmt
-            style: TextStyle(
-              color: isSelected ? Colors.white : Colors.black54, // Adjust subtitle color
             ),
           ),
           leading: Icon(

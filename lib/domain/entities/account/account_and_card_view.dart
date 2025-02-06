@@ -175,11 +175,11 @@ class _AccountAndCardViewState extends State<AccountAndCardView> {
       context: context,
       isScrollControlled: true,
       builder: (context) {
-        return AccountAddBottomSheet(onSave: (name, initialAmt, desc, group) {
+        return AccountAddBottomSheet(
+            onSave: (name, initialAmt, desc, group) {
           final currentState = context.read<AccountBloc>().state;
           int position =
               currentState is AccountLoaded ? currentState.data.length + 1 : 0;
-
           final newAccount = AccountModel(
               id: UuidHelper.generateNumericUUID(),
               name: name,

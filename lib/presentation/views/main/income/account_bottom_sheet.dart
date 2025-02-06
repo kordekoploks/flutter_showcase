@@ -1,4 +1,5 @@
 import 'package:eshop/presentation/blocs/category/outcome_category_bloc.dart';
+import 'package:eshop/presentation/widgets/account_card/account_bottom_sheet/account_search_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -52,12 +53,12 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
           _setAccount(state);
         }
       },
-      child: VWBottomSheet(
+      child: AccountSearchBottomSheet(
         title: "${widget.account.name} Account",
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: [_buildAccountContent()
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:eshop/core/util/money_text_controller.dart';
+import 'package:eshop/domain/entities/category/outcome_category.dart';
 import 'package:eshop/presentation/views/main/other/income_ui/tabbar.dart';
 import 'package:eshop/presentation/widgets/input_money_form_field.dart';
 import 'package:eshop/presentation/widgets/vw_button.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../core/constant/colors.dart';
 import '../../../../core/router/app_router.dart';
@@ -16,14 +18,18 @@ import '../../../../core/util/UuidHelper.dart';
 import '../../../../data/models/account/account_model.dart';
 import '../../../../data/models/income/income_model.dart';
 import '../../../../domain/entities/account/account.dart';
+import '../../../../domain/entities/account/account_bottom_sheet/spinner_choose_group.dart';
+import '../../../../domain/entities/account/account_bottom_sheet/vw_spinner.dart';
 import '../../../../domain/entities/income/income_bottom_sheet/account_spinner.dart';
 import '../../../blocs/cart/cart_bloc.dart';
 import '../../../blocs/income/income_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
 import '../../../widgets/input_text_form_field.dart';
 import '../../../widgets/outcome_category/income_tab_bar.dart';
+import '../../../widgets/outcome_category/outcome_category_item_card.dart';
 import '../../../widgets/vw_checkbox.dart';
 import '../../../widgets/vw_text_link.dart';
+import '../outcome_category/bottom_sheet/outcome_category_bottom_sheet.dart';
 import 'account_bottom_sheet.dart';
 
 class IncomeAddView extends StatefulWidget {
@@ -39,6 +45,8 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool isValid = true;
+
   final List<String> _tabTitles = ["INCOME", "EXPENSE"];
   int _selectedIndex = 0;
   String selectedGroup = "Category";
@@ -49,38 +57,41 @@ class _IncomeAddViewState extends State<IncomeAddView> {
     super.initState();
   }
 
-  void main() {}
+  void main() {
+    EasyLoading.init();
+  }
 
   // Show the modal that contains the CupertinoDatePicker
   void _showDateCoy(BuildContext ctx) {
     showCupertinoModalPopup(
       context: ctx,
-      builder: (_) => Container(
-        height: 300,
-        color: Colors.white,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 200,
-              child: CupertinoDatePicker(
-                initialDateTime: DateTime.now(),
-                mode: CupertinoDatePickerMode.date,
-                onDateTimeChanged: (DateTime val) {
-                  setState(() {
-                    _chosenDateTime = val;
-                    dateController.text =
+      builder: (_) =>
+          Container(
+            height: 300,
+            color: Colors.white,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 200,
+                  child: CupertinoDatePicker(
+                    initialDateTime: DateTime.now(),
+                    mode: CupertinoDatePickerMode.date,
+                    onDateTimeChanged: (DateTime val) {
+                      setState(() {
+                        _chosenDateTime = val;
+                        dateController.text =
                         "${val.day}-${val.month}-${val.year}"; // Format Date
-                  });
-                },
-              ),
+                      });
+                    },
+                  ),
+                ),
+                CupertinoButton(
+                  child: Text('OK'),
+                  onPressed: () => Navigator.of(ctx).pop(),
+                )
+              ],
             ),
-            CupertinoButton(
-              child: Text('OK'),
-              onPressed: () => Navigator.of(ctx).pop(),
-            )
-          ],
-        ),
-      ),
+          ),
     );
   }
 
@@ -130,7 +141,9 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                   padding: const EdgeInsets.only(right: 30.0, top: 4),
                   child: GestureDetector(
                     onTap: () {
-                      _showAccountBottomSheet(context )
+                      _showAccountBottomSheet(context, Account(
+                          id: "",name: "",initialAmt: 0,desc: "",isUpdated: false)
+                      );
                     },
                     child: Column(
                       children: [
@@ -248,11 +261,23 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                           hint: "amount",
                           controller: amountController,
                         ),
-                        const SizedBox(height: 20),
-                        InputTextFormField(
-                          hint: "Category",
-                          controller: categoryController,
+                        const SizedBox(height: 0),
+                        GestureDetector(
+                          onTap: () async {
+                            final selectedCategory = await _showOutcomeCategoryBottomSheet(context);
+                            if (selectedCategory != null) {
+                              setState(() {
+                                selectedCategoryName = selectedCategory.name; // Store selected category name
+                              });
+                            }
+                          },
+                          child: VwSpinner(
+                            text: selectedCategoryName ?? "Category", // Display selected category
+                            isValid: isValid,
+                          ),
                         ),
+
+
                         // GestureDetector(
                         //   onTap: () {
                         //     showDialog<void>(
@@ -331,21 +356,32 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                         VwButton(
                           onClick: () {
                             final newIncome = IncomeModel(
-                                id: UuidHelper.generateNumericUUID(),
-                                idAccount: "0",
-                                date: dateController.text,
-                                amount: amountController.parsedValue,
-                                category: categoryController.text,
-                                note: noteController.text,
-                                isRepeat: true);
-                            // tombol add terusan dari atas
-                            context
-                                .read<IncomeBloc>()
-                                .add(AddIncome(newIncome));
+                              id: UuidHelper.generateNumericUUID(),
+                              idAccount: "0",
+                              date: dateController.text,
+                              amount: amountController.parsedValue,
+                              category: categoryController.text,
+                              note: noteController.text,
+                              isRepeat: true,
+                            );
+
+                            context.read<IncomeBloc>().add(
+                                AddIncome(newIncome));
+
+                            // Show success toast
+                            Fluttertoast.showToast(
+                              msg: "Save Success",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: Colors.black,
+                              textColor: Colors.white,
+                              fontSize: 16.0,
+                            );
                           },
                           titleText: "Confirm",
                           buttonType: ButtonType.primary,
-                        ),
+
+                        )
                       ],
                     ),
                   ),
@@ -368,4 +404,18 @@ class _IncomeAddViewState extends State<IncomeAddView> {
       },
     );
   }
+
+  Future<OutcomeCategory?> _showOutcomeCategoryBottomSheet(BuildContext context) async {
+    return await showModalBottomSheet<OutcomeCategory>(
+      context: context,
+      builder: (context) {
+        return OutcomeCategoryBottomSheet(
+          onCategorySelected: (category) {
+                      },
+        );
+      },
+    );
+  }
+
+
 }
