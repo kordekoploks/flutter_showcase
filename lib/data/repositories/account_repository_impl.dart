@@ -5,6 +5,7 @@ import '../../../core/error/failures.dart';
 import '../../../core/network/network_info.dart';
 import '../../../data/data_sources/local/account_local_data_source.dart';
 import '../../../data/models/account/account_model.dart';
+import '../../core/error/exceptions.dart';
 import '../data_sources/remote/account_remote_data_source.dart';
 import '../../domain/repositories/account_repository.dart';
 
@@ -55,6 +56,17 @@ class AccountRepositoryImpl implements AccountRepository {
       return Right(data);
     } on Failure catch (failure) {
       return Left(failure);
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Account>>> filterCachedAccounts(
+      String keyword) async {
+    try {
+      final filteredCategories = await localDataSource.filterAccounts(keyword);
+      return Right(filteredCategories);
+    } on CacheException {
+      return Left(CacheFailure());
     }
   }
 }

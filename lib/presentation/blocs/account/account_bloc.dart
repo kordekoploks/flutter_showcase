@@ -7,6 +7,7 @@ import '../../../data/models/account/account_model.dart';
 import '../../../domain/entities/account/account.dart';
 import '../../../domain/usecases/account/add_account_usecase.dart';
 import '../../../domain/usecases/account/delete_account_usecase.dart';
+import '../../../domain/usecases/account/filter_account_usecase.dart';
 import '../../../domain/usecases/account/get_cached_account_usecase.dart';
 import '../../../domain/usecases/account/update_account_usecase.dart';
 
@@ -17,13 +18,15 @@ part 'account_state.dart';
 class AccountBloc extends Bloc<AccountEvent, AccountState> {
   final GetCachedAccountUseCase _getCachedAccountsUseCase;
   final AddAccountUseCase _addAccountUseCase;
+  final FilterAccountUseCase _filterAccountUseCase;
   final UpdateAccountUseCase _updateAccountUseCase;
   final DeleteAccountUseCase _deleteAccountUseCase;
 
-  AccountBloc(this._getCachedAccountsUseCase, this._addAccountUseCase,
+  AccountBloc(this._getCachedAccountsUseCase, this._filterAccountUseCase, this._addAccountUseCase,
       this._updateAccountUseCase, this._deleteAccountUseCase)
       : super(const AccountLoading(data: [])) {
     on<GetAccount>(_onLoadAccount);
+    on<FilterAccounts>(_onFilterAccounts);
     on<AddAccount>(_onAddAccount);
     on<UpdateAccount>(_onUpdateAccount);
     on<DeleteAccount>(_onDeleteAccount);
@@ -49,6 +52,36 @@ class AccountBloc extends Bloc<AccountEvent, AccountState> {
       );
     } catch (e) {
       EasyLoading.showError(e.toString());
+      emit(AccountError(
+        data: state.data,
+        failure: ExceptionFailure(),
+      ));
+    }
+  }
+
+  void _onFilterAccounts(
+      FilterAccounts event, Emitter<AccountState> emit) async {
+    try {
+      ///Initial Category loading with minimal loading animation
+      ///
+      emit(AccountLoading(data: state.data));
+      final cashedResult = await _filterAccountUseCase(event.keyword);
+      cashedResult.fold(
+              (failure) => emit(AccountError(
+            data: state.data,
+            failure: failure,
+          )), (categories) {
+        if (categories.isEmpty) {
+          emit(AccountEmpty(
+            data: categories,
+          ));
+        } else {
+          emit(AccountLoaded(
+            data: categories,
+          ));
+        }
+      });
+    } catch (e) {
       emit(AccountError(
         data: state.data,
         failure: ExceptionFailure(),

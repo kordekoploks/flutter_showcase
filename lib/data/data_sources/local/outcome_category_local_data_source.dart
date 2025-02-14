@@ -38,6 +38,7 @@ class CategoryLocalDataSourceImpl implements OutcomeCategoryLocalDataSource {
 
   @override
   Future<List<OutcomeCategoryModel>> getCategories() {
+    generateCategories();
     return Future.value(outcomeCategoryBox
         .getAll()
         .map((e) => OutcomeCategoryModel.fromEntity(e))
