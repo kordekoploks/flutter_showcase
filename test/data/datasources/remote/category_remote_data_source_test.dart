@@ -1,6 +1,6 @@
 import 'package:eshop/core/constant/strings.dart';
 import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/data/data_sources/remote/category_remote_data_source.dart';
+import 'package:eshop/data/data_sources/remote/outcome_category_remote_data_source.dart';
 import 'package:eshop/data/models/category/outcome_category_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;

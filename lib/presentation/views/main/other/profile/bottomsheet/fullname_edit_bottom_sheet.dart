@@ -50,7 +50,7 @@ class _FullNameEditBottomSheetState extends State<FullNameEditBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return VWBottomSheet(
-      title: "Edit FullName",
+      title: "Edit Full Name",
       content: Padding(
         padding: const EdgeInsets.all(16.0),
         child: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
@@ -71,13 +71,13 @@ class _FullNameEditBottomSheetState extends State<FullNameEditBottomSheet> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 InputTextFormField(
-                  label: "Nama Kategori",
+                  label: "Nama Depan",
                   controller: FirstnameController,
                   textInputAction: TextInputAction.next,
                   isMandatory: true,
-                ),
+                ),SizedBox(height: 16,),
                 InputTextFormField(
-                  label: "Nama Kategori",
+                  label: "Nama Belakang",
                   controller: LastnameController,
                   textInputAction: TextInputAction.next,
                   isMandatory: true,

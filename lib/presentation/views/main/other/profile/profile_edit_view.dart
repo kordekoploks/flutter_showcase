@@ -59,11 +59,14 @@ class _ProfileEditViewState extends State<ProfileEditView> {
         appBar: VwAppBar(title: "Profile Edit"),
         body: SingleChildScrollView(
           child: Container(
+            constraints: BoxConstraints(
+              maxHeight: double.infinity,
+            ),
             color: vWPrimaryColor,
             child: Form(
               key: _formKey,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(0,54,0,0),
+                padding: const EdgeInsets.fromLTRB(0,54,0,120),
                 child: Card(
                   color: Colors.white,
                   child: Column(
