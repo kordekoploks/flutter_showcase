@@ -33,27 +33,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/data_sources/local/account_local_data_source.dart';
 import '../../data/data_sources/local/cart_local_data_source.dart';
+import '../../data/data_sources/local/income_category_local_data_source.dart';
 import '../../data/data_sources/local/income_local_data_source.dart';
+import '../../data/data_sources/local/income_sub_category_local_data_source.dart';
 import '../../data/data_sources/local/outcome_category_local_data_source.dart';
 import '../../data/data_sources/local/delivery_info_local_data_source.dart';
 import '../../data/data_sources/local/order_local_data_source.dart';
 import '../../data/data_sources/local/product_local_data_source.dart';
 import '../../data/data_sources/local/user_local_data_source.dart';
 import '../../data/data_sources/remote/cart_remote_data_source.dart';
-import '../../data/data_sources/remote/category_remote_data_source.dart';
+import '../../data/data_sources/remote/income_category_remote_data_source.dart';
+import '../../data/data_sources/remote/outcome_category_remote_data_source.dart';
 import '../../data/data_sources/remote/delivery_info_remote_data_source.dart';
 import '../../data/data_sources/remote/order_remote_data_source.dart';
 import '../../data/data_sources/remote/product_remote_data_source.dart';
 import '../../data/data_sources/remote/user_remote_data_source.dart';
 import '../../data/repositories/account_repository_impl.dart';
 import '../../data/repositories/cart_repository_impl.dart';
+import '../../data/repositories/income_category_repository_impl.dart';
 import '../../data/repositories/income_repository_impl.dart';
+import '../../data/repositories/income_sub_category_repository_impl.dart';
 import '../../data/repositories/outcome_category_repository_impl.dart';
 import '../../data/repositories/delivery_info_impl.dart';
 import '../../data/repositories/order_repository_impl.dart';
 import '../../data/repositories/product_repository_impl.dart';
 import '../../data/repositories/user_repository_impl.dart';
 import '../../domain/repositories/cart_repository.dart';
+import '../../domain/repositories/income_category_repository.dart';
+import '../../domain/repositories/income_sub_category_repository.dart';
 import '../../domain/repositories/outcome_category_repository.dart';
 import '../../domain/repositories/delivery_info_repository.dart';
 import '../../domain/repositories/income_repository.dart';
@@ -67,7 +74,17 @@ import '../../domain/usecases/cart/add_cart_item_usecase.dart';
 import '../../domain/usecases/cart/clear_cart_usecase.dart';
 import '../../domain/usecases/cart/get_cached_cart_usecase.dart';
 import '../../domain/usecases/cart/sync_cart_usecase.dart';
+import '../../domain/usecases/income/add_income_sub_category_usecase.dart';
+import '../../domain/usecases/income/delete_income_sub_category_usecase.dart';
+import '../../domain/usecases/income/filter_income_sub_category_usecase.dart';
+import '../../domain/usecases/income/get_cached_income_category_usecase.dart';
+import '../../domain/usecases/income/get_cached_income_sub_category_usecase.dart';
+import '../../domain/usecases/income/income_category/add_income_category_usecase.dart';
+import '../../domain/usecases/income/income_category/delete_income_category_usecase.dart';
+import '../../domain/usecases/income/income_category/filter_income_category_usecase.dart';
+import '../../domain/usecases/income/income_category/update_income_category_usecase.dart';
 import '../../domain/usecases/income/save_income_usecase.dart';
+import '../../domain/usecases/income/update_income_sub_category_usecase.dart';
 import '../../domain/usecases/outcome_category/delete_category_usecase.dart';
 import '../../domain/usecases/outcome_category/filter_category_usecase.dart';
 import '../../domain/usecases/outcome_category/get_cached_outcome_category_usecase.dart';
@@ -85,10 +102,12 @@ import '../../domain/usecases/user/sign_in_usecase.dart';
 import '../../domain/usecases/user/sign_out_usecase.dart';
 import '../../domain/usecases/user/sign_up_usecase.dart';
 import '../../presentation/blocs/cart/cart_bloc.dart';
+import '../../presentation/blocs/category/income_category_bloc.dart';
 import '../../presentation/blocs/category/outcome_category_bloc.dart';
 import '../../presentation/blocs/delivery_info/delivery_info_action/delivery_info_action_cubit.dart';
 import '../../presentation/blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.dart';
 import '../../presentation/blocs/income/income_bloc.dart';
+import '../../presentation/blocs/income/income_sub_category_bloc.dart';
 import '../../presentation/blocs/order/order_add/order_add_cubit.dart';
 import '../../presentation/blocs/order/order_fetch/order_fetch_cubit.dart';
 import '../../presentation/blocs/product/product_bloc.dart';
@@ -145,11 +164,11 @@ Future<void> init() async {
     ),
   );
   // Data sources
-  sl.registerLazySingleton<CategoryRemoteDataSource>(
-    () => CategoryRemoteDataSourceImpl(client: sl()),
+  sl.registerLazySingleton<OutcomeCategoryRemoteDataSource>(
+    () => OutcomeCategoryRemoteDataSourceImpl(client: sl()),
   );
   sl.registerLazySingleton<OutcomeCategoryLocalDataSource>(
-    () => CategoryLocalDataSourceImpl(
+    () => OutcomeCategoryLocalDataSourceImpl(
         outcomeCategoryBox: sl(), outcomeSubCategoryBox: sl(), store: sl()),
   );
 
@@ -176,6 +195,59 @@ Future<void> init() async {
     () => OutcomeSubCategoryLocalDataSourceImpl(
         outcomeSubCategoryBox: sl(), store: sl()),
   );
+
+  // Bloc
+  sl.registerFactory(
+        () => IncomeCategoryBloc(sl(), sl(), sl(), sl(), sl()),
+  );
+  // Use cases
+  sl.registerLazySingleton(() => GetCachedIncomeCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => AddIncomeCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateIncomeCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteIncomeCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => FilterIncomeCategoryUseCase(sl()));
+  // Repository
+  sl.registerLazySingleton<IncomeCategoryRepository>(
+        () => IncomeCategoryRepositoryImpl(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  // Data sources
+  sl.registerLazySingleton<IncomeCategoryRemoteDataSource>(
+        () => IncomeCategoryRemoteDataSourceImpl(client: sl()),
+  );
+  sl.registerLazySingleton<IncomeCategoryLocalDataSource>(
+        () => IncomeCategoryLocalDataSourceImpl(
+        incomeCategoryBox: sl(), incomeSubCategoryBox: sl(), store: sl()),
+  );
+
+  //Features - Category
+  // Bloc
+  sl.registerFactory(
+        () => IncomeSubCategoryBloc(sl(), sl(), sl(), sl(), sl()),
+  );
+  // Use cases
+  sl.registerLazySingleton(() => GetCachedIncomeSubCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => AddIncomeSubCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateIncomeSubCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteIncomeSubCategoryUseCase(sl()));
+  sl.registerLazySingleton(() => FilterIncomeSubCategoryUseCase(sl()));
+  // Repository
+  sl.registerLazySingleton<IncomeSubCategoryRepository>(
+        () => IncomeSubCategoryRepositoryImpl(
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+  // Data sources
+  sl.registerLazySingleton<IncomeSubCategoryLocalDataSource>(
+        () => IncomeSubCategoryLocalDataSourceImpl(
+        incomeSubCategoryBox: sl(), store: sl()),
+  );
+
+
 
   //Features - Cart
   // Bloc

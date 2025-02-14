@@ -15,7 +15,9 @@ import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'data/data_sources/local/entity/account_entity.dart';
+import 'data/data_sources/local/entity/income_category_entity.dart';
 import 'data/data_sources/local/entity/income_entity.dart';
+import 'data/data_sources/local/entity/income_sub_category_entity.dart';
 import 'data/data_sources/local/entity/outcome_category_entity.dart';
 import 'data/data_sources/local/entity/outcome_sub_category_entity.dart';
 
@@ -507,4 +509,48 @@ class IncomeEntity_ {
   /// See [IncomeEntity.isRepeat].
   static final isRepeat =
       obx.QueryBooleanProperty<IncomeEntity>(_entities[3].properties[6]);
+}
+
+/// [IncomeCategoryEntity] entity fields to define ObjectBox queries.
+class IncomeCategoryEntity_ {
+  /// See [IncomeCategoryEntity.id].
+  static final id = obx.QueryIntegerProperty<IncomeCategoryEntity>(
+      _entities[0].properties[0]);
+
+  /// See [IncomeCategoryEntity.name].
+  static final name = obx.QueryStringProperty<IncomeCategoryEntity>(
+      _entities[0].properties[1]);
+
+  /// See [IncomeCategoryEntity.image].
+  static final image = obx.QueryStringProperty<IncomeCategoryEntity>(
+      _entities[0].properties[2]);
+
+  /// See [IncomeCategoryEntity.position].
+  static final position = obx.QueryIntegerProperty<IncomeCategoryEntity>(
+      _entities[0].properties[3]);
+
+  /// See [IncomeCategoryEntity.desc].
+  static final desc = obx.QueryStringProperty<IncomeCategoryEntity>(
+      _entities[0].properties[4]);
+
+}
+
+/// [IncomeSubCategoryEntity] entity fields to define ObjectBox queries.
+class IncomeSubCategoryEntity_ {
+  /// See [IncomeSubCategoryEntity.id].
+  static final id = obx.QueryIntegerProperty<IncomeSubCategoryEntity>(
+      _entities[1].properties[0]);
+
+  /// See [IncomeSubCategoryEntity.name].
+  static final name = obx.QueryStringProperty<IncomeSubCategoryEntity>(
+      _entities[1].properties[1]);
+
+  /// See [IncomeSubCategoryEntity.desc].
+  static final desc = obx.QueryStringProperty<IncomeSubCategoryEntity>(
+      _entities[1].properties[2]);
+
+  /// See [IncomeSubCategoryEntity.incomeCategory].
+  static final incomeCategory =
+  obx.QueryRelationToOne<IncomeSubCategoryEntity, IncomeSubCategoryEntity>(
+      _entities[1].properties[3]);
 }

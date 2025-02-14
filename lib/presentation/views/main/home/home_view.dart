@@ -276,10 +276,19 @@ class _HomeViewState extends State<HomeView> {
                         // SizedBox(
                         //   height: MediaQuery.of(context).size.height * 0.1,
                         // ),
-                        FloatingActionButton(onPressed: () {
-                          Navigator.of(context).pushNamed(AppRouter.incomeAdd);
-                        }
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 50), // Move it 50 pixels up
+                            child: FloatingActionButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(AppRouter.incomeAdd);
+                              },
+                              child: Icon(Icons.add),
+                            ),
+                          ),
                         )
+
                       ],
                     );
                   }

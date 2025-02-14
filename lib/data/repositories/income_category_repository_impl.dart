@@ -5,23 +5,28 @@ import 'package:eshop/domain/entities/category/outcome_category.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../core/network/network_info.dart';
+import '../../domain/entities/category/income_category.dart';
+import '../../domain/repositories/income_category_repository.dart';
 import '../../domain/repositories/outcome_category_repository.dart';
+import '../data_sources/local/income_category_local_data_source.dart';
 import '../data_sources/local/outcome_category_local_data_source.dart';
+import '../data_sources/remote/income_category_remote_data_source.dart';
 import '../data_sources/remote/outcome_category_remote_data_source.dart';
+import '../models/category/income_category_model.dart';
 
-class OutcomeCategoryRepositoryImpl implements OutcomeCategoryRepository {
-  final OutcomeCategoryRemoteDataSource remoteDataSource;
-  final OutcomeCategoryLocalDataSource localDataSource;
+class IncomeCategoryRepositoryImpl implements IncomeCategoryRepository {
+  final IncomeCategoryRemoteDataSource remoteDataSource;
+  final IncomeCategoryLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
-  OutcomeCategoryRepositoryImpl({
+  IncomeCategoryRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
   });
 
   @override
-  Future<Either<Failure, List<OutcomeCategory>>> getRemoteCategories() async {
+  Future<Either<Failure, List<IncomeCategory>>> getRemoteCategories() async {
     if (await networkInfo.isConnected) {
       try {
         final remoteProducts = await remoteDataSource.getCategories();
@@ -36,7 +41,7 @@ class OutcomeCategoryRepositoryImpl implements OutcomeCategoryRepository {
   }
 
   @override
-  Future<Either<Failure, List<OutcomeCategory>>> getCachedCategories() async {
+  Future<Either<Failure, List<IncomeCategory>>> getCachedCategories() async {
     try {
       final cachedCategories = await localDataSource.getCategories();
       // if (cachedCategories.isEmpty) await localDataSource.generateCategories();
@@ -49,7 +54,7 @@ class OutcomeCategoryRepositoryImpl implements OutcomeCategoryRepository {
   }
 
   @override
-  Future<Either<Failure, OutcomeCategory>> addCategories(OutcomeCategoryModel params) async {
+  Future<Either<Failure, IncomeCategory>> addCategories(IncomeCategoryModel params) async {
     try {
       await localDataSource.saveCategory(params);
       return Right(params);
@@ -59,7 +64,7 @@ class OutcomeCategoryRepositoryImpl implements OutcomeCategoryRepository {
   }
 
   @override
-  Future<Either<Failure, List<OutcomeCategory>>> filterCachedCategories(
+  Future<Either<Failure, List<IncomeCategory>>> filterCachedCategories(
       params) async {
     try {
       final filteredCategories = await localDataSource.filterCategories(params);
@@ -70,8 +75,8 @@ class OutcomeCategoryRepositoryImpl implements OutcomeCategoryRepository {
   }
 
   @override
-  Future<Either<Failure, OutcomeCategory>> updateCategory(
-      OutcomeCategoryModel keyword) async {
+  Future<Either<Failure, IncomeCategory>> updateCategory(
+      IncomeCategoryModel keyword) async {
     try {
       await localDataSource.saveCategory(keyword);
       return Right(keyword);
@@ -81,8 +86,8 @@ class OutcomeCategoryRepositoryImpl implements OutcomeCategoryRepository {
   }
 
   @override
-  Future<Either<Failure, OutcomeCategory>> deleteCategory(
-      OutcomeCategory data) async {
+  Future<Either<Failure, IncomeCategory>> deleteCategory(
+      IncomeCategory data) async {
     try {
       await localDataSource.deleteCategory(data);
       return Right(data);

@@ -76,12 +76,22 @@ class _IncomeAddViewState extends State<IncomeAddView> {
               height: 200,
               child: CupertinoDatePicker(
                 initialDateTime: DateTime.now(),
-                mode: CupertinoDatePickerMode.date,
+                mode: CupertinoDatePickerMode.dateAndTime, // Includes hour selection
+                use24hFormat: true, // 24-hour format (optional)
                 onDateTimeChanged: (DateTime val) {
                   setState(() {
                     _chosenDateTime = val;
+                    DateTime today = DateTime.now();
+                    bool isToday = val.year == today.year &&
+                        val.month == today.month &&
+                        val.day == today.day;
+
+                    String formattedDate = isToday
+                        ? "Today"
+                        : "${val.month}/${val.day}/${val.year}";
+
                     dateController.text =
-                        "${val.day}-${val.month}-${val.year}"; // Format Date
+                    "$formattedDate ${val.hour}:${val.minute.toString().padLeft(2, '0')}"; // Format Date
                   });
                 },
               ),
@@ -94,6 +104,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
         ),
       ),
     );
+
   }
 
   @override
