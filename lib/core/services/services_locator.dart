@@ -62,6 +62,7 @@ import '../../domain/repositories/product_repository.dart';
 import '../../domain/repositories/user_repository.dart';
 import '../../domain/usecases/account/add_account_usecase.dart';
 import '../../domain/usecases/account/delete_account_usecase.dart';
+import '../../domain/usecases/account/filter_account_usecase.dart';
 import '../../domain/usecases/cart/add_cart_item_usecase.dart';
 import '../../domain/usecases/cart/clear_cart_usecase.dart';
 import '../../domain/usecases/cart/get_cached_cart_usecase.dart';
@@ -314,10 +315,11 @@ Future<void> init() async {
   //Setting Feature
   // Bloc
   sl.registerFactory(
-    () => AccountBloc(sl(),sl(),sl(),sl()),
+    () => AccountBloc(sl(),sl(),sl(),sl(),sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedAccountUseCase(sl()));
+  sl.registerLazySingleton(() => FilterAccountUseCase(sl()));
   sl.registerLazySingleton(() => UpdateAccountUseCase(sl()));
   sl.registerLazySingleton(() => DeleteAccountUseCase(sl()));
   sl.registerLazySingleton(() => AddAccountUseCase(sl()));

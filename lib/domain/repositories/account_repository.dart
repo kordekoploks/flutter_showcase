@@ -9,6 +9,9 @@ abstract class AccountRepository {
 
   Future<Either<Failure, List<Account>>> getCachedAccount();
 
+  Future<Either<Failure, List<Account>>> filterCachedAccounts(
+      String keyword);
+
   Future<Either<Failure, Account>> addAccount(
       AccountModel keyword);
 

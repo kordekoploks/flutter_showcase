@@ -12,9 +12,9 @@ class GetAccount extends AccountEvent {
   List<Object> get props => [];
 }
 
-class FilterCategories extends AccountEvent {
+class FilterAccounts extends AccountEvent {
   final String keyword;
-  const FilterCategories(this.keyword);
+  const FilterAccounts(this.keyword);
 
   @override
   List<Object> get props => [];

@@ -14,6 +14,8 @@ abstract class AccountLocalDataSource {
   Future<void> deleteAccount(Account accountModel);
 
   Future<void> generateAccount();
+
+  Future<List<Account>> filterAccounts(String params);
 }
 
 const cachedAccount = 'CACHED_ACCOUNT';
@@ -25,7 +27,8 @@ class AccountLocalDataSourceImpl implements AccountLocalDataSource {
   AccountLocalDataSourceImpl({required this.accountBox, required this.store});
 
   @override
-  Future<List<AccountModel>> getAccounts() {
+  Future<List<AccountModel>> getAccounts() async {
+    await generateAccount();
     return Future.value(
         accountBox.getAll().map((e) => AccountModel.fromEntity(e)).toList());
   }
@@ -58,14 +61,34 @@ class AccountLocalDataSourceImpl implements AccountLocalDataSource {
     final List<dynamic> data = jsonData['data'];
 
     for (var account in data) {
-      final accountEntity = AccountEntity(
-          int.parse(account["_id"]),
+      final int accountId = int.parse(account["_id"]);
+
+      // Convert initialAmt to double safely
+      final double initialAmt =
+          double.tryParse(account["initialAmt"].toString()) ?? 0.0;
+
+      // Check if the account already exists in the box
+      if (accountBox.get(accountId) == null) {
+        final accountEntity = AccountEntity(
+          accountId,
           account["name"],
-          account["position"],
+          initialAmt,
           account["desc"],
-          account["accountGroup"]);
-      accountBox.put(accountEntity);
+          account["accountGroup"],
+        );
+        await accountBox.putAsync(accountEntity);
+      }
     }
+  }
+
+  @override
+  Future<List<Account>> filterAccounts(String params) async {
+    return Future.value(accountBox
+        .query(AccountEntity_.name.contains(params, caseSensitive: false))
+        .build()
+        .find()
+        .map((e) => AccountModel.fromEntity(e))
+        .toList());
   }
 }
 
@@ -81,10 +104,11 @@ const String accountInitializeData = '''
     },
    {
       "_id": "2",
-      "name": "Loan",
+      "name": "Main Account",
       "initialAmt": "0",
       "desc": "Loan Desc",
-      "accountGroup": "LOAN_CASH"
-    },      ]
+      "accountGroup": "GROUP_ACCOUNT"
+  }
+  ]
 }
 ''';

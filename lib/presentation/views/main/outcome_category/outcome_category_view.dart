@@ -1,4 +1,5 @@
 import 'package:eshop/domain/entities/category/outcome_sub_category.dart';
+import 'package:eshop/presentation/widgets/VwFilterTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oktoast/oktoast.dart';
@@ -237,7 +238,16 @@ class _OutcomeCategoryViewState extends State<OutcomeCategoryView> {
     return Column(
       children: [
         const SizedBox(height: 16),
-        _buildFilterTextField(context), // Extracted filter widget
+        VwSearchTextField(
+          controller: _filterController,
+          hintText: "Search Categories...", // Custom hint text
+          onChanged: (val) {
+            context.read<OutcomeCategoryBloc>().add(FilterCategories(val));
+          },
+          onSubmitted: (val) {
+            context.read<OutcomeCategoryBloc>().add(FilterCategories(val));
+          },
+        ), // Extracted filter widget
         Expanded(
           child: _buildCategoryListView(
               context), // Extracted RefreshIndicator and AnimatedList logic
@@ -246,54 +256,6 @@ class _OutcomeCategoryViewState extends State<OutcomeCategoryView> {
     );
   }
 
-  Widget _buildFilterTextField(BuildContext context) {
-    return TextField(
-      controller: _filterController,
-      autofocus: false,
-      onSubmitted: (val) {
-        context.read<OutcomeCategoryBloc>().add(FilterCategories(val));
-      },
-      onChanged: (val) =>
-          setState(() {
-            context.read<OutcomeCategoryBloc>().add(FilterCategories(val));
-          }),
-      decoration: InputDecoration(
-        contentPadding: const EdgeInsets.only(left: 20, bottom: 22, top: 22),
-        prefixIcon: const Padding(
-          padding: EdgeInsets.only(left: 8),
-          child: Icon(Icons.search),
-        ),
-        suffixIcon: _filterController.text.isNotEmpty
-            ? Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: IconButton(
-            onPressed: () {
-              setState(() {
-                _filterController.clear();
-                context
-                    .read<OutcomeCategoryBloc>()
-                    .add(const FilterCategories(''));
-              });
-            },
-            icon: const Icon(Icons.clear),
-          ),
-        )
-            : null,
-        border: const OutlineInputBorder(),
-        hintText: "Search",
-        fillColor: Colors.grey.shade100,
-        filled: true,
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white, width: 3.0),
-          borderRadius: BorderRadius.circular(26),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(26),
-          borderSide: const BorderSide(color: Colors.white, width: 3.0),
-        ),
-      ),
-    );
-  }
 
   Widget _buildCategoryListView(BuildContext context) {
     if (_data.isEmpty) {

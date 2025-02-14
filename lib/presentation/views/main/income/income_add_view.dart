@@ -24,6 +24,7 @@ import '../../../../domain/entities/income/income_bottom_sheet/account_spinner.d
 import '../../../blocs/cart/cart_bloc.dart';
 import '../../../blocs/income/income_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
+import '../../../widgets/account_card/AccountHelper.dart';
 import '../../../widgets/input_text_form_field.dart';
 import '../../../widgets/outcome_category/income_tab_bar.dart';
 import '../../../widgets/outcome_category/outcome_category_item_card.dart';
@@ -50,6 +51,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   final List<String> _tabTitles = ["INCOME", "EXPENSE"];
   int _selectedIndex = 0;
   String selectedGroup = "Category";
+  Account selectedAccount = AccountDefaults.defaultAccount;
   late DateTime _chosenDateTime;
 
   @override
@@ -65,33 +67,32 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   void _showDateCoy(BuildContext ctx) {
     showCupertinoModalPopup(
       context: ctx,
-      builder: (_) =>
-          Container(
-            height: 300,
-            color: Colors.white,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 200,
-                  child: CupertinoDatePicker(
-                    initialDateTime: DateTime.now(),
-                    mode: CupertinoDatePickerMode.date,
-                    onDateTimeChanged: (DateTime val) {
-                      setState(() {
-                        _chosenDateTime = val;
-                        dateController.text =
+      builder: (_) => Container(
+        height: 300,
+        color: Colors.white,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 200,
+              child: CupertinoDatePicker(
+                initialDateTime: DateTime.now(),
+                mode: CupertinoDatePickerMode.date,
+                onDateTimeChanged: (DateTime val) {
+                  setState(() {
+                    _chosenDateTime = val;
+                    dateController.text =
                         "${val.day}-${val.month}-${val.year}"; // Format Date
-                      });
-                    },
-                  ),
-                ),
-                CupertinoButton(
-                  child: Text('OK'),
-                  onPressed: () => Navigator.of(ctx).pop(),
-                )
-              ],
+                  });
+                },
+              ),
             ),
-          ),
+            CupertinoButton(
+              child: Text('OK'),
+              onPressed: () => Navigator.of(ctx).pop(),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -114,7 +115,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
       },
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(58), // Height of the app bar
+          preferredSize: Size.fromHeight(80), // Height of the app bar
           child: Padding(
             padding: const EdgeInsets.only(top: 40.0),
             child: Row(
@@ -137,21 +138,19 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 30.0, top: 4),
-                  child: GestureDetector(
-                    onTap: () {
-                      _showAccountBottomSheet(context, Account(
-                          id: "",name: "",initialAmt: 0,desc: "",isUpdated: false)
-                      );
-                    },
+                GestureDetector(
+                  onTap: () {
+                    _showAccountBottomSheet(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 30.0, top: 4),
                     child: Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "CASH",
+                              selectedAccount.name,
                               style: TextStyle(
                                   fontSize: 12, fontWeight: FontWeight.bold),
                             ),
@@ -162,7 +161,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                           ],
                         ),
                         Text(
-                          "Balance: 10.000",
+                          "Balance: " + selectedAccount.initialAmt.toString(),
                           style: TextStyle(
                               color: vWPrimaryColor,
                               fontSize: 12,
@@ -264,19 +263,21 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                         const SizedBox(height: 0),
                         GestureDetector(
                           onTap: () async {
-                            final selectedCategory = await _showOutcomeCategoryBottomSheet(context);
+                            final selectedCategory =
+                                await _showOutcomeCategoryBottomSheet(context);
                             if (selectedCategory != null) {
                               setState(() {
-                                selectedCategoryName = selectedCategory.name; // Store selected category name
+                                selectedCategoryName = selectedCategory
+                                    .name; // Store selected category name
                               });
                             }
                           },
                           child: VwSpinner(
-                            text: selectedCategoryName ?? "Category", // Display selected category
+                            text: selectedCategoryName ?? "Category",
+                            // Display selected category
                             isValid: isValid,
                           ),
                         ),
-
 
                         // GestureDetector(
                         //   onTap: () {
@@ -365,8 +366,9 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                               isRepeat: true,
                             );
 
-                            context.read<IncomeBloc>().add(
-                                AddIncome(newIncome));
+                            context
+                                .read<IncomeBloc>()
+                                .add(AddIncome(newIncome));
 
                             // Show success toast
                             Fluttertoast.showToast(
@@ -380,7 +382,6 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                           },
                           titleText: "Confirm",
                           buttonType: ButtonType.primary,
-
                         )
                       ],
                     ),
@@ -394,28 +395,31 @@ class _IncomeAddViewState extends State<IncomeAddView> {
     );
   }
 
-  void _showAccountBottomSheet(BuildContext context, Account account) {
+  void _showAccountBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return AccountBottomSheet(
-          account: account,
+          account: selectedAccount,
+          onSelectedItem: (val) {
+            setState(() {
+              selectedAccount = val;
+            });
+          },
         );
       },
     );
   }
 
-  Future<OutcomeCategory?> _showOutcomeCategoryBottomSheet(BuildContext context) async {
+  Future<OutcomeCategory?> _showOutcomeCategoryBottomSheet(
+      BuildContext context) async {
     return await showModalBottomSheet<OutcomeCategory>(
       context: context,
       builder: (context) {
         return OutcomeCategoryBottomSheet(
-          onCategorySelected: (category) {
-                      },
+          onCategorySelected: (category) {},
         );
       },
     );
   }
-
-
 }
