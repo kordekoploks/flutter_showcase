@@ -1,7 +1,7 @@
 import 'package:eshop/core/error/failures.dart';
 import 'package:eshop/core/network/network_info.dart';
 import 'package:eshop/data/data_sources/local/outcome_category_local_data_source.dart';
-import 'package:eshop/data/data_sources/remote/category_remote_data_source.dart';
+import 'package:eshop/data/data_sources/remote/outcome_category_remote_data_source.dart';
 import 'package:eshop/data/repositories/outcome_category_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';

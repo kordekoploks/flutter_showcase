@@ -25,7 +25,7 @@ import '../../../blocs/cart/cart_bloc.dart';
 import '../../../blocs/income/income_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
 import '../../../widgets/input_text_form_field.dart';
-import '../../../widgets/outcome_category/income_tab_bar.dart';
+import '../../../widgets/income_category/income_tab_bar.dart';
 import '../../../widgets/outcome_category/outcome_category_item_card.dart';
 import '../../../widgets/vw_checkbox.dart';
 import '../../../widgets/vw_text_link.dart';
@@ -65,34 +65,44 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   void _showDateCoy(BuildContext ctx) {
     showCupertinoModalPopup(
       context: ctx,
-      builder: (_) =>
-          Container(
-            height: 300,
-            color: Colors.white,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 200,
-                  child: CupertinoDatePicker(
-                    initialDateTime: DateTime.now(),
-                    mode: CupertinoDatePickerMode.date,
-                    onDateTimeChanged: (DateTime val) {
-                      setState(() {
-                        _chosenDateTime = val;
-                        dateController.text =
-                        "${val.day}-${val.month}-${val.year}"; // Format Date
-                      });
-                    },
-                  ),
-                ),
-                CupertinoButton(
-                  child: Text('OK'),
-                  onPressed: () => Navigator.of(ctx).pop(),
-                )
-              ],
+      builder: (_) => Container(
+        height: 300,
+        color: Colors.white,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 200,
+              child: CupertinoDatePicker(
+                initialDateTime: DateTime.now(),
+                mode: CupertinoDatePickerMode.dateAndTime, // Includes hour selection
+                use24hFormat: true, // 24-hour format (optional)
+                onDateTimeChanged: (DateTime val) {
+                  setState(() {
+                    _chosenDateTime = val;
+                    DateTime today = DateTime.now();
+                    bool isToday = val.year == today.year &&
+                        val.month == today.month &&
+                        val.day == today.day;
+
+                    String formattedDate = isToday
+                        ? "Today"
+                        : "${val.month}/${val.day}/${val.year}";
+
+                    dateController.text =
+                    "$formattedDate ${val.hour}:${val.minute.toString().padLeft(2, '0')}"; // Format Date
+                  });
+                },
+              ),
             ),
-          ),
+            CupertinoButton(
+              child: Text('OK'),
+              onPressed: () => Navigator.of(ctx).pop(),
+            )
+          ],
+        ),
+      ),
     );
+
   }
 
   @override

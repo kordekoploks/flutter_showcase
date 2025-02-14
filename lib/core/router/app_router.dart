@@ -14,6 +14,7 @@ import '../../domain/entities/user/user.dart';
 import '../../presentation/views/authentication/signin_view.dart';
 import '../../presentation/views/authentication/signup_view.dart';
 import '../../presentation/views/main/income/income_add_view.dart';
+import '../../presentation/views/main/income/income_category/income_category_view.dart';
 import '../../presentation/views/main/main_view.dart';
 import '../../presentation/views/main/other/about/about_view.dart';
 import '../../presentation/views/main/other/delivery_info/delivery_info.dart';
@@ -42,6 +43,7 @@ class AppRouter {
   static const String incomeAdd = '/income-add';
   static const String accountAndCardView = '/account_card-and-card-view';
   static const String helpView = '/help-view';
+  static const String incomeCategoryView = '/income-category-view';
 
   //products
   static const String productDetails = '/product-details';
@@ -105,6 +107,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SettingsView());
       case category:
         return MaterialPageRoute(builder: (_) => const OutcomeCategoryView());
+      case incomeCategoryView:
+        return MaterialPageRoute(builder: (_) => const IncomeCategoryView());
       case notifications:
         return MaterialPageRoute(builder: (_) => const NotificationView());
       case about:
