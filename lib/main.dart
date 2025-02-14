@@ -3,7 +3,9 @@ import 'package:eshop/data/data_sources/local/entity/account_entity.dart';
 import 'package:eshop/domain/entities/account/account.dart';
 import 'package:eshop/objectbox.g.dart';
 import 'package:eshop/presentation/blocs/account/account_bloc.dart';
+import 'package:eshop/presentation/blocs/category/income_category_bloc.dart';
 import 'package:eshop/presentation/blocs/income/income_bloc.dart';
+import 'package:eshop/presentation/blocs/income/income_sub_category_bloc.dart';
 import 'package:eshop/presentation/blocs/outcome_sub_category/outcome_sub_category_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -18,7 +20,9 @@ import 'core/constant/strings.dart';
 import 'core/database/ObjectBox.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
+import 'data/data_sources/local/entity/income_category_entity.dart';
 import 'data/data_sources/local/entity/income_entity.dart';
+import 'data/data_sources/local/entity/income_sub_category_entity.dart';
 import 'data/data_sources/local/entity/outcome_category_entity.dart';
 import 'data/data_sources/local/entity/outcome_sub_category_entity.dart';
 import 'domain/usecases/product/get_product_usecase.dart';
@@ -52,6 +56,8 @@ Future<void> main() async {
   sl.registerLazySingleton(() => objectBoxStore);
   sl.registerLazySingleton(() => objectBoxStore.box<OutcomeCategoryEntity>());
   sl.registerLazySingleton(() => objectBoxStore.box<OutcomeSubCategoryEntity>());
+  sl.registerLazySingleton(() => objectBoxStore.box<IncomeCategoryEntity>());
+  sl.registerLazySingleton(() => objectBoxStore.box<IncomeSubCategoryEntity>());
   sl.registerLazySingleton(() => objectBoxStore.box<AccountEntity>());
   sl.registerLazySingleton(() => objectBoxStore.box<IncomeEntity>());
 
@@ -83,6 +89,14 @@ class MyApp extends StatelessWidget {
 
         BlocProvider(
           create: (context) => di.sl<OutcomeSubCategoryBloc>(),
+        ),
+        BlocProvider(
+          create: (context) =>
+          di.sl<IncomeCategoryBloc>()..add(const GetIncomeCategories()),
+        ),
+
+        BlocProvider(
+          create: (context) => di.sl<IncomeSubCategoryBloc>(),
         ),
 
         BlocProvider(

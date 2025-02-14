@@ -2,21 +2,21 @@ import 'package:eshop/core/error/failures.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../core/constant/strings.dart';
-import '../../models/category/outcome_category_model.dart';
+import '../../models/category/income_category_model.dart';
 
-abstract class CategoryRemoteDataSource {
-  Future<List<OutcomeCategoryModel>> getCategories();
+abstract class IncomeCategoryRemoteDataSource {
+  Future<List<IncomeCategoryModel>> getCategories();
 }
 
-class CategoryRemoteDataSourceImpl implements CategoryRemoteDataSource {
+class IncomeCategoryRemoteDataSourceImpl implements IncomeCategoryRemoteDataSource {
   final http.Client client;
-  CategoryRemoteDataSourceImpl({required this.client});
+  IncomeCategoryRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<List<OutcomeCategoryModel>> getCategories() =>
+  Future<List<IncomeCategoryModel>> getCategories() =>
       _getCategoryFromUrl('$baseUrl/categories');
 
-  Future<List<OutcomeCategoryModel>> _getCategoryFromUrl(String url) async {
+  Future<List<IncomeCategoryModel>> _getCategoryFromUrl(String url) async {
     final response = await client.get(
       Uri.parse(url),
       headers: {

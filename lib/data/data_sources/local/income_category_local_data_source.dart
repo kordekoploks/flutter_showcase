@@ -1,55 +1,52 @@
 import 'dart:convert';
 
-import 'package:eshop/core/error/failures.dart';
-import 'package:eshop/data/data_sources/local/entity/outcome_category_entity.dart';
-import 'package:eshop/domain/entities/category/outcome_category.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../domain/entities/category/income_category.dart';
 
 import '../../../objectbox.g.dart';
-import '../../models/category/outcome_category_model.dart';
-import 'entity/outcome_category_entity.dart';
-import 'entity/outcome_sub_category_entity.dart';
+import '../../models/category/income_category_model.dart';
+import 'entity/income_category_entity.dart';
+import 'entity/income_sub_category_entity.dart';
 
-abstract class OutcomeCategoryLocalDataSource {
-  Future<List<OutcomeCategoryModel>> getCategories();
+abstract class IncomeCategoryLocalDataSource {
+  Future<List<IncomeCategoryModel>> getCategories();
 
-  Future<void> saveCategory(OutcomeCategoryModel categoryModel);
+  Future<void> saveCategory(IncomeCategoryModel categoryModel);
 
-  Future<void> deleteCategory(OutcomeCategory categoryModel);
+  Future<void> deleteCategory(IncomeCategory categoryModel);
 
-  Future<void> saveCategories(List<OutcomeCategoryModel> categoriesToCache);
+  Future<void> saveCategories(List<IncomeCategoryModel> categoriesToCache);
 
   Future<void> generateCategories();
 
-  Future<List<OutcomeCategoryModel>> filterCategories(String params);
+  Future<List<IncomeCategoryModel>> filterCategories(String params);
 }
 
 const cachedCategories = 'CACHED_CATEGORIES';
 
-class OutcomeCategoryLocalDataSourceImpl implements OutcomeCategoryLocalDataSource {
-  final Box<OutcomeCategoryEntity> outcomeCategoryBox;
-  final Box<OutcomeSubCategoryEntity> outcomeSubCategoryBox;
+class IncomeCategoryLocalDataSourceImpl implements IncomeCategoryLocalDataSource {
+  final Box<IncomeCategoryEntity> incomeCategoryBox;
+  final Box<IncomeSubCategoryEntity> incomeSubCategoryBox;
   final Store store;
 
-  OutcomeCategoryLocalDataSourceImpl(
-      {required this.outcomeCategoryBox,
-      required this.outcomeSubCategoryBox,
-      required this.store});
+  IncomeCategoryLocalDataSourceImpl(
+      {required this.incomeCategoryBox,
+        required this.incomeSubCategoryBox,
+        required this.store});
 
   @override
-  Future<List<OutcomeCategoryModel>> getCategories() {
-    generateCategories();
-    return Future.value(outcomeCategoryBox
+  Future<List<IncomeCategoryModel>> getCategories() {
+    return Future.value(incomeCategoryBox
         .getAll()
-        .map((e) => OutcomeCategoryModel.fromEntity(e))
+        .map((e) => IncomeCategoryModel.fromEntity(e))
         .toList());
   }
 
   @override
-  Future<void> saveCategory(OutcomeCategoryModel e) async {
-    final categoryEntity = OutcomeCategoryEntity.fromModel(e);
+  Future<void> saveCategory(IncomeCategoryModel e) async {
+    final categoryEntity = IncomeCategoryEntity.fromModel(e);
 
-    final newSubCategoryIds = e.outcomeSubCategory.map((sub) => sub.id).toSet();
+    final newSubCategoryIds = e.incomeSubCategory.map((sub) => sub.id).toSet();
 
     final idsToDelete = categoryEntity.subCategories
         .where((sub) => !newSubCategoryIds.contains(sub.id))
@@ -57,55 +54,55 @@ class OutcomeCategoryLocalDataSourceImpl implements OutcomeCategoryLocalDataSour
         .toList();
 
     await Future.wait([
-      outcomeSubCategoryBox.removeManyAsync(idsToDelete),
-      outcomeCategoryBox.putAsync(categoryEntity),
+      incomeSubCategoryBox.removeManyAsync(idsToDelete),
+      incomeCategoryBox.putAsync(categoryEntity),
     ]);
   }
 
 
   @override
-  Future<void> deleteCategory(OutcomeCategory categoryModel) {
-    return outcomeCategoryBox.removeAsync(int.parse(categoryModel.id));
+  Future<void> deleteCategory(IncomeCategory categoryModel) {
+    return incomeCategoryBox.removeAsync(int.parse(categoryModel.id));
   }
 
   @override
-  Future<void> saveCategories(List<OutcomeCategoryModel> categoriesToCache) {
-    return Future(() => outcomeCategoryBox.putMany(categoriesToCache
-        .map((e) => OutcomeCategoryEntity(
-            int.parse(e.id), e.name, e.image, e.position, e.desc))
+  Future<void> saveCategories(List<IncomeCategoryModel> categoriesToCache) {
+    return Future(() => incomeCategoryBox.putMany(categoriesToCache
+        .map((e) => IncomeCategoryEntity(
+        int.parse(e.id), e.name, e.image, e.position, e.desc))
         .toList()));
   }
 
   @override
-  Future<List<OutcomeCategoryModel>> filterCategories(String params) {
-    return Future.value(outcomeCategoryBox
+  Future<List<IncomeCategoryModel>> filterCategories(String params) {
+    return Future.value(incomeCategoryBox
         .query(
-            OutcomeCategoryEntity_.name.contains(params, caseSensitive: false))
+        IncomeCategoryEntity_.name.contains(params, caseSensitive: false))
         .build()
         .find()
-        .map((e) => OutcomeCategoryModel(
-            id: e.id.toString(),
-            position: e.position!,
-            name: e.name!,
-            desc: e.desc!,
-            image: e.image!))
+        .map((e) => IncomeCategoryModel(
+        id: e.id.toString(),
+        position: e.position!,
+        name: e.name!,
+        desc: e.desc!,
+        image: e.image!))
         .toList());
   }
 
   @override
   Future<void> generateCategories() async {
     final jsonData =
-        json.decode(categoryInitializeData) as Map<String, dynamic>;
+    json.decode(categoryInitializeData) as Map<String, dynamic>;
     final List<dynamic> data = jsonData['data'];
 
     for (var category in data) {
-      final outcomeCategoryEntity = OutcomeCategoryEntity(
+      final incomeCategoryEntity = IncomeCategoryEntity(
           int.parse(category["_id"]),
           category["name"],
           category["image"],
           category["position"],
           category["desc"]);
-      outcomeCategoryBox.put(outcomeCategoryEntity);
+      incomeCategoryBox.put(incomeCategoryEntity);
     }
   }
 }

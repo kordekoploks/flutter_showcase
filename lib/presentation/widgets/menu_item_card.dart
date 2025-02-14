@@ -15,34 +15,43 @@ class MenuItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onClick, // Gesture detector applies to the entire row and divider
+      onTap: onClick,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6), // Reduced padding
         child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (icon != null)
                   Padding(
-                    padding: const EdgeInsets.only(right: 10),
-                    child: icon,
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Icon(
+                      icon!.icon,
+                      size: 20, // Adjusted icon size
+                      color: icon!.color ?? Colors.black,
+                    ),
                   ),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontSize: 16, // Adjusted font size
+                    color: Colors.black54
                   ),
                 ),
+                const SizedBox(width: 8), // Space between text and arrow
                 const Icon(
                   Icons.keyboard_arrow_right,
                   color: Colors.grey,
+                  size: 20, // Adjusted arrow size
                 ),
               ],
             ),
+            SizedBox(height: 10,),
             const Divider(
-              height: 20,
-              thickness: 1,
+              height: 16, // Adjusted spacing
+              thickness: 1, // Slightly thinner divider
               color: Colors.black12,
             ),
           ],

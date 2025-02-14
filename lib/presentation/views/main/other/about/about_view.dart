@@ -78,9 +78,12 @@ class AboutView extends StatelessWidget {
           ]
       ),
       ),
-            VwButton(onClick: () {
-              Navigator.of(context)
-                  .pushNamed(AppRouter.profilePengguna);},titleText: "OK"),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: VwButton(onClick: () {
+                Navigator.of(context)
+                    .pushNamed(AppRouter.profilePengguna);},titleText: "OK"),
+            ),
           ],
     )
     );
