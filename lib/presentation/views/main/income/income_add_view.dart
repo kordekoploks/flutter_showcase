@@ -26,7 +26,6 @@ import '../../../blocs/income/income_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
 import '../../../widgets/account_card/AccountHelper.dart';
 import '../../../widgets/input_text_form_field.dart';
-import '../../../widgets/outcome_category/income_tab_bar.dart';
 import '../../../widgets/outcome_category/outcome_category_item_card.dart';
 import '../../../widgets/vw_checkbox.dart';
 import '../../../widgets/vw_text_link.dart';

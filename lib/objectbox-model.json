@@ -146,10 +146,76 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "5:2981011859023560912",
+      "lastPropertyId": "5:4094473489980939634",
+      "name": "IncomeCategoryEntity",
+      "properties": [
+        {
+          "id": "1:4929735823797882733",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:3973868594080948503",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:1265851971395594793",
+          "name": "image",
+          "type": 9
+        },
+        {
+          "id": "4:1910000978272629656",
+          "name": "position",
+          "type": 6
+        },
+        {
+          "id": "5:4094473489980939634",
+          "name": "desc",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:126124556540328195",
+      "lastPropertyId": "4:7007038967002140364",
+      "name": "IncomeSubCategoryEntity",
+      "properties": [
+        {
+          "id": "1:5072739551901303921",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:2519141905697328814",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:9209169188366882772",
+          "name": "desc",
+          "type": 9
+        },
+        {
+          "id": "4:7007038967002140364",
+          "name": "incomeCategoryId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "2:2900070649476771993",
+          "relationTarget": "IncomeCategoryEntity"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "4:2886093891279533130",
-  "lastIndexId": "1:666203549246372151",
+  "lastEntityId": "6:126124556540328195",
+  "lastIndexId": "2:2900070649476771993",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
