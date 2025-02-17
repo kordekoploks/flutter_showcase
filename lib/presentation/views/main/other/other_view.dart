@@ -16,42 +16,6 @@ class OtherView extends StatefulWidget {
   State<OtherView> createState() => _OtherViewState();
 }
 
-class _OverlayMenuDelegate extends SliverPersistentHeaderDelegate {
-  final Widget child;
-
-  _OverlayMenuDelegate({required this.child});
-
-  @override
-  double get minExtent => 80; // Adjust as needed
-  @override
-  double get maxExtent => 80; // Adjust as needed
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Stack(
-      clipBehavior: Clip.none, // Allows overlap
-      children: [
-        Positioned(
-          top: -40, // Moves it above SliverAppBar
-          left: 0,
-          right: 0,
-          child: Material(
-            elevation: 6, // Ensures it appears above SliverAppBar
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.white, // Ensure visibility
-            child: child,
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  bool shouldRebuild(covariant _OverlayMenuDelegate oldDelegate) {
-    return oldDelegate.child != child;
-  }
-}
-
 class _OtherViewState extends State<OtherView> {
   final List<String> _titles = ['', ''];
   int _selectedIndex = 0;
@@ -63,22 +27,17 @@ class _OtherViewState extends State<OtherView> {
       body: SafeArea(
         child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            // SliverAppBar remains in place
-            _buildSliverAppBar(),
+            _buildSliverAppBar(), // SliverAppBar tetap di atas
 
-            // Overlays menu positioned above SliverAppBar
-            SliverPersistentHeader(
-              pinned: false,
-              floating: false,
-              delegate: _OverlayMenuDelegate(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: _buildOverlaysMenuItems(),
-                ),
+            // Menambahkan _buildOverlaysMenuItems() di bawah SliverAppBar
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: _buildOverlaysMenuItems(),
               ),
             ),
           ],
-          body: Padding(
+          body: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: _buildMenuItems(),
           ),
