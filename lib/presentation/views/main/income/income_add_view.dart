@@ -1,5 +1,4 @@
 import 'package:eshop/core/util/money_text_controller.dart';
-import 'package:eshop/domain/entities/category/outcome_category.dart';
 import 'package:eshop/presentation/views/main/other/income_ui/tabbar.dart';
 import 'package:eshop/presentation/widgets/input_money_form_field.dart';
 import 'package:eshop/presentation/widgets/vw_button.dart';
@@ -20,19 +19,22 @@ import '../../../../data/models/income/income_model.dart';
 import '../../../../domain/entities/account/account.dart';
 import '../../../../domain/entities/account/account_bottom_sheet/spinner_choose_group.dart';
 import '../../../../domain/entities/account/account_bottom_sheet/vw_spinner.dart';
+import '../../../../domain/entities/category/income_category.dart';
 import '../../../../domain/entities/income/income_bottom_sheet/account_spinner.dart';
 import '../../../blocs/cart/cart_bloc.dart';
 import '../../../blocs/income/income_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
-import '../../../widgets/account_card/AccountHelper.dart';
+import '../../../widgets/account_card/acccount_helper..dart';
+import '../../../widgets/income_category/income_category_helper.dart';
+import '../../../widgets/income_category/income_category_item_card.dart';
 import '../../../widgets/input_text_form_field.dart';
-import '../../../widgets/outcome_category/outcome_category_item_card.dart';
 import '../../../widgets/vw_checkbox.dart';
 import '../../../widgets/vw_text_link.dart';
-import '../outcome_category/bottom_sheet/outcome_category_bottom_sheet.dart';
 import 'account_bottom_sheet.dart';
+import 'income_category/income_category_bottom_sheet/income_category_bottom_sheet.dart';
 
 class IncomeAddView extends StatefulWidget {
+
   const IncomeAddView({Key? key}) : super(key: key);
 
   @override
@@ -42,6 +44,7 @@ class IncomeAddView extends StatefulWidget {
 class _IncomeAddViewState extends State<IncomeAddView> {
   final TextEditingController dateController = TextEditingController();
   final MoneyTextController amountController = MoneyTextController();
+  IncomeCategory? selectedCategory;
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -49,8 +52,9 @@ class _IncomeAddViewState extends State<IncomeAddView> {
 
   final List<String> _tabTitles = ["INCOME", "EXPENSE"];
   int _selectedIndex = 0;
-  String selectedGroup = "Category";
   Account selectedAccount = AccountDefaults.defaultAccount;
+  IncomeCategory selectedIncomeCategory = IncomeCategoryHelper.defaultIncomeCategory;
+  String? selectedCategoryName;
   late DateTime _chosenDateTime;
 
   @override
@@ -66,44 +70,47 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   void _showDateCoy(BuildContext ctx) {
     showCupertinoModalPopup(
       context: ctx,
-      builder: (_) => Container(
-        height: 300,
-        color: Colors.white,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 200,
-              child: CupertinoDatePicker(
-                initialDateTime: DateTime.now(),
-                mode: CupertinoDatePickerMode.dateAndTime, // Includes hour selection
-                use24hFormat: true, // 24-hour format (optional)
-                onDateTimeChanged: (DateTime val) {
-                  setState(() {
-                    _chosenDateTime = val;
-                    DateTime today = DateTime.now();
-                    bool isToday = val.year == today.year &&
-                        val.month == today.month &&
-                        val.day == today.day;
+      builder: (_) =>
+          Container(
+            height: 300,
+            color: Colors.white,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 200,
+                  child: CupertinoDatePicker(
+                    initialDateTime: DateTime.now(),
+                    mode: CupertinoDatePickerMode.dateAndTime,
+                    // Includes hour selection
+                    use24hFormat: true,
+                    // 24-hour format (optional)
+                    onDateTimeChanged: (DateTime val) {
+                      setState(() {
+                        _chosenDateTime = val;
+                        DateTime today = DateTime.now();
+                        bool isToday = val.year == today.year &&
+                            val.month == today.month &&
+                            val.day == today.day;
 
-                    String formattedDate = isToday
-                        ? "Today"
-                        : "${val.month}/${val.day}/${val.year}";
+                        String formattedDate = isToday
+                            ? "Today"
+                            : "${val.month}/${val.day}/${val.year}";
 
-                    dateController.text =
-                    "$formattedDate ${val.hour}:${val.minute.toString().padLeft(2, '0')}"; // Format Date
-                  });
-                },
-              ),
+                        dateController.text =
+                        "$formattedDate ${val.hour}:${val.minute.toString()
+                            .padLeft(2, '0')}"; // Format Date
+                      });
+                    },
+                  ),
+                ),
+                CupertinoButton(
+                  child: Text('OK'),
+                  onPressed: () => Navigator.of(ctx).pop(),
+                )
+              ],
             ),
-            CupertinoButton(
-              child: Text('OK'),
-              onPressed: () => Navigator.of(ctx).pop(),
-            )
-          ],
-        ),
-      ),
+          ),
     );
-
   }
 
   @override
@@ -176,7 +183,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                               color: vWPrimaryColor,
                               fontSize: 12,
                               fontWeight: FontWeight.bold),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -274,64 +281,22 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                         GestureDetector(
                           onTap: () async {
                             final selectedCategory =
-                                await _showOutcomeCategoryBottomSheet(context);
+                            await _showIncomeCategoryBottomSheet(context);
                             if (selectedCategory != null) {
                               setState(() {
-                                selectedCategoryName = selectedCategory
-                                    .name; // Store selected category name
+                                selectedIncomeCategory = selectedCategory; // ✅ Update category object
+                                selectedCategoryName = selectedCategory.name; // ✅ Store category name
                               });
                             }
                           },
                           child: VwSpinner(
-                            text: selectedCategoryName ?? "Category",
-                            // Display selected category
+                            text: selectedCategoryName ?? "Category", // ✅ Display selected category
                             isValid: isValid,
+                            label: "Category",
+                            placeholder: "Category",
                           ),
                         ),
 
-                        // GestureDetector(
-                        //   onTap: () {
-                        //     showDialog<void>(
-                        //       context: context,
-                        //       builder: (context) => AlertDialog(
-                        //         insetPadding: EdgeInsets.all(8),
-                        //         backgroundColor: Colors.transparent,
-                        //         content: Container(
-                        //           decoration: BoxDecoration(
-                        //             color: Colors.white,
-                        //             borderRadius: BorderRadius.circular(16),
-                        //             boxShadow: [
-                        //               BoxShadow(
-                        //                 color: Colors.black12.withOpacity(0.3),
-                        //                 blurRadius: 12,
-                        //                 spreadRadius: 2,
-                        //                 offset: Offset(0, 4),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //           child: AccountSpinner(
-                        //             onClickGroup: (String accountGroup) {
-                        //               setState(() {
-                        //                 selectedGroup = accountGroup;
-                        //               });
-                        //               Navigator.of(context).pop();
-                        //             },
-                        //             selectedGroup: selectedGroup,
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     );
-                        //   },
-                        //   child: AccountSpinner(
-                        //     selectedGroup: selectedGroup,
-                        //     onClickGroup: (String accountGroup) {
-                        //       setState(() {
-                        //         selectedGroup = accountGroup;
-                        //       });
-                        //       Navigator.of(context).pop();
-                        //     },
-                        //   ),
-                        // ),
                         const SizedBox(height: 20),
                         InputTextFormField(
                           hint: "note",
@@ -368,10 +333,10 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                           onClick: () {
                             final newIncome = IncomeModel(
                               id: UuidHelper.generateNumericUUID(),
-                              idAccount: "0",
+                              idAccount: selectedAccount.id,
                               date: dateController.text,
                               amount: amountController.parsedValue,
-                              category: categoryController.text,
+                              category: selectedIncomeCategory.id,
                               note: noteController.text,
                               isRepeat: true,
                             );
@@ -414,22 +379,28 @@ class _IncomeAddViewState extends State<IncomeAddView> {
           onSelectedItem: (val) {
             setState(() {
               selectedAccount = val;
-            });
+            }
+            );
           },
         );
       },
     );
   }
 
-  Future<OutcomeCategory?> _showOutcomeCategoryBottomSheet(
+  Future<IncomeCategory?> _showIncomeCategoryBottomSheet(
       BuildContext context) async {
-    return await showModalBottomSheet<OutcomeCategory>(
-      context: context,
-      builder: (context) {
-        return OutcomeCategoryBottomSheet(
-          onCategorySelected: (category) {},
+    return await showModalBottomSheet<IncomeCategory>(
+        context: context,
+        builder: (context) {
+          return IncomeCategoryBottomSheet(
+            incomeCategory: selectedIncomeCategory,
+
+            onCategorySelected: (
+                IncomeCategory val) {
+              Navigator.pop(context, val);
+            },
+          );
+        }
         );
-      },
-    );
   }
 }

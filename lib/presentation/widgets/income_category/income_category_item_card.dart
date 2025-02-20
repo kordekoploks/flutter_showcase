@@ -8,14 +8,15 @@ class IncomeCategoryItemCard extends StatefulWidget {
   final IncomeCategory subCategory;
   final int index;
   final VoidCallback onAnimationEnd;
+  final VoidCallback onTap;
 
   const IncomeCategoryItemCard({
     Key? key,
     required this.subCategory,
     required this.index,
     required this.onAnimationEnd,
+    required this.onTap,
   }) : super(key: key);
-
   @override
   _IncomeCategoryItemCardState createState() => _IncomeCategoryItemCardState();
 }
@@ -31,7 +32,9 @@ class _IncomeCategoryItemCardState extends State<IncomeCategoryItemCard> {
       onTap: () {
         setState(() {
           _selectedIndex = widget.index; // Update selected index
-        });
+        }
+        );
+        widget.onTap();
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200), // Smooth animation
