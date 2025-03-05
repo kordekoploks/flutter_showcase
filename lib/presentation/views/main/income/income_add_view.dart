@@ -34,7 +34,6 @@ import 'account_bottom_sheet.dart';
 import 'income_category/income_category_bottom_sheet/income_category_bottom_sheet.dart';
 
 class IncomeAddView extends StatefulWidget {
-
   const IncomeAddView({Key? key}) : super(key: key);
 
   @override
@@ -53,10 +52,10 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   final List<String> _tabTitles = ["INCOME", "EXPENSE"];
   int _selectedIndex = 0;
   Account selectedAccount = AccountDefaults.defaultAccount;
-   DateTime _chosenDateTime = DateTime.now();
-  IncomeCategory selectedIncomeCategory = IncomeCategoryHelper.defaultIncomeCategory;
+  DateTime _chosenDateTime = DateTime.now();
+  IncomeCategory selectedIncomeCategory =
+      IncomeCategoryHelper.defaultIncomeCategory;
   String? selectedCategoryName;
-  late DateTime _chosenDateTime;
 
   @override
   void initState() {
@@ -93,17 +92,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                 titleText: "Confirm",
                 onClick: () {
                   setState(() {
-                    DateTime today = DateTime.now();
-                    bool isToday = _chosenDateTime.year == today.year &&
-                        _chosenDateTime.month == today.month &&
-                        _chosenDateTime.day == today.day;
-
-                    String formattedDate = isToday
-                        ? "Today"
-                        : "${_chosenDateTime.month}/${_chosenDateTime.day}/${_chosenDateTime.year}";
-
-                    dateController.text =
-                        "$formattedDate ${_chosenDateTime.hour}:${_chosenDateTime.minute.toString().padLeft(2, '0')}"; // Format Date
+                    setDateToField();
                   });
                   Navigator.of(ctx).pop();
                 })
@@ -111,6 +100,20 @@ class _IncomeAddViewState extends State<IncomeAddView> {
         ),
       ),
     );
+  }
+
+  void setDateToField() {
+     DateTime today = DateTime.now();
+    bool isToday = _chosenDateTime.year == today.year &&
+        _chosenDateTime.month == today.month &&
+        _chosenDateTime.day == today.day;
+
+    String formattedDate = isToday
+        ? "Today"
+        : "${_chosenDateTime.month}/${_chosenDateTime.day}/${_chosenDateTime.year}";
+
+    dateController.text =
+        "$formattedDate ${_chosenDateTime.hour}:${_chosenDateTime.minute.toString().padLeft(2, '0')}"; // Format Date
   }
 
   @override
@@ -281,22 +284,24 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                         GestureDetector(
                           onTap: () async {
                             final selectedCategory =
-                            await _showIncomeCategoryBottomSheet(context);
+                                await _showIncomeCategoryBottomSheet(context);
                             if (selectedCategory != null) {
                               setState(() {
-                                selectedIncomeCategory = selectedCategory; // ✅ Update category object
-                                selectedCategoryName = selectedCategory.name; // ✅ Store category name
+                                selectedIncomeCategory =
+                                    selectedCategory; // ✅ Update category object
+                                selectedCategoryName = selectedCategory
+                                    .name; // ✅ Store category name
                               });
                             }
                           },
                           child: VwSpinner(
-                            text: selectedCategoryName ?? "Category", // ✅ Display selected category
+                            text: selectedCategoryName ?? "Category",
+                            // ✅ Display selected category
                             isValid: isValid,
                             label: "Category",
                             placeholder: "Category",
                           ),
                         ),
-
                         const SizedBox(height: 20),
                         InputTextFormField(
                           hint: "note",
@@ -379,8 +384,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
           onSelectedItem: (val) {
             setState(() {
               selectedAccount = val;
-            }
-            );
+            });
           },
         );
       },
@@ -394,13 +398,10 @@ class _IncomeAddViewState extends State<IncomeAddView> {
         builder: (context) {
           return IncomeCategoryBottomSheet(
             incomeCategory: selectedIncomeCategory,
-
-            onCategorySelected: (
-                IncomeCategory val) {
+            onCategorySelected: (IncomeCategory val) {
               Navigator.pop(context, val);
             },
           );
-        }
-        );
+        });
   }
 }
