@@ -32,6 +32,7 @@ class OutcomeCategoryModel extends OutcomeCategory {
             image: image,
             outcomeSubCategory: subCategories);
 
+
   factory OutcomeCategoryModel.fromJson(Map<String, dynamic> json) =>
       OutcomeCategoryModel(
         id: json["_id"],
