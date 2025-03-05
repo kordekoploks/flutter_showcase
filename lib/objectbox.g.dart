@@ -171,6 +171,76 @@ final _entities = <obx_int.ModelEntity>[
             flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(5, 2981011859023560912),
+      name: 'IncomeCategoryEntity',
+      lastPropertyId: const obx_int.IdUid(5, 4094473489980939634),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 4929735823797882733),
+            name: 'id',
+            type: 6,
+            flags: 129),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 3973868594080948503),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 1265851971395594793),
+            name: 'image',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 1910000978272629656),
+            name: 'position',
+            type: 6,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 4094473489980939634),
+            name: 'desc',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <obx_int.ModelRelation>[],
+      backlinks: <obx_int.ModelBacklink>[
+        obx_int.ModelBacklink(
+            name: 'subCategories',
+            srcEntity: 'IncomeSubCategoryEntity',
+            srcField: 'incomeCategory')
+      ]),
+  obx_int.ModelEntity(
+      id: const obx_int.IdUid(6, 126124556540328195),
+      name: 'IncomeSubCategoryEntity',
+      lastPropertyId: const obx_int.IdUid(4, 7007038967002140364),
+      flags: 0,
+      properties: <obx_int.ModelProperty>[
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(1, 5072739551901303921),
+            name: 'id',
+            type: 6,
+            flags: 129),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(2, 2519141905697328814),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(3, 9209169188366882772),
+            name: 'desc',
+            type: 9,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 7007038967002140364),
+            name: 'incomeCategoryId',
+            type: 11,
+            flags: 520,
+            indexId: const obx_int.IdUid(2, 2900070649476771993),
+            relationTarget: 'IncomeCategoryEntity')
+      ],
+      relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
 ];
 
@@ -209,8 +279,8 @@ Future<obx.Store> openStore(
 obx_int.ModelDefinition getObjectBoxModel() {
   final model = obx_int.ModelInfo(
       entities: _entities,
-      lastEntityId: const obx_int.IdUid(4, 2886093891279533130),
-      lastIndexId: const obx_int.IdUid(1, 666203549246372151),
+      lastEntityId: const obx_int.IdUid(6, 126124556540328195),
+      lastIndexId: const obx_int.IdUid(2, 2900070649476771993),
       lastRelationId: const obx_int.IdUid(0, 0),
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
@@ -403,6 +473,98 @@ obx_int.ModelDefinition getObjectBoxModel() {
               amountParam, categoryParam, noteParam, isRepeatParam);
 
           return object;
+        }),
+    IncomeCategoryEntity: obx_int.EntityDefinition<IncomeCategoryEntity>(
+        model: _entities[4],
+        toOneRelations: (IncomeCategoryEntity object) => [],
+        toManyRelations: (IncomeCategoryEntity object) => {
+              obx_int.RelInfo<IncomeSubCategoryEntity>.toOneBacklink(
+                  4,
+                  object.id,
+                  (IncomeSubCategoryEntity srcObject) =>
+                      srcObject.incomeCategory): object.subCategories
+            },
+        getId: (IncomeCategoryEntity object) => object.id,
+        setId: (IncomeCategoryEntity object, int id) {
+          object.id = id;
+        },
+        objectToFB: (IncomeCategoryEntity object, fb.Builder fbb) {
+          final nameOffset =
+              object.name == null ? null : fbb.writeString(object.name!);
+          final imageOffset =
+              object.image == null ? null : fbb.writeString(object.image!);
+          final descOffset =
+              object.desc == null ? null : fbb.writeString(object.desc!);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addOffset(2, imageOffset);
+          fbb.addInt64(3, object.position);
+          fbb.addOffset(4, descOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 6);
+          final imageParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 8);
+          final positionParam =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 10);
+          final descParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 12);
+          final object = IncomeCategoryEntity(
+              idParam, nameParam, imageParam, positionParam, descParam);
+          obx_int.InternalToManyAccess.setRelInfo<IncomeCategoryEntity>(
+              object.subCategories,
+              store,
+              obx_int.RelInfo<IncomeSubCategoryEntity>.toOneBacklink(
+                  4,
+                  object.id,
+                  (IncomeSubCategoryEntity srcObject) =>
+                      srcObject.incomeCategory));
+          return object;
+        }),
+    IncomeSubCategoryEntity: obx_int.EntityDefinition<IncomeSubCategoryEntity>(
+        model: _entities[5],
+        toOneRelations: (IncomeSubCategoryEntity object) =>
+            [object.incomeCategory],
+        toManyRelations: (IncomeSubCategoryEntity object) => {},
+        getId: (IncomeSubCategoryEntity object) => object.id,
+        setId: (IncomeSubCategoryEntity object, int id) {
+          object.id = id;
+        },
+        objectToFB: (IncomeSubCategoryEntity object, fb.Builder fbb) {
+          final nameOffset =
+              object.name == null ? null : fbb.writeString(object.name!);
+          final descOffset =
+              object.desc == null ? null : fbb.writeString(object.desc!);
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addOffset(2, descOffset);
+          fbb.addInt64(3, object.incomeCategory.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (obx.Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+          final idParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+          final nameParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 6);
+          final descParam = const fb.StringReader(asciiOptimization: true)
+              .vTableGetNullable(buffer, rootOffset, 8);
+          final object = IncomeSubCategoryEntity(idParam, nameParam, descParam);
+          object.incomeCategory.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          object.incomeCategory.attach(store);
+          return object;
         })
   };
 
@@ -515,42 +677,46 @@ class IncomeEntity_ {
 class IncomeCategoryEntity_ {
   /// See [IncomeCategoryEntity.id].
   static final id = obx.QueryIntegerProperty<IncomeCategoryEntity>(
-      _entities[0].properties[0]);
+      _entities[4].properties[0]);
 
   /// See [IncomeCategoryEntity.name].
-  static final name = obx.QueryStringProperty<IncomeCategoryEntity>(
-      _entities[0].properties[1]);
+  static final name =
+      obx.QueryStringProperty<IncomeCategoryEntity>(_entities[4].properties[1]);
 
   /// See [IncomeCategoryEntity.image].
-  static final image = obx.QueryStringProperty<IncomeCategoryEntity>(
-      _entities[0].properties[2]);
+  static final image =
+      obx.QueryStringProperty<IncomeCategoryEntity>(_entities[4].properties[2]);
 
   /// See [IncomeCategoryEntity.position].
   static final position = obx.QueryIntegerProperty<IncomeCategoryEntity>(
-      _entities[0].properties[3]);
+      _entities[4].properties[3]);
 
   /// See [IncomeCategoryEntity.desc].
-  static final desc = obx.QueryStringProperty<IncomeCategoryEntity>(
-      _entities[0].properties[4]);
+  static final desc =
+      obx.QueryStringProperty<IncomeCategoryEntity>(_entities[4].properties[4]);
 
+  /// see [IncomeCategoryEntity.subCategories]
+  static final subCategories =
+      obx.QueryBacklinkToMany<IncomeSubCategoryEntity, IncomeCategoryEntity>(
+          IncomeSubCategoryEntity_.incomeCategory);
 }
 
 /// [IncomeSubCategoryEntity] entity fields to define ObjectBox queries.
 class IncomeSubCategoryEntity_ {
   /// See [IncomeSubCategoryEntity.id].
   static final id = obx.QueryIntegerProperty<IncomeSubCategoryEntity>(
-      _entities[1].properties[0]);
+      _entities[5].properties[0]);
 
   /// See [IncomeSubCategoryEntity.name].
   static final name = obx.QueryStringProperty<IncomeSubCategoryEntity>(
-      _entities[1].properties[1]);
+      _entities[5].properties[1]);
 
   /// See [IncomeSubCategoryEntity.desc].
   static final desc = obx.QueryStringProperty<IncomeSubCategoryEntity>(
-      _entities[1].properties[2]);
+      _entities[5].properties[2]);
 
   /// See [IncomeSubCategoryEntity.incomeCategory].
   static final incomeCategory =
-  obx.QueryRelationToOne<IncomeSubCategoryEntity, IncomeSubCategoryEntity>(
-      _entities[1].properties[3]);
+      obx.QueryRelationToOne<IncomeSubCategoryEntity, IncomeCategoryEntity>(
+          _entities[5].properties[3]);
 }
