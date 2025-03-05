@@ -201,6 +201,7 @@ class _OutcomeCategoryViewState extends State<OutcomeCategoryView> {
               position: position,
               image: '$name Image URL here',
             );
+
             // tombol add terusan dari atas
             context.read<OutcomeCategoryBloc>().add(AddCategory(newCategory));
           },

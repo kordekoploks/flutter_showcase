@@ -45,13 +45,13 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   final TextEditingController categoryController = TextEditingController();
   final TextEditingController noteController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool isValid = true;
+  final bool isValid = true;
 
   final List<String> _tabTitles = ["INCOME", "EXPENSE"];
   int _selectedIndex = 0;
   String selectedGroup = "Category";
   Account selectedAccount = AccountDefaults.defaultAccount;
-  late DateTime _chosenDateTime;
+   DateTime _chosenDateTime = DateTime.now();
 
   @override
   void initState() {
@@ -75,35 +75,37 @@ class _IncomeAddViewState extends State<IncomeAddView> {
               height: 200,
               child: CupertinoDatePicker(
                 initialDateTime: DateTime.now(),
-                mode: CupertinoDatePickerMode.dateAndTime, // Includes hour selection
-                use24hFormat: true, // 24-hour format (optional)
+                mode: CupertinoDatePickerMode.dateAndTime,
+                // Includes hour selection
+                use24hFormat: true,
+                // 24-hour format (optional)
                 onDateTimeChanged: (DateTime val) {
-                  setState(() {
-                    _chosenDateTime = val;
-                    DateTime today = DateTime.now();
-                    bool isToday = val.year == today.year &&
-                        val.month == today.month &&
-                        val.day == today.day;
-
-                    String formattedDate = isToday
-                        ? "Today"
-                        : "${val.month}/${val.day}/${val.year}";
-
-                    dateController.text =
-                    "$formattedDate ${val.hour}:${val.minute.toString().padLeft(2, '0')}"; // Format Date
-                  });
+                  _chosenDateTime = val;
                 },
               ),
             ),
-            CupertinoButton(
-              child: Text('OK'),
-              onPressed: () => Navigator.of(ctx).pop(),
-            )
+            VwButton(
+                titleText: "Confirm",
+                onClick: () {
+                  setState(() {
+                    DateTime today = DateTime.now();
+                    bool isToday = _chosenDateTime.year == today.year &&
+                        _chosenDateTime.month == today.month &&
+                        _chosenDateTime.day == today.day;
+
+                    String formattedDate = isToday
+                        ? "Today"
+                        : "${_chosenDateTime.month}/${_chosenDateTime.day}/${_chosenDateTime.year}";
+
+                    dateController.text =
+                        "$formattedDate ${_chosenDateTime.hour}:${_chosenDateTime.minute.toString().padLeft(2, '0')}"; // Format Date
+                  });
+                  Navigator.of(ctx).pop();
+                })
           ],
         ),
       ),
     );
-
   }
 
   @override
