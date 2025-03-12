@@ -20,14 +20,17 @@ class IncomeCategoryEntity {
 
   String? desc;
 
+  String? icon;
+
+
   @Backlink('incomeCategory')
   final subCategories = ToMany<IncomeSubCategoryEntity>();
 
   IncomeCategoryEntity(
-      this.id, this.name, this.image, this.position, this.desc);
+      this.id, this.name, this.image, this.position, this.desc, this.icon);
 
   factory IncomeCategoryEntity.fromModel(IncomeCategory data) {
     return IncomeCategoryEntity(
-        int.parse(data.id), data.name, data.image, data.position, data.desc);
+        int.parse(data.id), data.name, data.image, data.position, data.desc, data.icon);
   }
 }

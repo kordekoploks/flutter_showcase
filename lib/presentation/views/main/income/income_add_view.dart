@@ -24,7 +24,7 @@ import '../../../../domain/entities/income/income_bottom_sheet/account_spinner.d
 import '../../../blocs/cart/cart_bloc.dart';
 import '../../../blocs/income/income_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
-import '../../../widgets/account_card/acccount_helper..dart';
+import '../../../widgets/account_card/acccount_default.dart';
 import '../../../widgets/income_category/income_category_helper.dart';
 import '../../../widgets/income_category/income_category_item_card.dart';
 import '../../../widgets/input_text_form_field.dart';
@@ -53,8 +53,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   int _selectedIndex = 0;
   Account selectedAccount = AccountDefaults.defaultAccount;
   DateTime _chosenDateTime = DateTime.now();
-  IncomeCategory selectedIncomeCategory =
-      IncomeCategoryHelper.defaultIncomeCategory;
+  IncomeCategory selectedIncomeCategory = IncomeCategoryHelper.defaultIncomeCategory;
   String? selectedCategoryName;
 
   @override

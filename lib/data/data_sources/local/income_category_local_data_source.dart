@@ -69,7 +69,7 @@ class IncomeCategoryLocalDataSourceImpl implements IncomeCategoryLocalDataSource
   Future<void> saveCategories(List<IncomeCategoryModel> categoriesToCache) {
     return Future(() => incomeCategoryBox.putMany(categoriesToCache
         .map((e) => IncomeCategoryEntity(
-        int.parse(e.id), e.name, e.image, e.position, e.desc))
+        int.parse(e.id), e.name, e.image, e.position, e.desc, e.icon,))
         .toList()));
   }
 
@@ -85,7 +85,8 @@ class IncomeCategoryLocalDataSourceImpl implements IncomeCategoryLocalDataSource
         position: e.position!,
         name: e.name!,
         desc: e.desc!,
-        image: e.image!))
+        image: e.image!,
+        icon: e.icon!))
         .toList());
   }
 
@@ -101,7 +102,8 @@ class IncomeCategoryLocalDataSourceImpl implements IncomeCategoryLocalDataSource
           category["name"],
           category["image"],
           category["position"],
-          category["desc"]);
+          category["desc"],
+          category["icon"]);
       incomeCategoryBox.put(incomeCategoryEntity);
     }
   }

@@ -8,5 +8,6 @@ class IncomeCategoryHelper {
     name: "Cash",
     desc: "Cash Desc",
     image: "image",
+    icon: "icon",
   );
 }
