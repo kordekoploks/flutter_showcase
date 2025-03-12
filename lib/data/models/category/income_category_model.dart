@@ -26,6 +26,7 @@ class IncomeCategoryModel extends IncomeCategory {
         required String name,
         required String desc,
         required String image,
+        required String icon,
         List<IncomeSubCategoryModel> subCategories = const []})
       : super(
       id: id,
@@ -33,6 +34,7 @@ class IncomeCategoryModel extends IncomeCategory {
       name: name,
       desc: desc,
       image: image,
+      icon: icon,
       incomeSubCategory: subCategories);
 
   factory IncomeCategoryModel.fromJson(Map<String, dynamic> json) =>
@@ -42,6 +44,7 @@ class IncomeCategoryModel extends IncomeCategory {
         name: json["name"],
         desc: json["desc"],
         image: json["image"],
+        icon: json["icon"],
         subCategories: List<IncomeSubCategoryModel>.from(
             json["subCategories"].map((x) => IncomeCategoryModel.fromJson(x))),
       );
@@ -52,6 +55,7 @@ class IncomeCategoryModel extends IncomeCategory {
     "name": name,
     "desc": desc,
     "image": image,
+    "icon": icon,
     "subCategories": List<dynamic>.from(
         (IncomeSubCategory as List<IncomeSubCategoryModel>).map((x) => x.toJson())),
 
@@ -64,6 +68,7 @@ class IncomeCategoryModel extends IncomeCategory {
         name: entity.name,
         desc: entity.desc,
         image: entity.image,
+        icon: entity.icon,
         subCategories: entity.incomeSubCategory
             .map((incomeSubCategory) => IncomeSubCategoryModel.fromInterface(incomeSubCategory))
             .toList(),
@@ -76,6 +81,7 @@ class IncomeCategoryModel extends IncomeCategory {
         name: entity.name!,
         desc: entity.desc!,
         image: entity.image!,
+        icon: entity.icon!,
         subCategories: entity.subCategories
             .map((subCategoryEntity) => IncomeSubCategoryModel.fromEntity(subCategoryEntity))
             .toList(),

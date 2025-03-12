@@ -10,6 +10,7 @@ class IncomeCategory extends Equatable {
   final String name;
   final String desc;
   final String image;
+  final String icon;
   final List<IncomeSubCategory> incomeSubCategory;
   final bool isUpdated;
 
@@ -19,6 +20,7 @@ class IncomeCategory extends Equatable {
     required this.name,
     required this.desc,
     required this.image,
+  required this.icon,
     this.incomeSubCategory = const [],
     this.isUpdated = false,
   });
@@ -30,6 +32,7 @@ class IncomeCategory extends Equatable {
       name: name,
       desc: desc,
       image: image,
+      icon: icon,
       incomeSubCategory: incomeSubCategory,
       isUpdated: isUpdated ?? this.isUpdated,
       //   otomatis terudate saat memasukan yang dibutuhkan

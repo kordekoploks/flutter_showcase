@@ -34,7 +34,7 @@ class AccountBottomSheet extends StatefulWidget {
 
 class _AccountBottomSheetState extends State<AccountBottomSheet> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  final List<Account> _subAccount = [];
+  final List<Account> _listAccount = [];
   final TextEditingController _filterController = TextEditingController();
   late Account selectedAccount;
 
@@ -118,19 +118,19 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
 
   void _setAccount(AccountLoaded state) {
     setState(() {
-      _subAccount.clear();
-      _subAccount.addAll(state.data);
+      _listAccount.clear();
+      _listAccount.addAll(state.data);
     });
   }
 
   void _emptyAccount() {
     setState(() {
-      _subAccount.clear();
+      _listAccount.clear();
     });
   }
 
   Widget _buildAccountContent() {
-    if (_subAccount.isEmpty) {
+    if (_listAccount.isEmpty) {
       return _buildEmptyState();
     } else {
       // Use FutureBuilder to ensure AnimatedList is built after setState() is called
@@ -142,13 +142,13 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
             height: 300,
             child: AnimatedList(
               key: _listKey,
-              initialItemCount: _subAccount.length,
+              initialItemCount: _listAccount.length,
               itemBuilder: (context, index, animation) {
-                if (index >= _subAccount.length) {
+                if (index >= _listAccount.length) {
                   // Prevent accessing out-of-bound indexes
                   return const SizedBox.shrink();
                 }
-                final account = _subAccount[index];
+                final account = _listAccount[index];
                 return _buildAccountItemCard(
                   context,
                   account,
@@ -176,7 +176,7 @@ class _AccountBottomSheetState extends State<AccountBottomSheet> {
         },
         onAnimationEnd: () {
           setState(() {
-            _subAccount[index] = _subAccount[index].copyWith(isUpdated: false);
+            _listAccount[index] = _listAccount[index].copyWith(isUpdated: false);
           });
         },
       ),

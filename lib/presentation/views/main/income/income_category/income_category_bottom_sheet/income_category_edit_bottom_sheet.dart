@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../data/models/category/income_category_model.dart';
 import '../../../../../../domain/entities/category/income_category.dart';
+import '../../../../../../domain/entities/image/IconSelection.dart';
 import '../../../../../widgets/input_text_form_field.dart';
 import '../../../../../widgets/vw_button.dart';
+import 'icon_helper.dart';
+import 'icon_selection_bottom_sheet.dart';
 
 
 class IncomeCategoryEditBottomSheet extends StatefulWidget {
@@ -26,6 +29,7 @@ class IncomeCategoryEditBottomSheet extends StatefulWidget {
 
 class _IncomeCategoryEditBottomSheetState extends State<IncomeCategoryEditBottomSheet> {
   late TextEditingController nameController;
+  IconSelection selectedIcon = IconHelper.defaultIcon;
 
   @override
   void initState() {
@@ -66,6 +70,7 @@ class _IncomeCategoryEditBottomSheetState extends State<IncomeCategoryEditBottom
                     name: nameController.text,
                     desc: widget.category.desc,
                     image: widget.category.image,
+                    icon: widget.category.icon,
                   ),
                 );
                 Navigator.pop(context);
@@ -77,4 +82,22 @@ class _IncomeCategoryEditBottomSheetState extends State<IncomeCategoryEditBottom
       ),
     );
   }
+
+  void _showIconSelectionBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return IconSelectionBottomSheet(
+          defaultIcon: selectedIcon,
+          onIconSelection: (val) {
+            setState(() {
+              selectedIcon = val;
+            });
+          },
+        );
+      },
+    );
+  }
+
+
 }

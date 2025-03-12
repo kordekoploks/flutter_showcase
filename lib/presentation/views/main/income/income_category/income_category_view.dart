@@ -185,7 +185,7 @@ class _IncomeCategoryViewState extends State<IncomeCategoryView> {
       context: context,
       builder: (context) {
         return IncomeCategoryAddBottomSheet(
-          onSave: (name) {
+          onSave: (name,description) {
             final currentState = context
                 .read<IncomeCategoryBloc>()
                 .state;
@@ -196,9 +196,10 @@ class _IncomeCategoryViewState extends State<IncomeCategoryView> {
             final newCategory = IncomeCategoryModel(
               id: UuidHelper.generateNumericUUID(),
               name: name,
-              desc: '$name Description here',
+              desc: '$description',
               position: position,
               image: '$name Image URL here',
+              icon: 'icon',
             );
             // tombol add terusan dari atas
             context.read<IncomeCategoryBloc>().add(AddCategory(newCategory));
