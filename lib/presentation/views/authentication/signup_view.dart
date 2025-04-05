@@ -3,12 +3,12 @@ import 'package:eshop/presentation/widgets/vw_text_link.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../core/constant/colors.dart';
 import '../../../core/constant/images.dart';
 import '../../../core/router/app_router.dart';
 import '../../../domain/usecases/user/sign_up_usecase.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../blocs/cart/cart_bloc.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../widgets/input_text_form_field.dart';

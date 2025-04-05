@@ -14,7 +14,6 @@ import 'package:get_it/get_it.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'core/constant/strings.dart';
 import 'core/database/ObjectBox.dart';
@@ -26,6 +25,7 @@ import 'data/data_sources/local/entity/income_sub_category_entity.dart';
 import 'data/data_sources/local/entity/outcome_category_entity.dart';
 import 'data/data_sources/local/entity/outcome_sub_category_entity.dart';
 import 'domain/usecases/product/get_product_usecase.dart';
+import 'l10n/app_localizations.dart';
 import 'presentation/blocs/cart/cart_bloc.dart';
 import 'presentation/blocs/category/outcome_category_bloc.dart';
 import 'presentation/blocs/delivery_info/delivery_info_action/delivery_info_action_cubit.dart';
