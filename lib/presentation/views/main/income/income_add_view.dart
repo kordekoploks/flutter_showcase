@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../../core/constant/colors.dart';
@@ -21,6 +20,7 @@ import '../../../../domain/entities/account/account_bottom_sheet/spinner_choose_
 import '../../../../domain/entities/account/account_bottom_sheet/vw_spinner.dart';
 import '../../../../domain/entities/category/income_category.dart';
 import '../../../../domain/entities/income/income_bottom_sheet/account_spinner.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../blocs/cart/cart_bloc.dart';
 import '../../../blocs/income/income_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
@@ -59,6 +59,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   @override
   void initState() {
     super.initState();
+    setDateToField();
   }
 
   void main() {
@@ -69,50 +70,53 @@ class _IncomeAddViewState extends State<IncomeAddView> {
   void _showDateCoy(BuildContext ctx) {
     showCupertinoModalPopup(
       context: ctx,
-      builder: (_) => Container(
-        height: 300,
-        color: Colors.white,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 200,
-              child: CupertinoDatePicker(
-                initialDateTime: DateTime.now(),
-                mode: CupertinoDatePickerMode.dateAndTime,
-                // Includes hour selection
-                use24hFormat: true,
-                // 24-hour format (optional)
-                onDateTimeChanged: (DateTime val) {
-                  _chosenDateTime = val;
-                },
-              ),
+      builder: (_) =>
+          Container(
+            height: 300,
+            color: Colors.white,
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 200,
+                  child: CupertinoDatePicker(
+                    initialDateTime: DateTime.now(),
+                    mode: CupertinoDatePickerMode.dateAndTime,
+                    // Includes hour selection
+                    use24hFormat: true,
+                    // 24-hour format (optional)
+                    onDateTimeChanged: (DateTime val) {
+                      _chosenDateTime = val;
+                    },
+                  ),
+                ),
+                VwButton(
+                    titleText: "Confirm",
+                    onClick: () {
+                      setState(() {
+                        setDateToField();
+                      });
+                      Navigator.of(ctx).pop();
+                    })
+              ],
             ),
-            VwButton(
-                titleText: "Confirm",
-                onClick: () {
-                  setState(() {
-                    setDateToField();
-                  });
-                  Navigator.of(ctx).pop();
-                })
-          ],
-        ),
-      ),
+          ),
     );
   }
 
   void setDateToField() {
-     DateTime today = DateTime.now();
+    DateTime today = DateTime.now();
     bool isToday = _chosenDateTime.year == today.year &&
         _chosenDateTime.month == today.month &&
         _chosenDateTime.day == today.day;
 
     String formattedDate = isToday
         ? "Today"
-        : "${_chosenDateTime.month}/${_chosenDateTime.day}/${_chosenDateTime.year}";
+        : "${_chosenDateTime.month}/${_chosenDateTime.day}/${_chosenDateTime
+        .year}";
 
     dateController.text =
-        "$formattedDate ${_chosenDateTime.hour}:${_chosenDateTime.minute.toString().padLeft(2, '0')}"; // Format Date
+    "$formattedDate ${_chosenDateTime.hour}:${_chosenDateTime.minute.toString()
+        .padLeft(2, '0')}"; // Format Date
   }
 
   @override
@@ -283,7 +287,7 @@ class _IncomeAddViewState extends State<IncomeAddView> {
                         GestureDetector(
                           onTap: () async {
                             final selectedCategory =
-                                await _showIncomeCategoryBottomSheet(context);
+                            await _showIncomeCategoryBottomSheet(context);
                             if (selectedCategory != null) {
                               setState(() {
                                 selectedIncomeCategory =
