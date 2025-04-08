@@ -9,7 +9,6 @@ import '../../../core/constant/images.dart';
 import '../../../core/router/app_router.dart';
 import '../../../domain/usecases/user/sign_up_usecase.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../blocs/cart/cart_bloc.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../widgets/input_text_form_field.dart';
 import '../../widgets/vw_button.dart';
@@ -42,7 +41,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (state is UserLoading) {
           EasyLoading.show(status: AppLocalizations.of(context)!.loading);
         } else if (state is UserLogged) {
-          context.read<CartBloc>().add(const GetCart());
           Navigator.of(context).pushNamedAndRemoveUntil(
             AppRouter.home,
             ModalRoute.withName(''),

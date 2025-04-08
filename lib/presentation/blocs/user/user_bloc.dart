@@ -11,8 +11,6 @@ import 'package:flutter/cupertino.dart';
 
 import '../../../core/error/failures.dart';
 import '../../../core/usecases/usecase.dart';
-import '../../../data/models/setting/setting_model.dart';
-import '../../../domain/entities/setting/setting.dart';
 import '../../../domain/entities/user/user.dart';
 import '../../../domain/usecases/user/edit_usecase.dart';
 import '../../../domain/usecases/user/get_cached_user_usecase.dart';
