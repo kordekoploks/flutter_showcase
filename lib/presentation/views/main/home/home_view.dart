@@ -76,18 +76,18 @@ class _HomeViewState extends State<HomeView> {
                       },
                       child: state.user.image != null
                           ? CachedNetworkImage(
-                              imageUrl: state.user.image!,
-                              imageBuilder: (context, image) => CircleAvatar(
-                                radius: 24.0,
-                                backgroundImage: image,
-                                backgroundColor: Colors.transparent,
-                              ),
-                            )
+                        imageUrl: state.user.image!,
+                        imageBuilder: (context, image) => CircleAvatar(
+                          radius: 24.0,
+                          backgroundImage: image,
+                          backgroundColor: Colors.transparent,
+                        ),
+                      )
                           : const CircleAvatar(
-                              radius: 24.0,
-                              backgroundImage: AssetImage(kUserAvatar),
-                              backgroundColor: Colors.transparent,
-                            ),
+                        radius: 24.0,
+                        backgroundImage: AssetImage(kUserAvatar),
+                        backgroundColor: Colors.transparent,
+                      ),
                     )
                   ],
                 );
@@ -146,7 +146,7 @@ class _HomeViewState extends State<HomeView> {
                       return TextField(
                         autofocus: false,
                         controller:
-                            context.read<FilterCubit>().searchController,
+                        context.read<FilterCubit>().searchController,
                         onChanged: (val) => setState(() {}),
                         onSubmitted: (val) => context.read<ProductBloc>().add(
                             GetProducts(FilterProductParams(keyword: val))),
@@ -158,24 +158,24 @@ class _HomeViewState extends State<HomeView> {
                               child: Icon(Icons.search),
                             ),
                             suffixIcon: context
-                                    .read<FilterCubit>()
-                                    .searchController
-                                    .text
-                                    .isNotEmpty
+                                .read<FilterCubit>()
+                                .searchController
+                                .text
+                                .isNotEmpty
                                 ? Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: IconButton(
-                                        onPressed: () {
-                                          context
-                                              .read<FilterCubit>()
-                                              .searchController
-                                              .clear();
-                                          context
-                                              .read<FilterCubit>()
-                                              .update(keyword: '');
-                                        },
-                                        icon: const Icon(Icons.clear)),
-                                  )
+                              padding: const EdgeInsets.only(right: 8),
+                              child: IconButton(
+                                  onPressed: () {
+                                    context
+                                        .read<FilterCubit>()
+                                        .searchController
+                                        .clear();
+                                    context
+                                        .read<FilterCubit>()
+                                        .update(keyword: '');
+                                  },
+                                  icon: const Icon(Icons.clear)),
+                            )
                                 : null,
                             border: const OutlineInputBorder(),
                             hintText: "Search Product",
@@ -211,7 +211,7 @@ class _HomeViewState extends State<HomeView> {
                           style: const TextStyle(color: Colors.black87),
                         ),
                         isLabelVisible:
-                            context.read<FilterCubit>().getFiltersCount() != 0,
+                        context.read<FilterCubit>().getFiltersCount() != 0,
                         backgroundColor: Theme.of(context).primaryColor,
                         child: InputButton(
                           color: Colors.black87,
@@ -231,40 +231,20 @@ class _HomeViewState extends State<HomeView> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: BlocBuilder<ProductBloc, ProductState>(
                     builder: (context, state) {
-                  //Result Empty and No Error
-                  if (state is ProductLoaded && state.products.isEmpty) {
-                    return const AlertCard(
-                      image: kEmpty,
-                      message: "Products not found!",
-                    );
-                  }
-                  //Error and no preloaded data
-                  if (state is ProductError && state.products.isEmpty) {
-                    if (state.failure is NetworkFailure) {
-                      return AlertCard(
-                        image: kNoConnection,
-                        message: "Network failure\nTry again!",
-                        onClick: () {
-                          context.read<ProductBloc>().add(GetProducts(
-                              FilterProductParams(
-                                  keyword: context
-                                      .read<FilterCubit>()
-                                      .searchController
-                                      .text)));
-                        },
-                      );
-                    }
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (state.failure is ServerFailure)
-                          Image.asset(
-                              'assets/status_image/internal-server-error.png'),
-                        if (state.failure is CacheFailure)
-                          Image.asset('assets/status_image/no-connection.png'),
-                        const Text("Products not found!"),
-                        IconButton(
-                            onPressed: () {
+                      //Result Empty and No Error
+                      if (state is ProductLoaded && state.products.isEmpty) {
+                        return const AlertCard(
+                          image: kEmpty,
+                          message: "Products not found!",
+                        );
+                      }
+                      //Error and no preloaded data
+                      if (state is ProductError && state.products.isEmpty) {
+                        if (state.failure is NetworkFailure) {
+                          return AlertCard(
+                            image: kNoConnection,
+                            message: "Network failure\nTry again!",
+                            onClick: () {
                               context.read<ProductBloc>().add(GetProducts(
                                   FilterProductParams(
                                       keyword: context
@@ -272,66 +252,86 @@ class _HomeViewState extends State<HomeView> {
                                           .searchController
                                           .text)));
                             },
-                            icon: const Icon(Icons.refresh)),
-                        // SizedBox(
-                        //   height: MediaQuery.of(context).size.height * 0.1,
-                        // ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 50), // Move it 50 pixels up
-                            child: FloatingActionButton(
-                              onPressed: () {
-                                Navigator.of(context).pushNamed(AppRouter.incomeAdd);
-                              },
-                              child: Icon(Icons.add),
-                            ),
-                          ),
-                        )
-
-                      ],
-                    );
-                  }
-                  return RefreshIndicator(
-                    onRefresh: () async {
-                      context
-                          .read<ProductBloc>()
-                          .add(const GetProducts(FilterProductParams()));
-                    },
-                    child: GridView.builder(
-                      itemCount: state.products.length +
-                          ((state is ProductLoading) ? 10 : 0),
-                      controller: scrollController,
-                      padding: EdgeInsets.only(
-                          top: 18,
-                          left: 20,
-                          right: 20,
-                          bottom: (80 + MediaQuery.of(context).padding.bottom)),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.55,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 20,
-                      ),
-                      physics: const BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        if (state.products.length > index) {
-                          return ProductCard(
-                            product: state.products[index],
-                          );
-                        } else {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey.shade100,
-                            highlightColor: Colors.white,
-                            child: const ProductCard(),
                           );
                         }
-                      },
-                    ),
-                  );
-                })),
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            if (state.failure is ServerFailure)
+                              Image.asset(
+                                  'assets/status_image/internal-server-error.png'),
+                            if (state.failure is CacheFailure)
+                              Image.asset('assets/status_image/no-connection.png'),
+                            const Text("Products not found!"),
+                            IconButton(
+                                onPressed: () {
+                                  context.read<ProductBloc>().add(GetProducts(
+                                      FilterProductParams(
+                                          keyword: context
+                                              .read<FilterCubit>()
+                                              .searchController
+                                              .text)));
+                                },
+                                icon: const Icon(Icons.refresh)),
+                            // SizedBox(
+                            //   height: MediaQuery.of(context).size.height * 0.1,
+                            // ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                margin: EdgeInsets.only(bottom: 50), // Move it 50 pixels up
+                                child: FloatingActionButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(AppRouter.incomeAdd);
+                                  },
+                                  child: Icon(Icons.add),
+                                ),
+                              ),
+                            )
+
+                          ],
+                        );
+                      }
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          context
+                              .read<ProductBloc>()
+                              .add(const GetProducts(FilterProductParams()));
+                        },
+                        child: GridView.builder(
+                          itemCount: state.products.length +
+                              ((state is ProductLoading) ? 10 : 0),
+                          controller: scrollController,
+                          padding: EdgeInsets.only(
+                              top: 18,
+                              left: 20,
+                              right: 20,
+                              bottom: (80 + MediaQuery.of(context).padding.bottom)),
+                          gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.55,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 20,
+                          ),
+                          physics: const BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            if (state.products.length > index) {
+                              return ProductCard(
+                                product: state.products[index],
+                              );
+                            } else {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey.shade100,
+                                highlightColor: Colors.white,
+                                child: const ProductCard(),
+                              );
+                            }
+                          },
+                        ),
+                      );
+                    })),
           )
         ],
       ),

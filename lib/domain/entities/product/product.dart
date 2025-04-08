@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-
-import '../category/outcome_category.dart';
 import 'price_tag.dart';
 
 class Product extends Equatable {
@@ -8,7 +6,6 @@ class Product extends Equatable {
   final String name;
   final String description;
   final List<PriceTag> priceTags;
-  final List<OutcomeCategory> categories;
   final List<String> images;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -18,7 +15,6 @@ class Product extends Equatable {
     required this.name,
     required this.description,
     required this.priceTags,
-    required this.categories,
     required this.images,
     required this.createdAt,
     required this.updatedAt,

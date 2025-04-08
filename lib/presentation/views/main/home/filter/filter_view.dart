@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../domain/usecases/product/get_product_usecase.dart';
-import '../../../../blocs/category/outcome_category_bloc.dart';
 import '../../../../blocs/filter/filter_cubit.dart';
 import '../../../../widgets/input_button.dart';
 import '../../../../widgets/input_range_slider.dart';
@@ -40,43 +39,7 @@ class FilterView extends StatelessWidget {
               ),
             ),
           ),
-          BlocBuilder<OutcomeCategoryBloc, OutcomeCategoryState>(
-            builder: (context, categoryState) {
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: categoryState.data.length,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 10,
-                ),
-                itemBuilder: (context, index) =>
-                    Row(
-                      children: [
-                        Text(
-                          categoryState.data[index].name,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                        const Spacer(),
-                        BlocBuilder<FilterCubit, FilterProductParams>(
-                          builder: (context, filterState) {
-                            return Checkbox(
-                              value: filterState.categories
-                                  .contains(categoryState.data[index]) ||
-                                  filterState.categories.isEmpty,
-                              onChanged: (bool? value) {
-                                context.read<FilterCubit>().updateCategory(
-                                    category: categoryState.data[index]);
-                              },
-                            );
-                          },
-                        )
-                      ],
-                    ),
-              );
-            },
-          ),
+
           const Padding(
             padding: EdgeInsets.only(left: 20, top: 10),
             child: Text(

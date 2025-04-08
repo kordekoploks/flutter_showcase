@@ -1,15 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../../../../../domain/entities/cart/cart_item.dart';
 import '../../../../../domain/entities/product/price_tag.dart';
 import '../../../../../domain/entities/product/product.dart';
-import '../../../core/router/app_router.dart';
-import '../../blocs/cart/cart_bloc.dart';
-import '../../widgets/input_button.dart';
 
 class ProductDetailsView extends StatefulWidget {
   final Product product;
@@ -200,37 +195,8 @@ class _ProductDetailsViewState extends State<ProductDetailsView> {
               ],
             ),
             const Spacer(),
-            SizedBox(
-              width: 120,
-              child: InputButton(
-                onClick: () {
-                  context.read<CartBloc>().add(AddProduct(
-                      cartItem: CartItem(
-                          product: widget.product,
-                          priceTag: _selectedPriceTag)));
-                  // print("test");
-                  Navigator.pop(context);
-                },
-                titleText: "Add to Cart",
-              ),
-            ),
             const SizedBox(
               width: 6,
-            ),
-            SizedBox(
-              width: 90,
-              child: InputButton(
-                onClick: () {
-                  Navigator.of(context)
-                      .pushNamed(AppRouter.orderCheckout, arguments: [
-                    CartItem(
-                      product: widget.product,
-                      priceTag: _selectedPriceTag,
-                    )
-                  ]);
-                },
-                titleText: "Buy",
-              ),
             ),
           ],
         ),
