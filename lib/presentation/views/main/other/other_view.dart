@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eshop/core/router/app_router.dart';
-import 'package:eshop/presentation/blocs/cart/cart_bloc.dart';
-import 'package:eshop/presentation/blocs/delivery_info/delivery_info_fetch/delivery_info_fetch_cubit.dart';
-import 'package:eshop/presentation/blocs/order/order_fetch/order_fetch_cubit.dart';
 import 'package:eshop/presentation/blocs/user/user_bloc.dart';
 import 'package:eshop/presentation/widgets/menu_item_card.dart';
 import 'package:eshop/presentation/widgets/vw_appbar.dart';
@@ -218,9 +215,6 @@ class _OtherViewState extends State<OtherView> {
           return MenuItemCard(
             onClick: () {
               context.read<UserBloc>().add(SignOutUser());
-              context.read<CartBloc>().add(const ClearCart());
-              context.read<DeliveryInfoFetchCubit>().clearLocalDeliveryInfo();
-              context.read<OrderFetchCubit>().clearLocalOrders();
             },
             title: "Sign Out",
           );

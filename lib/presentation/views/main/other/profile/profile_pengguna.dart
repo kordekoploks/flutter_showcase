@@ -1,4 +1,3 @@
-import 'package:eshop/presentation/views/main/other/about/about_item_card.dart';
 import 'package:eshop/presentation/views/main/other/profile/profile_item_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

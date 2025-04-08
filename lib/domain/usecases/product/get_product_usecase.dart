@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../../core/error/failures.dart';
 import '../../../../../core/usecases/usecase.dart';
-import '../../entities/category/outcome_category.dart';
 import '../../entities/product/product_response.dart';
 import '../../repositories/product_repository.dart';
 
@@ -20,7 +19,6 @@ class GetProductUseCase
 
 class FilterProductParams {
   final String? keyword;
-  final List<OutcomeCategory> categories;
   final double minPrice;
   final double maxPrice;
   final int? limit;
@@ -28,7 +26,6 @@ class FilterProductParams {
 
   const FilterProductParams({
     this.keyword = '',
-    this.categories = const [],
     this.minPrice = 0,
     this.maxPrice = 10000,
     this.limit = 0,
@@ -38,7 +35,6 @@ class FilterProductParams {
   FilterProductParams copyWith({
     int? skip,
     String? keyword,
-    List<OutcomeCategory>? categories,
     double? minPrice,
     double? maxPrice,
     int? limit,
@@ -46,7 +42,6 @@ class FilterProductParams {
   }) =>
       FilterProductParams(
         keyword: keyword ?? this.keyword,
-        categories: categories ?? this.categories,
         minPrice: minPrice ?? this.minPrice,
         maxPrice: maxPrice ?? this.maxPrice,
         limit: skip ?? this.limit,

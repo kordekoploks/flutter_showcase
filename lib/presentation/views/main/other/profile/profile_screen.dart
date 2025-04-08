@@ -1,25 +1,14 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eshop/core/constant/images.dart';
-import 'package:eshop/data/data_sources/local/user_local_data_source.dart';
 import 'package:eshop/presentation/views/main/other/profile/bottomsheet/fullname_edit_bottom_sheet.dart';
 import 'package:eshop/presentation/views/main/other/profile/profile_item_card.dart';
 import 'package:eshop/presentation/widgets/vw_appbar.dart';
-import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../../../../../core/constant/colors.dart';
 import '../../../../../core/router/app_router.dart';
-import '../../../../../data/models/user/user_model.dart';
 import '../../../../../domain/entities/user/user.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../../blocs/user/user_bloc.dart';
-import '../../../../widgets/input_button.dart';
-import '../../../../widgets/input_text_form_field.dart';
-import '../../../../widgets/menu_item_card.dart';
-import '../../outcome_category/bottom_sheet/outcome_category_edit_bottom_sheet.dart';
 
 class UserProfileScreen extends StatefulWidget {
   User user;

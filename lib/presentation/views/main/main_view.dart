@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
-import 'cart/cart_view.dart';
 import 'home/home_view.dart';
 import 'other/other_view.dart';
-import 'outcome_category/outcome_category_view.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
@@ -30,8 +28,6 @@ class _MainViewState extends State<MainView> {
                   controller: context.read<NavbarCubit>().controller,
                   children: const <Widget>[
                     HomeView(),
-                    OutcomeCategoryView(),
-                    CartView(),
                     OtherView(),
                   ],
                 ),
@@ -91,35 +87,7 @@ class _MainViewState extends State<MainView> {
                             ),
                           ),
                           label: 'Home'),
-                      BottomNavigationBarItem(
-                          icon: ImageIcon(
-                            AssetImage("assets/navbar_icons/categories.png"),
-                            color: Colors.white,
-                            size: 26,
-                          ),
-                          activeIcon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.deepOrange,
-                              maxRadius: 4,
-                            ),
-                          ),
-                          label: 'Category'),
-                      BottomNavigationBarItem(
-                          icon: ImageIcon(
-                            AssetImage("assets/navbar_icons/shopping-cart.png"),
-                            color: Colors.white,
-                            size: 26,
-                          ),
-                          activeIcon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.deepOrange,
-                              maxRadius: 4,
-                            ),
-                          ),
-                          label: 'Cart'),
-                      BottomNavigationBarItem(
+                    BottomNavigationBarItem(
                           icon: ImageIcon(
                             AssetImage("assets/navbar_icons/user.png"),
                             color: Colors.white,
