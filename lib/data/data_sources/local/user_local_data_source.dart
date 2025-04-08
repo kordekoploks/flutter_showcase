@@ -2,23 +2,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/error/exceptions.dart';
-import '../../../domain/entities/setting/setting.dart';
-import '../../models/setting/setting_model.dart';
 import '../../models/user/user_model.dart';
-import 'cart_local_data_source.dart';
 
 abstract class UserLocalDataSource {
   Future<String> getToken();
 
   Future<UserModel> getUser();
 
-  Future<SettingModel> getSetting();
-
   Future<void> saveToken(String token);
 
   Future<void> saveUser(UserModel user);
-
-  Future<void> saveSetting(SettingModel settingModel);
 
   Future<void> clearCache();
 
@@ -82,27 +75,10 @@ class UserLocalDataSourceImpl implements UserLocalDataSource {
   @override
   Future<void> clearCache() async {
     await secureStorage.deleteAll();
-    await sharedPreferences.remove(cachedCart);
     await sharedPreferences.remove(cachedUser);
     await sharedPreferences.remove(cachedSetting);
   }
 
-  @override
-  Future<SettingModel> getSetting() async{
-    final jsonString = sharedPreferences.getString(cachedSetting);
-    if (jsonString != null) {
-      return Future.value(settingModelFromJson(jsonString));
-    } else {
-      return Future.value(const SettingModel(darkMode: false));
-    }
-  }
 
-  @override
-  Future<void> saveSetting(SettingModel settingModel) {
-    return sharedPreferences.setString(
-      cachedSetting,
-      settingModelToJson(settingModel),
-    );
-  }
 
 }

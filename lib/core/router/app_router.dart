@@ -1,4 +1,3 @@
-import 'package:eshop/domain/entities/account/account_and_card_view.dart';
 import 'package:eshop/presentation/views/main/home/filter/filter_view.dart';
 import 'package:eshop/presentation/views/main/other/profile/forget_password/change_password.dart';
 import 'package:eshop/presentation/views/main/other/profile/forget_password/change_password2.dart';
@@ -8,23 +7,12 @@ import 'package:eshop/presentation/views/main/other/profile/profile_edit_view.da
 import 'package:eshop/presentation/views/main/other/profile/profile_pengguna.dart';
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/cart/cart_item.dart';
 import '../../domain/entities/product/product.dart';
 import '../../domain/entities/user/user.dart';
 import '../../presentation/views/authentication/signin_view.dart';
 import '../../presentation/views/authentication/signup_view.dart';
-import '../../presentation/views/main/income/income_add_view.dart';
-import '../../presentation/views/main/income/income_category/income_category_view.dart';
 import '../../presentation/views/main/main_view.dart';
-import '../../presentation/views/main/other/about/about_view.dart';
-import '../../presentation/views/main/other/delivery_info/delivery_info.dart';
-import '../../presentation/views/main/other/help/help_view.dart';
-import '../../presentation/views/main/other/notification/notification_view.dart';
-import '../../presentation/views/main/other/orders/order_view.dart';
 import '../../presentation/views/main/other/profile/profile_screen.dart';
-import '../../presentation/views/main/other/settings/settings_view.dart';
-import '../../presentation/views/main/outcome_category/outcome_category_view.dart';
-import '../../presentation/views/order_chekout/order_checkout_view.dart';
 import '../../presentation/views/product/product_details_view.dart';
 import '../error/exceptions.dart';
 
@@ -75,14 +63,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const ChangePassword2());
       case signUp:
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
-      case incomeAdd:
-        return MaterialPageRoute(builder: (_) => const IncomeAddView());
       case profilePengguna:
         return MaterialPageRoute(builder: (_) => const ProfilePengguna());
-      case accountAndCardView:
-        return MaterialPageRoute(builder: (_) =>  AccountAndCardView());
-      case helpView:
-        return MaterialPageRoute(builder: (_) =>  HelpView());
       case productDetails:
         Product product = routeSettings.arguments as Product;
         return MaterialPageRoute(
@@ -93,26 +75,6 @@ class AppRouter {
             builder: (_) => UserProfileScreen(
                   user: user,
                 ));
-      case orderCheckout:
-        List<CartItem> items = routeSettings.arguments as List<CartItem>;
-        return MaterialPageRoute(
-            builder: (_) => OrderCheckoutView(
-                  items: items,
-                ));
-      case deliveryDetails:
-        return MaterialPageRoute(builder: (_) => const DeliveryInfoView());
-      case orders:
-        return MaterialPageRoute(builder: (_) => const OrderView());
-      case settings:
-        return MaterialPageRoute(builder: (_) => const SettingsView());
-      case category:
-        return MaterialPageRoute(builder: (_) => const OutcomeCategoryView());
-      case incomeCategoryView:
-        return MaterialPageRoute(builder: (_) => const IncomeCategoryView());
-      case notifications:
-        return MaterialPageRoute(builder: (_) => const NotificationView());
-      case about:
-        return MaterialPageRoute(builder: (_) => const AboutView());
       case filter:
         return MaterialPageRoute(builder: (_) => const FilterView());
       case profileEditView:
