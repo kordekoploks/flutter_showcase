@@ -7,6 +7,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../../../../data/models/user/user_model.dart';
 import '../../../../../../domain/entities/user/user.dart';
+import '../../../../../../l10n/gen_l10n/app_localizations.dart';
 import '../../../../../blocs/user/user_bloc.dart';
 import '../../../../../widgets/input_text_form_field.dart';
 import '../../../../../widgets/product_card.dart';
@@ -50,7 +51,7 @@ class _FullNameEditBottomSheetState extends State<FullNameEditBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return VWBottomSheet(
-      title: "Edit Full Name",
+      title:  AppLocalizations.of(context)!.editFullName,
       content: Padding(
         padding: const EdgeInsets.all(16.0),
         child: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
@@ -71,13 +72,13 @@ class _FullNameEditBottomSheetState extends State<FullNameEditBottomSheet> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 InputTextFormField(
-                  label: "Nama Depan",
+                  label:  AppLocalizations.of(context)!.firstName,
                   controller: FirstnameController,
                   textInputAction: TextInputAction.next,
                   isMandatory: true,
                 ),SizedBox(height: 16,),
                 InputTextFormField(
-                  label: "Nama Belakang",
+                  label:  AppLocalizations.of(context)!.lastName,
                   controller: LastnameController,
                   textInputAction: TextInputAction.next,
                   isMandatory: true,
@@ -93,7 +94,7 @@ class _FullNameEditBottomSheetState extends State<FullNameEditBottomSheet> {
                       ),
                     );
                   },
-                  titleText: 'Simpan',
+                  titleText:  AppLocalizations.of(context)!.save,
                 ),
               ],
             );
