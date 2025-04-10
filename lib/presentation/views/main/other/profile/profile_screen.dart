@@ -7,7 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constant/colors.dart';
 import '../../../../../core/router/app_router.dart';
 import '../../../../../domain/entities/user/user.dart';
-import '../../../../../l10n/app_localizations.dart';
+
+import '../../../../../l10n/gen_l10n/app_localizations.dart';
 import '../../../../blocs/user/user_bloc.dart';
 
 class UserProfileScreen extends StatefulWidget {

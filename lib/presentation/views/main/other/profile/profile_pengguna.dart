@@ -1,8 +1,10 @@
 import 'package:eshop/presentation/views/main/other/profile/profile_item_card.dart';
+import 'package:eshop/presentation/widgets/vw_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/constant/colors.dart';
 import '../../../../../core/router/app_router.dart';
+import '../../../../../l10n/gen_l10n/app_localizations.dart';
 import '../../../../blocs/user/user_bloc.dart';
 import '../../../../widgets/vw_appbar.dart';
 
@@ -12,77 +14,62 @@ class ProfilePengguna extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: VwAppBar(
-          title: "Profile Information",
-        ),
-        body: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-          if (state is UserLogged) {
-            return ListView(
-              physics: const BouncingScrollPhysics(),
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          child: const Text(
-                            'Profile Pengguna',
-                            style: TextStyle(
-                                fontSize: 21, fontWeight: FontWeight.bold),
-                          ),
-                          height: 40,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: ProfileItemCard(
-                            onClick: () {
-                              Navigator.of(context).pushNamed(AppRouter.orders);
-                            },
-                            title: "First Name",
-                            data: state.user.firstName,
-                          ),
-                        ),Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: ProfileItemCard(
-                            onClick: () {
-                              Navigator.of(context).pushNamed(AppRouter.orders);
-                            },
-                            title: "Last Name",
-                            data: state.user.lastName,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: ProfileItemCard(
-                            onClick: () {
-                              Navigator.of(context).pushNamed(AppRouter.orders);
-                            },
-                            title: "Email",
-                            data: state.user.email,
-                          ),
-                        ),
+      appBar: VwAppBar(title: AppLocalizations.of(context)!.profileInformation),
+      body: BlocBuilder<UserBloc, UserState>(
+        builder: (context, state) {
+          if (state is! UserLogged) return const SizedBox();
 
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: ProfileItemCard(
-                            onClick: () {
-                              Navigator.of(context).pushNamed(AppRouter.orders);
-                            },
-                            title: "Phone Number",
-                            data:  state.user.phoneNumber,
-                          ),
-                        ),
-                      ]),
-                )
+          final user = state.user;
+
+          return SafeArea(
+            child: ListView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              children: [
+                Text(
+                  AppLocalizations.of(context)!.profileUser,
+                  style: const TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 20),
+
+                ...[
+                  {
+                    "title": AppLocalizations.of(context)!.firstName,
+                    "data": user.firstName,
+                  },
+                  {
+                    "title": AppLocalizations.of(context)!.lastName,
+                    "data": user.lastName,
+                  },
+                  {
+                    "title": "Email",
+                    "data": user.email,
+                  },
+                  {
+                    "title": AppLocalizations.of(context)!.phoneNumber,
+                    "data": user.phoneNumber,
+                  },
+                ].map(
+                      (item) => Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: ProfileItemCard(
+                      onClick: () => Navigator.of(context).pushNamed(AppRouter.orders),
+                      title: item["title"]!,
+                      data: item["data"]!,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 40),
+                VwButton(
+                  onClick: () => context.read<UserBloc>().add(SignOutUser()),
+                  titleText: AppLocalizations.of(context)!.signOut,
+                ),
               ],
-            );
-          } else {
-            return SizedBox();
-          }
-        }
-        )
+            ),
+          );
+        },
+      ),
     );
   }
 }

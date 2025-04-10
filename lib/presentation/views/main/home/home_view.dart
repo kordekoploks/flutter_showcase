@@ -7,6 +7,7 @@ import '../../../../core/constant/images.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../domain/usecases/product/get_product_usecase.dart';
+import '../../../../l10n/gen_l10n/app_localizations.dart';
 import '../../../blocs/filter/filter_cubit.dart';
 import '../../../blocs/product/product_bloc.dart';
 import '../../../blocs/user/user_bloc.dart';
@@ -22,317 +23,247 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final ScrollController scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   void _scrollListener() {
-    double maxScroll = scrollController.position.maxScrollExtent;
-    double currentScroll = scrollController.position.pixels;
-    double scrollPercentage = 0.7;
-    if (currentScroll > (maxScroll * scrollPercentage)) {
-      if (context.read<ProductBloc>().state is ProductLoaded) {
-        context.read<ProductBloc>().add(const GetMoreProducts());
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+
+    if (currentScroll > maxScroll * 0.7) {
+      final productBloc = context.read<ProductBloc>();
+      if (productBloc.state is ProductLoaded) {
+        productBloc.add(const GetMoreProducts());
       }
     }
   }
 
   @override
-  void initState() {
-    scrollController.addListener(_scrollListener);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final paddingTop = MediaQuery.of(context).padding.top + 10;
     return Scaffold(
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            height: (MediaQuery.of(context).padding.top + 10),
-          ),
+          SizedBox(height: paddingTop),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-              if (state is UserLogged) {
-                return Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(AppRouter.userProfile);
-                      },
-                      child: Text(
-                        "${state.user.firstName} ${state.user.lastName}",
-                        style: const TextStyle(fontSize: 26),
-                      ),
-                    ),
-                    const Spacer(),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(AppRouter.userProfile);
-                      },
-                      child: state.user.image != null
-                          ? CachedNetworkImage(
-                        imageUrl: state.user.image!,
-                        imageBuilder: (context, image) => CircleAvatar(
-                          radius: 24.0,
-                          backgroundImage: image,
-                          backgroundColor: Colors.transparent,
-                        ),
-                      )
-                          : const CircleAvatar(
-                        radius: 24.0,
-                        backgroundImage: AssetImage(kUserAvatar),
-                        backgroundColor: Colors.transparent,
-                      ),
-                    )
-                  ],
-                );
-              } else {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          "Welcome,",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 36),
-                        ),
-                        Text(
-                          "E-Shop mobile store",
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal, fontSize: 22),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(AppRouter.signIn);
-                      },
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircleAvatar(
-                          radius: 24.0,
-                          backgroundImage: AssetImage(kUserAvatar),
-                          backgroundColor: Colors.transparent,
-                        ),
-                      ),
-                    )
-                  ],
-                );
-              }
-            }),
+            child: _buildUserHeader(context),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              top: 12,
-              left: 20,
-              right: 20,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: BlocBuilder<FilterCubit, FilterProductParams>(
-                    builder: (context, state) {
-                      return TextField(
-                        autofocus: false,
-                        controller:
-                        context.read<FilterCubit>().searchController,
-                        onChanged: (val) => setState(() {}),
-                        onSubmitted: (val) => context.read<ProductBloc>().add(
-                            GetProducts(FilterProductParams(keyword: val))),
-                        decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.only(
-                                left: 20, bottom: 22, top: 22),
-                            prefixIcon: const Padding(
-                              padding: EdgeInsets.only(left: 8),
-                              child: Icon(Icons.search),
-                            ),
-                            suffixIcon: context
-                                .read<FilterCubit>()
-                                .searchController
-                                .text
-                                .isNotEmpty
-                                ? Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: IconButton(
-                                  onPressed: () {
-                                    context
-                                        .read<FilterCubit>()
-                                        .searchController
-                                        .clear();
-                                    context
-                                        .read<FilterCubit>()
-                                        .update(keyword: '');
-                                  },
-                                  icon: const Icon(Icons.clear)),
-                            )
-                                : null,
-                            border: const OutlineInputBorder(),
-                            hintText: "Search Product",
-                            fillColor: Colors.grey.shade100,
-                            filled: true,
-                            focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Colors.white, width: 3.0),
-                                borderRadius: BorderRadius.circular(26)),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(26),
-                              borderSide: const BorderSide(
-                                  color: Colors.white, width: 3.0),
-                            )),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                SizedBox(
-                  width: 55,
-                  child: BlocBuilder<FilterCubit, FilterProductParams>(
-                    builder: (context, state) {
-                      return Badge(
-                        alignment: AlignmentDirectional.topEnd,
-                        label: Text(
-                          context
-                              .read<FilterCubit>()
-                              .getFiltersCount()
-                              .toString(),
-                          style: const TextStyle(color: Colors.black87),
-                        ),
-                        isLabelVisible:
-                        context.read<FilterCubit>().getFiltersCount() != 0,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        child: InputButton(
-                          color: Colors.black87,
-                          onClick: () {
-                            Navigator.of(context).pushNamed(AppRouter.filter);
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
+            padding: const EdgeInsets.only(top: 12, left: 20, right: 20),
+            child: _buildSearchAndFilterRow(context),
           ),
           Expanded(
             child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: BlocBuilder<ProductBloc, ProductState>(
-                    builder: (context, state) {
-                      //Result Empty and No Error
-                      if (state is ProductLoaded && state.products.isEmpty) {
-                        return const AlertCard(
-                          image: kEmpty,
-                          message: "Products not found!",
-                        );
-                      }
-                      //Error and no preloaded data
-                      if (state is ProductError && state.products.isEmpty) {
-                        if (state.failure is NetworkFailure) {
-                          return AlertCard(
-                            image: kNoConnection,
-                            message: "Network failure\nTry again!",
-                            onClick: () {
-                              context.read<ProductBloc>().add(GetProducts(
-                                  FilterProductParams(
-                                      keyword: context
-                                          .read<FilterCubit>()
-                                          .searchController
-                                          .text)));
-                            },
-                          );
-                        }
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (state.failure is ServerFailure)
-                              Image.asset(
-                                  'assets/status_image/internal-server-error.png'),
-                            if (state.failure is CacheFailure)
-                              Image.asset('assets/status_image/no-connection.png'),
-                            const Text("Products not found!"),
-                            IconButton(
-                                onPressed: () {
-                                  context.read<ProductBloc>().add(GetProducts(
-                                      FilterProductParams(
-                                          keyword: context
-                                              .read<FilterCubit>()
-                                              .searchController
-                                              .text)));
-                                },
-                                icon: const Icon(Icons.refresh)),
-                            // SizedBox(
-                            //   height: MediaQuery.of(context).size.height * 0.1,
-                            // ),
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                margin: EdgeInsets.only(bottom: 50), // Move it 50 pixels up
-                                child: FloatingActionButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pushNamed(AppRouter.incomeAdd);
-                                  },
-                                  child: Icon(Icons.add),
-                                ),
-                              ),
-                            )
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: _buildProductGrid(context),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-                          ],
-                        );
-                      }
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          context
-                              .read<ProductBloc>()
-                              .add(const GetProducts(FilterProductParams()));
-                        },
-                        child: GridView.builder(
-                          itemCount: state.products.length +
-                              ((state is ProductLoading) ? 10 : 0),
-                          controller: scrollController,
-                          padding: EdgeInsets.only(
-                              top: 18,
-                              left: 20,
-                              right: 20,
-                              bottom: (80 + MediaQuery.of(context).padding.bottom)),
-                          gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 0.55,
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 20,
-                          ),
-                          physics: const BouncingScrollPhysics(),
-                          shrinkWrap: true,
-                          itemBuilder: (BuildContext context, int index) {
-                            if (state.products.length > index) {
-                              return ProductCard(
-                                product: state.products[index],
-                              );
-                            } else {
-                              return Shimmer.fromColors(
-                                baseColor: Colors.grey.shade100,
-                                highlightColor: Colors.white,
-                                child: const ProductCard(),
-                              );
-                            }
-                          },
-                        ),
-                      );
-                    })),
-          )
+  Widget _buildUserHeader(BuildContext context) {
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        if (state is UserLogged) {
+          return Row(
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.of(context).pushNamed(AppRouter.userProfile),
+                child: Text(
+                  "${state.user.firstName} ${state.user.lastName}",
+                  style: const TextStyle(fontSize: 26),
+                ),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => Navigator.of(context).pushNamed(AppRouter.userProfile),
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundImage: state.user.image != null
+                      ? CachedNetworkImageProvider(state.user.image!)
+                      : const AssetImage(kUserAvatar) as ImageProvider,
+                ),
+              ),
+            ],
+          );
+        }
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 8),
+                Text(AppLocalizations.of(context)!.welcome,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 36)),
+                Text(AppLocalizations.of(context)!.listOfProduct,
+                    style: const TextStyle(fontSize: 22)),
+              ],
+            ),
+            GestureDetector(
+              onTap: () => Navigator.of(context).pushNamed(AppRouter.signIn),
+              child: const CircleAvatar(
+                radius: 24,
+                backgroundImage: AssetImage(kUserAvatar),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildSearchAndFilterRow(BuildContext context) {
+    final filterCubit = context.read<FilterCubit>();
+    return Row(
+      children: [
+        Expanded(
+          child: BlocBuilder<FilterCubit, FilterProductParams>(
+            builder: (context, state) {
+              return TextField(
+                controller: filterCubit.searchController,
+                onChanged: (_) => setState(() {}),
+                onSubmitted: (val) => context.read<ProductBloc>().add(
+                  GetProducts(FilterProductParams(keyword: val)),
+                ),
+                decoration: InputDecoration(
+                  contentPadding: const EdgeInsets.symmetric(vertical: 22, horizontal: 20),
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: filterCubit.searchController.text.isNotEmpty
+                      ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      filterCubit.searchController.clear();
+                      filterCubit.update(keyword: '');
+                    },
+                  )
+                      : null,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(26)),
+                  hintText: AppLocalizations.of(context)!.searchOfProduct,
+                  fillColor: Colors.grey.shade100,
+                  filled: true,
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(width: 8),
+        SizedBox(
+          width: 55,
+          child: BlocBuilder<FilterCubit, FilterProductParams>(
+            builder: (context, state) {
+              final filterCount = filterCubit.getFiltersCount();
+              return Badge(
+                alignment: AlignmentDirectional.topEnd,
+                label: Text('$filterCount', style: const TextStyle(color: Colors.black87)),
+                isLabelVisible: filterCount != 0,
+                backgroundColor: Theme.of(context).primaryColor,
+                child: InputButton(
+                  color: Colors.black87,
+                  onClick: () => Navigator.of(context).pushNamed(AppRouter.filter),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _buildProductGrid(BuildContext context) {
+    return BlocBuilder<ProductBloc, ProductState>(
+      builder: (context, state) {
+        if (state is ProductLoaded && state.products.isEmpty) {
+          return AlertCard(
+            image: kEmpty,
+            message: AppLocalizations.of(context)!.productNotFound,
+          );
+        }
+
+        if (state is ProductError && state.products.isEmpty) {
+          return _buildErrorState(context, state);
+        }
+        return RefreshIndicator(
+          onRefresh: () async {
+            context.read<ProductBloc>().add(const GetProducts(FilterProductParams()));
+          },
+          child: GridView.builder(
+            itemCount: state.products.length + (state is ProductLoading ? 10 : 0),
+            controller: _scrollController,
+            padding: EdgeInsets.only(
+              top: 18,
+              left: 20,
+              right: 20,
+              bottom: 80 + MediaQuery.of(context).padding.bottom,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.55,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 20,
+            ),
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              if (index < state.products.length) {
+                return ProductCard(product: state.products[index]);
+              } else {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey.shade100,
+                  highlightColor: Colors.white,
+                  child: const ProductCard(),
+                );
+              }
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, ProductError state) {
+    final message = switch (state.failure) {
+      NetworkFailure() => AppLocalizations.of(context)!.networkFailurenTryAgain,
+      ServerFailure() => AppLocalizations.of(context)!.internalServerError,
+      CacheFailure() => AppLocalizations.of(context)!.noConnection,
+      _ => AppLocalizations.of(context)!.productNotFound,
+    };
+
+    final image = switch (state.failure) {
+      NetworkFailure() => kNoConnection,
+      ServerFailure() => 'assets/status_image/internal-server-error.png',
+      CacheFailure() => 'assets/status_image/no-connection.png',
+      _ => kEmpty,
+    };
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(image),
+          const SizedBox(height: 8),
+          Text(message, textAlign: TextAlign.center),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              final keyword = context.read<FilterCubit>().searchController.text;
+              context.read<ProductBloc>().add(GetProducts(FilterProductParams(keyword: keyword)));
+            },
+          ),
         ],
       ),
     );

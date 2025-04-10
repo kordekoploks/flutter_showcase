@@ -8,7 +8,7 @@ import 'core/constant/strings.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'domain/usecases/product/get_product_usecase.dart';
-import 'l10n/app_localizations.dart';
+import 'l10n/gen_l10n/app_localizations.dart';
 import 'presentation/blocs/filter/filter_cubit.dart';
 
 import 'core/services/services_locator.dart' as di;

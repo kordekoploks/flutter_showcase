@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 
 import '../../blocs/home/navbar_cubit.dart';
+import '../../blocs/user/user_bloc.dart';
+import '../authentication/signin_view.dart';
 import 'home/home_view.dart';
-import 'other/other_view.dart';
+import 'other/profile/profile_pengguna.dart';
+
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
@@ -20,20 +23,27 @@ class _MainViewState extends State<MainView> {
       body: Stack(
         children: [
           BlocBuilder<NavbarCubit, int>(
-            builder: (context, state) {
+            builder: (context, navbarState) {
               return AnimatedContainer(
                 duration: const Duration(seconds: 1),
-                child: PageView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: context.read<NavbarCubit>().controller,
-                  children: const <Widget>[
-                    HomeView(),
-                    OtherView(),
-                  ],
+                child: BlocBuilder<UserBloc, UserState>(
+                  builder: (context, userState) {
+                    return PageView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      controller: context.read<NavbarCubit>().controller,
+                      children: <Widget>[
+                        const HomeView(),
+                        userState is UserLogged
+                            ? const ProfilePengguna()
+                            : const SignInView(),
+                      ],
+                    );
+                  },
                 ),
               );
             },
           ),
+
           Positioned(
             bottom: 10,
             left: 18,

@@ -6,9 +6,11 @@ import 'package:eshop/presentation/views/main/other/profile/forget_password/forg
 import 'package:eshop/presentation/views/main/other/profile/profile_edit_view.dart';
 import 'package:eshop/presentation/views/main/other/profile/profile_pengguna.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/product/product.dart';
 import '../../domain/entities/user/user.dart';
+import '../../presentation/blocs/user/user_bloc.dart';
 import '../../presentation/views/authentication/signin_view.dart';
 import '../../presentation/views/authentication/signup_view.dart';
 import '../../presentation/views/main/main_view.dart';
@@ -51,8 +53,19 @@ class AppRouter {
     switch (routeSettings.name) {
       case home:
         return MaterialPageRoute(builder: (_) => const MainView());
-      case signIn:
-        return MaterialPageRoute(builder: (_) => const SignInView());
+      case signIn: {
+        return MaterialPageRoute(
+          builder: (context) {
+            final userState = BlocProvider.of<UserBloc>(context).state;
+            if (userState is UserLogged) {
+              return const ProfilePengguna();
+            } else {
+              return const SignInView();
+            }
+          },
+        );
+      }
+
       case forgotPassword1:
         return MaterialPageRoute(builder: (_) => const ForgotPassword1());
       case forgotPassword2:

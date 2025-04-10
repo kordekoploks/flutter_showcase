@@ -10,6 +10,7 @@ import '../../../../../core/constant/colors.dart';
 import '../../../../../core/router/app_router.dart';
 import '../../../../../domain/entities/user/user.dart';
 import '../../../../../domain/usecases/user/edit_usecase.dart';
+import '../../../../../l10n/gen_l10n/app_localizations.dart';
 import '../../../../blocs/user/user_bloc.dart';
 import '../../../../widgets/input_text_form_field.dart';
 
@@ -48,15 +49,15 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
         if (state is UserLoading) {
-          EasyLoading.show(status: 'Loading...');
+          EasyLoading.show(status: AppLocalizations.of(context)!.loading,);
         } else if (state is UserEdited) {
-          EasyLoading.showSuccess("Profile updated successfully!");
+          EasyLoading.showSuccess(AppLocalizations.of(context)!.profileUpdatedSuccessfully);
         } else if (state is UserEditFail) {
           EasyLoading.showError(state.failure.message);
         }
       },
       child: Scaffold(
-        appBar: VwAppBar(title: "Profile Edit"),
+        appBar: VwAppBar(title: AppLocalizations.of(context)!.profileEdit),
         body: SingleChildScrollView(
           child: Container(
             constraints: BoxConstraints(
@@ -86,26 +87,26 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                           children: [
                             InputTextFormField(
                               controller: firstNameController,
-                              label: 'First Name',
+                              label: AppLocalizations.of(context)!.firstName,
                               textInputAction: TextInputAction.next,
                               isMandatory: true,
                             ),
                             const SizedBox(height: 20),
                             InputTextFormField(
                               controller: lastNameController,
-                              label: 'Last Name',
+                              label: AppLocalizations.of(context)!.lastName,
                             ),
                             const SizedBox(height: 20),
                             InputTextFormField(
                               controller: emailController,
                               enable: false,
-                              label: 'Email Address',
+                              label: 'Email',
                             ),
                             const SizedBox(height: 20),
                             InputTextFormField(
                               controller: phoneNumberController,
                               enable: false,
-                              label: 'Phone Number',
+                              label: AppLocalizations.of(context)!.phoneNumber,
                             ),
                             const SizedBox(height: 20),
                             VwButton(
@@ -125,7 +126,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                   );
                                 }
                               },
-                              titleText: "Confirm",
+                              titleText: AppLocalizations.of(context)!.confirm,
                             ),
                           ],
                         ),

@@ -8,7 +8,7 @@ import '../../../core/constant/colors.dart';
 import '../../../core/constant/images.dart';
 import '../../../core/router/app_router.dart';
 import '../../../domain/usecases/user/sign_up_usecase.dart';
-import '../../../l10n/app_localizations.dart';
+import '../../../l10n/gen_l10n/app_localizations.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../widgets/input_text_form_field.dart';
 import '../../widgets/vw_button.dart';
@@ -22,237 +22,215 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  bool _agreeToTerms = false;
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final localization = AppLocalizations.of(context)!;
 
     return BlocListener<UserBloc, UserState>(
       listener: (context, state) {
         EasyLoading.dismiss();
         if (state is UserLoading) {
-          EasyLoading.show(status: AppLocalizations.of(context)!.loading);
+          EasyLoading.show(status: localization.loading);
         } else if (state is UserLogged) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRouter.home,
-            ModalRoute.withName(''),
-          );
+          Navigator.of(context).pushNamedAndRemoveUntil(AppRouter.home, (route) => false);
         } else if (state is UserLoggedFail) {
-          EasyLoading.showError(AppLocalizations.of(context)!.error);
+          EasyLoading.showError(localization.error);
         }
       },
       child: Scaffold(
-        appBar: VwAppBar(title: AppLocalizations.of(context)!.signUP),
+        appBar: VwAppBar(title: localization.signUP),
         backgroundColor: vWPrimaryColor,
         resizeToAvoidBottomInset: true,
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
-            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
           ),
-          child: Padding(
+          child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.welcomeBack,
-                          style: TextStyle(
-                            color: vWPrimaryColor,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(height: 0),
-                        Text(
-                          AppLocalizations.of(context)!.helloThereCreateNewAccount,
-                          style: TextStyle(fontSize: 14),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 40),
-
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(AppLocalizations.of(context)!.signInWithSosialNetwork),
-                    ),
-                    SizedBox(
-                      height: 35,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(kGoogle),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Image.asset(kFacebook)
-                      ],
-                    ),
-                    SizedBox(height:45),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(AppLocalizations.of(context)!.orSignInWithEmail),
-                    ),
-                    SizedBox(height: 30),
-                    InputTextFormField(
-                      controller: firstNameController,
-                      hint: AppLocalizations.of(context)!.firstName,
-                      prefixIcon: Icons.person_outlined,
-                      textInputAction: TextInputAction.next,
-                      isMandatory: true,
-                    ),
-                    SizedBox(height: 20),
-                    InputTextFormField(
-                      controller: lastNameController,
-                      prefixIcon: Icons.person_outlined,
-                      hint: AppLocalizations.of(context)!.lastName,
-                      textInputAction: TextInputAction.next,
-                      isMandatory: true,
-                    ),
-                    SizedBox(height: 20),
-                    InputTextFormField(
-                      controller: phoneNumberController,
-                      prefixIcon: Icons.phone_android_outlined,
-                      hint: AppLocalizations.of(context)!.phoneNumber,
-                      textInputAction: TextInputAction.next,
-                      validation: (String? val) {
-                        if (val == null || val.isEmpty) {
-                          return AppLocalizations.of(context)!.thisFieldCantBeEmpty;
-                        }
-                        if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(val)) {
-                          return AppLocalizations.of(context)!.enterAValidPhoneNumber;
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    InputTextFormField(
-                      hint: "Email",
-                      controller: emailController,
-                      prefixIcon: Icons.email_outlined,
-                      textInputAction: TextInputAction.next,
-                      validation: (String? val) {
-                        if (val == null || val.isEmpty) {
-                          return AppLocalizations.of(context)!.thisFieldCantBeEmpty;
-                        }
-                        if (!val.contains("@") || !val.contains('.')) {
-                          return AppLocalizations.of(context)!.enterAValidPEmail;
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    InputTextFormField(
-                      controller: passwordController,
-                      hint: AppLocalizations.of(context)!.password,
-                      prefixIcon: Icons.lock_outline,
-                      textInputAction: TextInputAction.next,
-                      isSecureField: true,
-                      isMandatory: true,
-                    ),
-                    SizedBox(height: 20),
-                    InputTextFormField(
-                      controller: confirmPasswordController,
-                      hint: AppLocalizations.of(context)!.confirmPassword,
-                      prefixIcon: Icons.lock_outline,
-                      isSecureField: true,
-                      textInputAction: TextInputAction.done,
-                      isMandatory: true,
-                      validation: (String? val) {
-                        if (val != passwordController.text) {
-                          return AppLocalizations.of(context)!.passwordDoNotMatch;
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        VwCheckbox(
-                          value: false,
-                          onChanged: (bool? value) {},
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)!.byCreatingAnAccountYouAgreeToOur,
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              VwTextLink(text: AppLocalizations.of(context)!.termsAndCondition),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    VwButton(
-                      onClick: () {
-                        if (_formKey.currentState!.validate()) {
-                          context.read<UserBloc>().add(SignUpUser(
-                              SignUpParams(
-                                firstName: firstNameController.text,
-                                lastName: lastNameController.text,
-                                phoneNumber:int.parse(phoneNumberController.text),
-                                email: emailController.text,
-                                password: passwordController.text,
-                                //copy tapi ganti signup user jadi edit/update
-                              )
-                          )
-                          );
-                        }
-                      },
-                      titleText: AppLocalizations.of(context)!.signUP,
-                      buttonType: ButtonType.primary,
-                    ),
-                    SizedBox(height: 10),
-
-                    Align(
-                      child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(AppLocalizations.of(context)!.alreadyHaveAnAccount),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(AppRouter.signIn);
-                            },
-                            child: Text(AppLocalizations.of(context)!.signIn,style: TextStyle(color: vWPrimaryColor)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(localization.welcomeBack,
+                      style: TextStyle(
+                        color: vWPrimaryColor,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      )),
+                  const SizedBox(height: 4),
+                  Text(localization.helloThereCreateNewAccount,
+                      style: const TextStyle(fontSize: 14)),
+                  const SizedBox(height: 40),
+                  Text(localization.signInWithSosialNetwork),
+                  const SizedBox(height: 35),
+                  _buildSocialButtons(),
+                  const SizedBox(height: 45),
+                  Text(localization.orSignInWithEmail),
+                  const SizedBox(height: 30),
+                  _buildInputField(firstNameController, localization.firstName, Icons.person_outlined),
+                  const SizedBox(height: 20),
+                  _buildInputField(lastNameController, localization.lastName, Icons.person_outlined),
+                  const SizedBox(height: 20),
+                  _buildInputField(
+                    phoneNumberController,
+                    localization.phoneNumber,
+                    Icons.phone_android_outlined,
+                    validator: (val) => _validatePhoneNumber(val, context),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildInputField(
+                    emailController,
+                    "Email",
+                    Icons.email_outlined,
+                    validator: (val) => _validateEmail(val, context),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildInputField(
+                    passwordController,
+                    localization.password,
+                    Icons.lock_outline,
+                    isSecure: true,
+                  ),
+                  const SizedBox(height: 20),
+                  _buildInputField(
+                    confirmPasswordController,
+                    localization.confirmPassword,
+                    Icons.lock_outline,
+                    isSecure: true,
+                    validator: (val) => _validateConfirmPassword(val, context),
+                  ),
+                  const SizedBox(height: 20),
+                  _buildTermsAndConditions(context),
+                  const SizedBox(height: 20),
+                  VwButton(
+                    onClick: _onSignUpPressed,
+                    titleText: localization.signUP,
+                    buttonType: ButtonType.primary,
+                  ),
+                  const SizedBox(height: 10),
+                  _buildSignInRedirect(localization),
+                ],
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _buildSocialButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        Image(image: AssetImage(kGoogle)),
+        SizedBox(width: 15),
+        Image(image: AssetImage(kFacebook)),
+      ],
+    );
+  }
+
+  Widget _buildInputField(
+      TextEditingController controller,
+      String hint,
+      IconData icon, {
+        TextInputAction action = TextInputAction.next,
+        bool isSecure = false,
+        bool isMandatory = true,
+        String? Function(String?)? validator,
+      }) {
+    return InputTextFormField(
+      controller: controller,
+      hint: hint,
+      prefixIcon: icon,
+      textInputAction: action,
+      isSecureField: isSecure,
+      isMandatory: isMandatory,
+      validation: validator,
+    );
+  }
+
+  Widget _buildTermsAndConditions(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        VwCheckbox(
+          value: _agreeToTerms,
+          onChanged: (val) => setState(() => _agreeToTerms = val ?? false),
+        ),
+        const SizedBox(width: 20),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                localization.byCreatingAnAccountYouAgreeToOur,
+                style: const TextStyle(fontSize: 12),
+              ),
+              VwTextLink(text: localization.termsAndCondition),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSignInRedirect(AppLocalizations localization) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(localization.alreadyHaveAnAccount),
+        TextButton(
+          onPressed: () => Navigator.of(context).pushNamed(AppRouter.signIn),
+          child: Text(localization.signIn, style: TextStyle(color: vWPrimaryColor)),
+        ),
+      ],
+    );
+  }
+
+  void _onSignUpPressed() {
+
+    if (_formKey.currentState?.validate() ?? false) {
+      context.read<UserBloc>().add(SignUpUser(SignUpParams(
+        firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
+        phoneNumber: int.tryParse(phoneNumberController.text) ?? 0,
+        email: emailController.text.trim(),
+        password: passwordController.text,
+      )));
+    }
+  }
+
+  String? _validateEmail(String? val, BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    if (val == null || val.isEmpty) return loc.thisFieldCantBeEmpty;
+    if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(val)) return loc.enterAValidPEmail;
+    return null;
+  }
+
+  String? _validatePhoneNumber(String? val, BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+    if (val == null || val.isEmpty) return loc.thisFieldCantBeEmpty;
+    if (!RegExp(r'^\+?[0-9]{10,15}$').hasMatch(val)) return loc.enterAValidPhoneNumber;
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? val, BuildContext context) {
+    if (val != passwordController.text) {
+      return AppLocalizations.of(context)!.passwordDoNotMatch;
+    }
+    return null;
   }
 }
