@@ -6,6 +6,7 @@ import '../../blocs/home/navbar_cubit.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../authentication/signin_view.dart';
 import 'home/home_view.dart';
+import 'home/home_view_getx.dart';
 import 'other/profile/profile_pengguna.dart';
 
 
@@ -33,6 +34,7 @@ class _MainViewState extends State<MainView> {
                       controller: context.read<NavbarCubit>().controller,
                       children: <Widget>[
                         const HomeView(),
+                        const HomeViewGetx(),
                         userState is UserLogged
                             ? const ProfilePengguna()
                             : const SignInView(),
@@ -99,6 +101,20 @@ class _MainViewState extends State<MainView> {
                           label: 'Home'),
                     BottomNavigationBarItem(
                           icon: ImageIcon(
+                            AssetImage("assets/navbar_icons/home.png"),
+                            color: Colors.white,
+                            size: 26,
+                          ),
+                          activeIcon: Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.deepOrange,
+                              maxRadius: 4,
+                            ),
+                          ),
+                          label: 'Home'),
+                      BottomNavigationBarItem(
+                          icon: ImageIcon(
                             AssetImage("assets/navbar_icons/user.png"),
                             color: Colors.white,
                             size: 26,
@@ -111,6 +127,8 @@ class _MainViewState extends State<MainView> {
                             ),
                           ),
                           label: 'Other'),
+
+
                       // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'search')
                     ],
                   );
