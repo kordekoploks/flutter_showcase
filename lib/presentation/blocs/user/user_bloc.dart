@@ -29,10 +29,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   final EditFullNameUseCase _editFullNameUseCase;
 
   UserBloc(
-    this._getCachedUserUseCase,
+
     this._signInUseCase,
     this._signUpUseCase,
     this._signOutUseCase,
+    this._getCachedUserUseCase,
     this._editUseCase,
     this._editFullNameUseCase,
   ) : super(UserInitial()) {

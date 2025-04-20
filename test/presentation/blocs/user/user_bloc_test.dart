@@ -2,6 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:eshop/core/error/failures.dart';
 import 'package:eshop/core/usecases/usecase.dart';
+import 'package:eshop/domain/usecases/user/edit_full_name_usecase.dart';
+import 'package:eshop/domain/usecases/user/edit_usecase.dart';
 import 'package:eshop/domain/usecases/user/get_cached_user_usecase.dart';
 import 'package:eshop/domain/usecases/user/sign_in_usecase.dart';
 import 'package:eshop/domain/usecases/user/sign_out_usecase.dart';
@@ -19,6 +21,10 @@ class MockSignOutUseCase extends Mock implements SignOutUseCase {}
 
 class MockGetCachedUserUseCase extends Mock implements GetCachedUserUseCase {}
 
+class MockEditUseCase extends Mock implements EditUseCase {}
+
+class MockEditFullNameUseCase extends Mock implements EditFullNameUseCase {}
+
 void main() {
   group('UserBloc', () {
     late UserBloc userBloc;
@@ -26,18 +32,24 @@ void main() {
     late MockSignUpUseCase mockSignUpUseCase;
     late MockSignOutUseCase mockSignOutUseCase;
     late MockGetCachedUserUseCase mockGetCachedUserUseCase;
+    late MockEditUseCase mockEditUseCase;
+    late MockEditFullNameUseCase mockEditFullNameUseCase;
 
     setUp(() {
       mockSignInUseCase = MockSignInUseCase();
       mockSignUpUseCase = MockSignUpUseCase();
       mockSignOutUseCase = MockSignOutUseCase();
       mockGetCachedUserUseCase = MockGetCachedUserUseCase();
+      mockEditUseCase = MockEditUseCase();
+      mockEditFullNameUseCase = MockEditFullNameUseCase();
 
       userBloc = UserBloc(
         mockSignInUseCase,
-        mockGetCachedUserUseCase,
-        mockSignOutUseCase,
         mockSignUpUseCase,
+        mockSignOutUseCase,
+        mockGetCachedUserUseCase,
+        mockEditUseCase,
+        mockEditFullNameUseCase
       );
     });
 

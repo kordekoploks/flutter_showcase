@@ -3,6 +3,8 @@ import 'package:eshop/presentation/widgets/vw_text_link.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../../../core/constant/colors.dart';
 import '../../../core/constant/images.dart';
@@ -121,6 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 10),
                   _buildSignInRedirect(localization),
+
                 ],
               ),
             ),
@@ -213,6 +216,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
+
+
   String? _validateEmail(String? val, BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     if (val == null || val.isEmpty) return loc.thisFieldCantBeEmpty;
@@ -228,9 +233,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   String? _validateConfirmPassword(String? val, BuildContext context) {
-    if (val != passwordController.text) {
-      return AppLocalizations.of(context)!.passwordDoNotMatch;
+    if (passwordController.text != confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords do not match'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return null;
     }
-    return null;
   }
+
 }

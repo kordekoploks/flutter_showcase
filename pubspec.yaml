@@ -35,6 +35,9 @@ dependencies:
   intl: any
   #flutter_gen: any
   stretchy_header: "^2.0.0"
+  get: ^4.7.2
+
+
 
 
   # The following adds the Cupertino Icons fonts to your application.
