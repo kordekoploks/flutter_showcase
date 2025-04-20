@@ -1,6 +1,7 @@
 import 'package:eshop/core/network/LoggingHttpClient.dart';
 import 'package:eshop/domain/usecases/user/edit_full_name_usecase.dart';
 import 'package:eshop/domain/usecases/user/edit_usecase.dart';
+import 'package:eshop/presentation/blocs/product/product_controller.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -31,6 +32,9 @@ Future<void> init() async {
   // Bloc
   sl.registerFactory(
     () => ProductBloc(sl()),
+  );
+  sl.registerFactory(
+        () => ProductController(sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetProductUseCase(sl()));

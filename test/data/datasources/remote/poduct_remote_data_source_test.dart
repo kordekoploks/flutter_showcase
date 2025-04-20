@@ -26,7 +26,7 @@ void main() {
       /// Arrange
       const fakeParams = FilterProductParams();
       final expectedUrl =
-          '$baseUrl/products?keyword=${fakeParams.keyword}&pageSize=${fakeParams.pageSize}&page=${fakeParams.limit}&categories=${jsonEncode(fakeParams.categories.map((e) => e.id).toList())}';
+          '$baseUrl/products?keyword=${fakeParams.keyword}&pageSize=${fakeParams.pageSize}&page=${fakeParams.limit}';
       final fakeResponse = fixture('product/product_remote_response.json');
       when(() => mockHttpClient.get(
             Uri.parse(expectedUrl),
@@ -48,7 +48,7 @@ void main() {
       /// Arrange
       const fakeParams = FilterProductParams();
       final expectedUrl =
-          '$baseUrl/products?keyword=${fakeParams.keyword}&pageSize=${fakeParams.pageSize}&page=${fakeParams.limit}&categories=${jsonEncode(fakeParams.categories.map((e) => e.id).toList())}';
+          '$baseUrl/products?keyword=${fakeParams.keyword}&pageSize=${fakeParams.pageSize}&page=${fakeParams.limit}';
       when(() => mockHttpClient.get(Uri.parse(expectedUrl),
               headers: any(named: 'headers')))
           .thenAnswer((_) async => http.Response('Error message', 404));

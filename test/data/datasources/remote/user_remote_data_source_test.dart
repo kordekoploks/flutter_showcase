@@ -120,6 +120,7 @@ void main() {
         lastName: 'Doe',
         email: 'john.doe@example.com',
         password: 'password',
+        phoneNumber: 012345678,
       );
       const expectedUrl = '$baseUrl/authentication/local/sign-up';
       final fakeResponse = fixture('user/authentication_response.json');
@@ -132,6 +133,7 @@ void main() {
               'firstName': fakeParams.firstName,
               'lastName': fakeParams.lastName,
               'email': fakeParams.email,
+              'phoneNumber': fakeParams.phoneNumber,
               'password': fakeParams.password,
             }),
           )).thenAnswer((_) async => http.Response(fakeResponse, 201));
@@ -163,6 +165,7 @@ void main() {
         lastName: 'Doe',
         email: 'john.doe@example.com',
         password: 'password',
+        phoneNumber: 012345678
       );
       const expectedUrl = '$baseUrl/authentication/local/sign-up';
       when(() => mockHttpClient.post(
@@ -194,6 +197,7 @@ void main() {
         lastName: 'Doe',
         email: 'john.doe@example.com',
         password: 'password',
+        phoneNumber: 012345678
       );
       const expectedUrl = '$baseUrl/authentication/local/sign-up';
       when(() => mockHttpClient.post(
