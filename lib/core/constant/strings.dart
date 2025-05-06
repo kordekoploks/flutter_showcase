@@ -1,5 +1,5 @@
 // App
-const String appTitle = 'EShop';
+const String appTitle = 'FLutter Showcase';
 
 // Networking and APIs
 const String baseUrl = 'http://demo9404297.mockable.io';
