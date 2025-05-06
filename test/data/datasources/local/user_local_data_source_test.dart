@@ -124,8 +124,10 @@ void main() {
       /// Arrange
       when(() => mockSecureStorage.deleteAll())
           .thenAnswer((_) => Future<void>.value());
-      when(() => mockSharedPreferences.remove(cachedUser))
-          .thenAnswer((_) => Future<bool>.value(true));
+      when(() => mockSharedPreferences.remove(any()))
+          .thenAnswer((_) async => true);
+
+
 
       /// Act
       await userLocalDataSource.clearCache();
