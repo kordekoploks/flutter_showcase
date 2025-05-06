@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "967348536564",
+    "firebase_url": "https://flutter-showcase-30d7e-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "flutter-showcase-30d7e",
+    "storage_bucket": "flutter-showcase-30d7e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:967348536564:android:3c7871751b6d25a2e2caa1",
+        "android_client_info": {
+          "package_name": "com.example.eshop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfrn4XTGVg_imiDJNv9yS0h_7Q3ujRpD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

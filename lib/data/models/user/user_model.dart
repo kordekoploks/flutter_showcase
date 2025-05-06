@@ -5,7 +5,6 @@ import '../../../domain/entities/user/user.dart';
 UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 
 String userModelToJson(UserModel data) => json.encode(data.toJson());
-
 class UserModel extends User {
   const UserModel({
     required String id,
@@ -21,20 +20,20 @@ class UserModel extends User {
     email: email,
   );
 
-  // json dari server di konversikan ke object user
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
     id: json["_id"],
     firstName: json["firstName"],
     lastName: json["lastName"],
-    phoneNumber: json["phoneNumber"],
+    phoneNumber: json["phoneNumber"].toString(), // <-- Convert to String
     email: json["email"],
   );
 
   Map<String, dynamic> toJson() => {
     "_id": id,
     "firstName": firstName,
-    "phoneNumber": phoneNumber,
+    "phoneNumber": phoneNumber, // <-- phoneNumber stays a String
     "lastName": lastName,
     "email": email,
   };
 }
+

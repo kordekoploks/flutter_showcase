@@ -233,16 +233,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   String? _validateConfirmPassword(String? val, BuildContext context) {
-    if (passwordController.text != confirmPasswordController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Passwords do not match'),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return null;
+    final loc = AppLocalizations.of(context)!;
+
+    if (val == null || val.isEmpty) {
+      return loc.thisFieldCantBeEmpty;
     }
+
+    if (val != passwordController.text) {
+      return loc.passwordDoNotMatch;
+    }
+
+    return null;
   }
+
 
 }

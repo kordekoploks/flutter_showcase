@@ -151,6 +151,7 @@ void main() {
               'firstName': fakeParams.firstName,
               'lastName': fakeParams.lastName,
               'email': fakeParams.email,
+              'phoneNumber': fakeParams.phoneNumber,
               'password': fakeParams.password,
             }),
           ));
@@ -177,6 +178,7 @@ void main() {
               'firstName': fakeParams.firstName,
               'lastName': fakeParams.lastName,
               'email': fakeParams.email,
+              'phoneNumber': fakeParams.phoneNumber,
               'password': fakeParams.password,
             }),
           )).thenAnswer((_) async => http.Response('Error message', 400));
@@ -209,6 +211,7 @@ void main() {
               'firstName': fakeParams.firstName,
               'lastName': fakeParams.lastName,
               'email': fakeParams.email,
+              'phoneNumber': fakeParams.phoneNumber,
               'password': fakeParams.password,
             }),
           )).thenAnswer((_) async => http.Response('Error message', 404));
