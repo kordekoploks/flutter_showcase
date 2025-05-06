@@ -9,21 +9,25 @@ import 'core/constant/strings.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'domain/usecases/product/get_product_usecase.dart';
-import 'firebase_options.dart';
 import 'l10n/gen_l10n/app_localizations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'presentation/blocs/filter/filter_cubit.dart';
 
 import 'core/services/services_locator.dart' as di;
 import 'presentation/blocs/home/navbar_cubit.dart';
 import 'presentation/blocs/product/product_bloc.dart';
 import 'presentation/blocs/user/user_bloc.dart';
+import 'firebase_options.dart';
 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+      options: DefaultFirebaseOptions.currentPlatform
   );
+// Ideal time to initialize
+  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   await di.init();
   final sl = GetIt.instance;
 

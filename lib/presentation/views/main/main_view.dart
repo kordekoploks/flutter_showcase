@@ -6,7 +6,6 @@ import '../../blocs/home/navbar_cubit.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../authentication/signin_view.dart';
 import 'home/home_view.dart';
-import 'home/product_view_getx.dart';
 import 'other/profile/profile_pengguna.dart';
 
 
