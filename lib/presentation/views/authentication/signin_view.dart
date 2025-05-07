@@ -6,12 +6,16 @@ import 'package:eshop/domain/usecases/user/sign_in_usecase.dart';
 import 'package:eshop/l10n/gen_l10n/app_localizations.dart';
 import 'package:eshop/presentation/blocs/home/navbar_cubit.dart';
 import 'package:eshop/presentation/blocs/user/user_bloc.dart';
+import 'package:eshop/presentation/views/main/home/home_view.dart';
 import 'package:eshop/presentation/widgets/input_text_form_field.dart';
 import 'package:eshop/presentation/widgets/vw_appbar.dart';
 import 'package:eshop/presentation/widgets/vw_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shimmer/main.dart';
 
 class SignInView extends StatefulWidget {
   const SignInView({Key? key}) : super(key: key);
@@ -135,7 +139,20 @@ class _SignInViewState extends State<SignInView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(kGoogle, height: 46, width: 46),
+                      GestureDetector(
+                        onTap: () async {
+                          bool isLogged = await login();
+
+                          if(isLogged){
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeView()));
+                          }
+                        },
+                        child: Image.asset(
+                          kGoogle,
+                          height: 46,
+                          width: 46,
+                        ),
+                      ),
                       const SizedBox(width: 16),
                       Image.asset(kFacebook, height: 46, width: 46),
                     ],
@@ -167,5 +184,14 @@ class _SignInViewState extends State<SignInView> {
         ),
       ),
     );
+  }
+
+  Future<bool> login() async {
+    final user = await GoogleSignIn().signIn();
+    GoogleSignInAuthentication userAuth = await user!.authentication;
+    var credential = GoogleAuthProvider.credential(
+        idToken: userAuth.idToken, accessToken: userAuth.accessToken);
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    return FirebaseAuth.instance.currentUser != null;
   }
 }
