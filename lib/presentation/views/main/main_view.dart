@@ -12,10 +12,9 @@ import 'other/profile/profile_pengguna.dart';
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
 
-
-
   @override
   State<MainView> createState() => _MainViewState();
+
 }
 
 
