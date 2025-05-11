@@ -142,9 +142,11 @@ class _SignInViewState extends State<SignInView> {
                       GestureDetector(
                         onTap: () async {
                           bool isLogged = await login();
-
-                          if(isLogged){
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeView()));
+                          if (isLogged) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeView()));
                           }
                         },
                         child: Image.asset(
