@@ -10,7 +10,7 @@ import '../../../../../../domain/entities/user/user.dart';
 import '../../../../../../l10n/gen_l10n/app_localizations.dart';
 import '../../../../../blocs/user/user_bloc.dart';
 import '../../../../../widgets/input_text_form_field.dart';
-import '../../../../../widgets/product_card.dart';
+import '../../../home/product_card.dart';
 import '../../../../../widgets/vw_button.dart';
 
 class FullNameEditBottomSheet extends StatefulWidget {

@@ -27,5 +27,10 @@ class FilterCubit extends Cubit<FilterProductParams> {
     return count;
   }
 
+  void clearSearch() {
+    searchController.clear();
+    update(keyword: '');
+  }
+
   void reset() => emit(const FilterProductParams());
 }

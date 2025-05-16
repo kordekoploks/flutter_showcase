@@ -81,7 +81,7 @@ class _SignInViewState extends State<SignInView> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Text(AppLocalizations.of(context)!.helloThereSignInToContinue,
+                  Text(AppLocalizations.of(context).helloThereSignInToContinue,
                       style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 20),
                   Center(child: Image.asset(kSignUp, height: 150, width: 150)),

@@ -3,6 +3,8 @@
   "@helloWorld": {
     "description": "The conventional newborn programmer greeting"
   },
+  "home":"Home",
+  "user":"Pengguna",
   "fullName": "Nama Lengkap",
   "phoneNumber": "Nomor Telepon",
   "seeProfileDetails": "Lihat Detail Lebih Jauh",
