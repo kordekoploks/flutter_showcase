@@ -19,6 +19,7 @@ import '../../domain/repositories/user_repository.dart';
 import '../../domain/usecases/product/get_product_usecase.dart';
 import '../../domain/usecases/user/get_cached_user_usecase.dart';
 import '../../domain/usecases/user/sign_in_usecase.dart';
+import '../../domain/usecases/user/sign_in_with_email_usecase.dart';
 import '../../domain/usecases/user/sign_out_usecase.dart';
 import '../../domain/usecases/user/sign_up_usecase.dart';
 import '../../presentation/blocs/product/product_bloc.dart';
@@ -60,11 +61,12 @@ Future<void> init() async {
   //Features - User
   // Bloc
   sl.registerFactory(
-    () => UserBloc(sl(), sl(), sl(), sl(), sl(), sl()),
+    () => UserBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
   );
   // Use cases
   sl.registerLazySingleton(() => GetCachedUserUseCase(sl()));
   sl.registerLazySingleton(() => SignInUseCase(sl()));
+  sl.registerLazySingleton(() => SignInWithEmailUseCase(sl()));
   sl.registerLazySingleton(() => SignUpUseCase(sl()));
   sl.registerLazySingleton(() => EditUseCase(sl()));
   sl.registerLazySingleton(() => EditFullNameUseCase(sl()));

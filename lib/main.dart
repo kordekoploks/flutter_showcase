@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get_it/get_it.dart';
@@ -22,16 +25,21 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
       name: "dev project",
       options: DefaultFirebaseOptions.currentPlatform
   );
 // Ideal time to initialize
-  await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+//   await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
   await di.init();
   final sl = GetIt.instance;
 
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
   runApp(const MyApp());
   configLoading();

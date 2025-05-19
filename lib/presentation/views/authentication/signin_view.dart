@@ -17,6 +17,8 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shimmer/main.dart';
 
+import '../../../domain/usecases/user/sign_in_with_email_usecase.dart';
+
 class SignInView extends StatefulWidget {
   const SignInView({Key? key}) : super(key: key);
 
@@ -118,13 +120,15 @@ class _SignInViewState extends State<SignInView> {
                     onClick: () {
                       if (_formKey.currentState!.validate()) {
                         context.read<UserBloc>().add(SignInUser(
-                              SignInParams(
-                                username: emailController.text,
-                                password: passwordController.text,
-                              ),
-                            ));
+                          SignInParams(
+                            username: emailController.text,
+                            password: passwordController.text,
+                          ),
+                        ));
+                        throw Exception('Simulasi error setelah SignInUser dipanggil');
                       }
                     },
+
                     titleText: AppLocalizations.of(context)!.signIn,
                   ),
                   const SizedBox(height: 30),
@@ -143,10 +147,13 @@ class _SignInViewState extends State<SignInView> {
                         onTap: () async {
                           bool isLogged = await login();
                           if (isLogged) {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeView()));
+                            context.read<UserBloc>().add(
+                              SignInWithEmailUser(
+                                SignInWithEmailParams(
+                                  email:  FirebaseAuth.instance.currentUser!.emailVerified.toString(),
+                                ),
+                              ),
+                            );
                           }
                         },
                         child: Image.asset(
@@ -155,6 +162,7 @@ class _SignInViewState extends State<SignInView> {
                           width: 46,
                         ),
                       ),
+
                       const SizedBox(width: 16),
                       Image.asset(kFacebook, height: 46, width: 46),
                     ],

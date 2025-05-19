@@ -1,14 +1,17 @@
 import 'package:eshop/presentation/widgets/vw_appbar.dart';
 import 'package:eshop/presentation/widgets/vw_text_link.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../core/constant/colors.dart';
 import '../../../core/constant/images.dart';
 import '../../../core/router/app_router.dart';
+import '../../../domain/usecases/user/sign_in_with_email_usecase.dart';
 import '../../../domain/usecases/user/sign_up_usecase.dart';
 import '../../../l10n/gen_l10n/app_localizations.dart';
 import '../../blocs/user/user_bloc.dart';
@@ -136,8 +139,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget _buildSocialButtons() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
-        Image(image: AssetImage(kGoogle)),
+      children:  [
+        GestureDetector(
+          onTap: () async {
+            bool isLogged = await login();
+            if (isLogged) {
+              context.read<UserBloc>().add(
+                SignInWithEmailUser(
+                  SignInWithEmailParams(
+                    email:  FirebaseAuth.instance.currentUser!.emailVerified.toString(),
+                  ),
+                ),
+              );
+            }
+          },
+          child: Image.asset(
+            kGoogle,
+            height: 60,
+            width: 60,
+          ),
+        ),
         SizedBox(width: 15),
         Image(image: AssetImage(kFacebook)),
       ],
@@ -245,6 +266,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     return null;
   }
-
+  Future<bool> login() async {
+    final user = await GoogleSignIn().signIn();
+    GoogleSignInAuthentication userAuth = await user!.authentication;
+    var credential = GoogleAuthProvider.credential(
+        idToken: userAuth.idToken, accessToken: userAuth.accessToken);
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    return FirebaseAuth.instance.currentUser != null;
+  }
 
 }

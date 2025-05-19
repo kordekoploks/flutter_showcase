@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:eshop/core/usecases/usecase.dart';
 import 'package:eshop/data/models/user/edit_response_model.dart';
 import 'package:eshop/domain/usecases/user/edit_full_name_usecase.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../core/network/network_info.dart';
@@ -23,13 +24,20 @@ class UserRepositoryImpl implements UserRepository {
     required this.remoteDataSource,
     required this.localDataSource,
     required this.networkInfo,
-  }
-  );
+  });
 
   @override
   Future<Either<Failure, User>> signIn(params) async {
     return await _authenticate(() {
       return remoteDataSource.signIn(params);
+    }
+    );
+  }
+
+  @override
+  Future<Either<Failure, User>> signInWithEmail(params) async {
+    return await _authenticate(() {
+      return remoteDataSource.signInWithEmail(params);
     }
     );
   }
@@ -49,6 +57,7 @@ class UserRepositoryImpl implements UserRepository {
     }
     );
   }
+
   //copy dan buat tapi ganti jadi edit/update
 
   @override
@@ -80,8 +89,7 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   Future<Either<Failure, User>> _authenticate(
-      _DataSourceChooser getDataSource,
-      ) async {
+      _DataSourceChooser getDataSource,) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteResponse = await getDataSource();
@@ -90,15 +98,20 @@ class UserRepositoryImpl implements UserRepository {
         return Right(remoteResponse.user);
       } on Failure catch (failure) {
         return Left(failure);
+      } catch (e, stackTrace) {
+        // Kirim ke Crashlytics
+        await FirebaseCrashlytics.instance.recordError(
+            e, stackTrace, reason: 'Unexpected error in _authenticate');
+        return Left(ServerFailure());
       }
     } else {
       return Left(NetworkFailure());
     }
   }
 
+
   Future<Either<Failure, User>> _updateUserLocal(
-      _DataEditSourceChooser getDataSource,
-      ) async {
+      _DataEditSourceChooser getDataSource,) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteResponse = await getDataSource();
@@ -106,10 +119,13 @@ class UserRepositoryImpl implements UserRepository {
         return Right(remoteResponse.user);
       } on Failure catch (failure) {
         return Left(failure);
+      } catch (e, stackTrace) {
+        await FirebaseCrashlytics.instance.recordError(
+            e, stackTrace, reason: 'Unexpected error in _updateUserLocal');
+        return Left(ServerFailure());
       }
     } else {
       return Left(NetworkFailure());
     }
   }
-  }
-
+}

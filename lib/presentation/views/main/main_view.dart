@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
@@ -8,18 +9,25 @@ import '../authentication/signin_view.dart';
 import 'home/home_view.dart';
 import 'other/profile/profile_pengguna.dart';
 
-
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
 
   @override
   State<MainView> createState() => _MainViewState();
-
 }
 
-
-
 class _MainViewState extends State<MainView> {
+  int selectedIndex = 0;
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
+  static const List<String> pageNames = ['HomeView', 'SignInView'];
+
+  @override
+  void initState() {
+    super.initState();
+    analytics.setAnalyticsCollectionEnabled(true);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +44,6 @@ class _MainViewState extends State<MainView> {
                       controller: context.read<NavbarCubit>().controller,
                       children: <Widget>[
                         const HomeView(),
-                        // const ProductViewGetx(),
                         userState is UserLogged
                             ? const ProfilePengguna()
                             : const SignInView(),
@@ -47,13 +54,12 @@ class _MainViewState extends State<MainView> {
               );
             },
           ),
-
           Positioned(
             bottom: 10,
             left: 18,
             right: 18,
             child: Padding(
-              padding: const EdgeInsets.only(left: 0, right: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: BlocBuilder<NavbarCubit, int>(
                 builder: (context, state) {
                   return SnakeNavigationBar.color(
@@ -79,59 +85,52 @@ class _MainViewState extends State<MainView> {
                     showUnselectedLabels: false,
                     showSelectedLabels: true,
                     currentIndex: state,
-                    onTap: (index) => setState(() {
+                    onTap: (index) async {
+                      await analytics.logEvent(
+                        name: 'pages_tracked',
+                        parameters: {
+                          "page_name": pageNames[index],
+                          "page_index": index,
+                        },
+                      );
                       context.read<NavbarCubit>().controller.animateToPage(
-                          index,
-                          duration: const Duration(milliseconds: 400),
-                          curve: Curves.linear);
+                        index,
+                        duration: const Duration(milliseconds: 400),
+                        curve: Curves.linear,
+                      );
                       context.read<NavbarCubit>().update(index);
-                    }),
+                    },
                     items: const [
                       BottomNavigationBarItem(
-                          icon: ImageIcon(
-                            AssetImage("assets/navbar_icons/home.png"),
-                            color: Colors.white,
-                            size: 26,
+                        icon: ImageIcon(
+                          AssetImage("assets/navbar_icons/home.png"),
+                          color: Colors.white,
+                          size: 26,
+                        ),
+                        activeIcon: Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.deepOrange,
+                            maxRadius: 4,
                           ),
-                          activeIcon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.deepOrange,
-                              maxRadius: 4,
-                            ),
-                          ),
-                          label: 'Home'),
-                    // BottomNavigationBarItem(
-                    //       icon: ImageIcon(
-                    //         AssetImage("assets/navbar_icons/home.png"),
-                    //         color: Colors.white,
-                    //         size: 26,
-                    //       ),
-                    //       activeIcon: Padding(
-                    //         padding: EdgeInsets.all(5.0),
-                    //         child: CircleAvatar(
-                    //           backgroundColor: Colors.deepOrange,
-                    //           maxRadius: 4,
-                    //         ),
-                    //       ),
-                    //       label: 'Home'),
+                        ),
+                        label: 'Home',
+                      ),
                       BottomNavigationBarItem(
-                          icon: ImageIcon(
-                            AssetImage("assets/navbar_icons/user.png"),
-                            color: Colors.white,
-                            size: 26,
+                        icon: ImageIcon(
+                          AssetImage("assets/navbar_icons/user.png"),
+                          color: Colors.white,
+                          size: 26,
+                        ),
+                        activeIcon: Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.deepOrange,
+                            maxRadius: 4,
                           ),
-                          activeIcon: Padding(
-                            padding: EdgeInsets.all(5.0),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.deepOrange,
-                              maxRadius: 4,
-                            ),
-                          ),
-                          label: 'Other'),
-
-
-                      // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'search')
+                        ),
+                        label: 'Other',
+                      ),
                     ],
                   );
                 },

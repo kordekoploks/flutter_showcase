@@ -15,6 +15,7 @@ import '../../../domain/entities/user/user.dart';
 import '../../../domain/usecases/user/edit_usecase.dart';
 import '../../../domain/usecases/user/get_cached_user_usecase.dart';
 import '../../../domain/usecases/user/sign_in_usecase.dart';
+import '../../../domain/usecases/user/sign_in_with_email_usecase.dart';
 
 part 'user_event.dart';
 
@@ -23,6 +24,7 @@ part 'user_state.dart';
 class UserBloc extends Bloc<UserEvent, UserState> {
   final GetCachedUserUseCase _getCachedUserUseCase;
   final SignInUseCase _signInUseCase;
+  final SignInWithEmailUseCase _signInWithEmailUseCase;
   final SignUpUseCase _signUpUseCase;
   final SignOutUseCase _signOutUseCase;
   final EditUseCase _editUseCase;
@@ -31,6 +33,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc(
 
     this._signInUseCase,
+    this._signInWithEmailUseCase,
     this._signUpUseCase,
     this._signOutUseCase,
     this._getCachedUserUseCase,
@@ -38,6 +41,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     this._editFullNameUseCase,
   ) : super(UserInitial()) {
     on<SignInUser>(_onSignIn);
+    on<SignInWithEmailUser>(_onSignInWithEmail);
     on<SignUpUser>(_onSignUp);
     on<CheckUser>(_onCheckUser);
     on<SignOutUser>(_onSignOut);
@@ -52,6 +56,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       result.fold(
         (failure) => emit(UserLoggedFail(failure)),
         (user) => emit(UserLogged(user)),
+      );
+    } catch (e) {
+      emit(UserLoggedFail(ExceptionFailure()));
+    }
+  }
+
+  void _onSignInWithEmail(SignInWithEmailUser event, Emitter<UserState> emit) async {
+    try {
+      emit(UserLoading());
+      final result = await _signInWithEmailUseCase(event.params);
+      result.fold(
+            (failure) => emit(UserLoggedFail(failure)),
+            (user) => emit(UserLogged(user)),
       );
     } catch (e) {
       emit(UserLoggedFail(ExceptionFailure()));
