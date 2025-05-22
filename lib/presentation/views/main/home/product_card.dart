@@ -102,21 +102,26 @@ class ProductCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: isLoading
-            ? const Padding(
-                padding: EdgeInsets.all(24.0),
-                child: ColoredBox(color: Colors.grey),
+            ? const ColoredBox(
+                color: Colors.grey,
+                child: SizedBox.expand(),
               )
-            : Hero(
-                tag: product!.id,
-                child: Padding(
-                  padding: const EdgeInsets.all(32.0),
+            : AspectRatio(
+                aspectRatio: 3 / 3,
+                child: Hero(
+                  tag: product!.id,
                   child: CachedNetworkImage(
                     imageUrl: product!.images.first,
-                    fit: BoxFit.contain,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
                     placeholder: (context, url) => Shimmer.fromColors(
                       baseColor: Colors.grey.shade100,
                       highlightColor: Colors.white,
-                      child: const ColoredBox(color: Colors.grey),
+                      child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.grey,
+                      ),
                     ),
                     errorWidget: (context, url, error) =>
                         const Center(child: Icon(Icons.error)),
